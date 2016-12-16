@@ -62,8 +62,10 @@ class OaiDc extends AbstractMetadata
          */
         foreach ($dcElementNames as $elementName) {
             $values = $this->item->value("dcterms:$elementName", ['all' => true]);
-            foreach ($values as $value) {
-                $this->appendNewElement($oai_dc, "dc:$elementName", (string) $value);
+            if (!empty($values)) {
+                foreach ($values as $value) {
+                    $this->appendNewElement($oai_dc, "dc:$elementName", (string) $value);
+                }
             }
         }
 

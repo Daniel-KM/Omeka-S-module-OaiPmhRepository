@@ -18,6 +18,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class ResponseGenerator extends OaiXmlGeneratorAbstract
 {
+    protected $request;
+
     /**
      * HTTP query string or POST vars formatted as an associative array.
      *
@@ -49,7 +51,7 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
      *
      * @uses dispatchRequest()
      */
-    public function __construct($query, $serviceLocator)
+    public function __construct($request, $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 
@@ -58,7 +60,8 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
         $this->_loadConfig();
 
         $this->error = false;
-        $this->query = $query;
+        $this->request = $request;
+        $this->query = $request->getQuery()->toArray();
         $this->document = new DomDocument('1.0', 'UTF-8');
 
         OaiIdentifier::initializeNamespace($settings->get('oaipmh_repository_namespace_id'));
@@ -187,7 +190,7 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
         /* Checks (essentially), if there are more arguments in the query string
            than in PHP's returned array, if so there were duplicate arguments,
            which is not allowed. */
-        if ($_SERVER['REQUEST_METHOD'] == 'GET' && (urldecode($_SERVER['QUERY_STRING']) != urldecode(http_build_query($this->query)))) {
+        if ($this->request->isGet() && $this->request->getUri()->getQuery() != urldecode(http_build_query($this->query))) {
             $this->throwError(self::OAI_ERR_BAD_ARGUMENT, 'Duplicate arguments in request.');
         }
 

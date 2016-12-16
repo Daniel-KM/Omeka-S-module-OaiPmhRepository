@@ -30,7 +30,7 @@ class Module extends AbstractModule
     {
         $settings = $serviceLocator->get('Omeka\Settings');
         $settings->set('oaipmh_repository_name', $settings->get('installation_title'));
-        $settings->set('oaipmh_repository_namespace_id', $this->_getServerName());
+        $settings->set('oaipmh_repository_namespace_id', $this->getServerName($serviceLocator));
         $settings->set('oaipmh_repository_namespace_expose_files', 1);
 
         $connection = $serviceLocator->get('Omeka\Connection');
@@ -120,10 +120,14 @@ class Module extends AbstractModule
         }
     }
 
-    private function _getServerName()
+    protected function getServerName($serviceLocator)
     {
-        $name = preg_replace('/[^a-z0-9\-\.]/i', '', $_SERVER['SERVER_NAME']);
-        if ($name == 'localhost') {
+        $viewHelpers = $serviceLocator->get('ViewHelperManager');
+        $serverUrlHelper = $viewHelpers->get('serverUrl');
+        $serverName = $serverUrlHelper->getHost();
+
+        $name = preg_replace('/[^a-z0-9\-\.]/i', '', $serverName);
+        if (empty($name) || $name == 'localhost') {
             $name = 'default.must.change';
         }
 

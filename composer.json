@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "biblibre/omeka-s-test-helper": "dev-master"
+    }
+}

@@ -30,8 +30,8 @@ class RequestController extends AbstractActionController
 
     public function indexAction()
     {
-        $query = $this->params()->fromQuery();
-        $oaiResponse = new ResponseGenerator($query, $this->serviceLocator);
+        $request = $this->getRequest();
+        $oaiResponse = new ResponseGenerator($request, $this->serviceLocator);
 
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Content-Type', 'text/xml; charset=utf-8');
