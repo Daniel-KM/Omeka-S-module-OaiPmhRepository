@@ -95,13 +95,10 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
 
     private function _loadConfig()
     {
-        $iniFile = OAI_PMH_REPOSITORY_PLUGIN_DIRECTORY . '/config.ini';
+        $config = $this->serviceLocator->get('Config');
 
-        $reader = new \Zend\Config\Reader\Ini();
-        $config = $reader->fromFile($iniFile);
-
-        $this->_listLimit = $config['oai-pmh-repository']['list_limit'];
-        $this->_tokenExpirationTime = $config['oai-pmh-repository']['token_expiration_time'];
+        $this->_listLimit = $config['oaipmhrepository']['list_limit'];
+        $this->_tokenExpirationTime = $config['oaipmhrepository']['token_expiration_time'];
     }
 
     /**
