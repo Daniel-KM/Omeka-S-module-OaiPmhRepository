@@ -13,9 +13,6 @@ use Zend\Mvc\Controller\AbstractController;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
-define('OAI_PMH_REPOSITORY_PLUGIN_DIRECTORY', __DIR__);
-define('OAI_PMH_REPOSITORY_METADATA_DIRECTORY', OAI_PMH_REPOSITORY_PLUGIN_DIRECTORY . '/src/Metadata');
-
 /**
  * OaiPmhRepository plugin class.
  */
