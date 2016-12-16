@@ -8,6 +8,9 @@
 
 namespace OaiPmhRepository\Metadata;
 
+use DOMElement;
+use Omeka\Api\Representation\ItemRepresentation;
+
 /**
  * Class implmenting MODS metadata output format.
  *
@@ -34,10 +37,10 @@ class Mets extends AbstractMetadata
      * and further children for each of the Dublin Core fields present in the
      * item.
      */
-    public function appendMetadata($metadataElement)
+    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
-        $mets = $this->document->createElementNS(
-            self::METADATA_NAMESPACE, 'mets');
+        $document = $metadataElement->ownerDocument;
+        $mets = $document->createElementNS(self::METADATA_NAMESPACE, 'mets');
         $metadataElement->appendChild($mets);
 
         /* Must manually specify XML schema uri per spec, but DOM won't include
@@ -50,7 +53,7 @@ class Mets extends AbstractMetadata
         $mets->setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
 
         $metadataSection = $this->appendNewElement($mets, 'dmdSec');
-        $itemDmdId = 'dmd-' . $this->item->id();
+        $itemDmdId = 'dmd-' . $item->id();
         $metadataSection->setAttribute('ID', $itemDmdId);
         $dcWrap = $this->appendNewElement($metadataSection, 'mdWrap');
         $dcWrap->setAttribute('MDTYPE', 'DC');
@@ -65,14 +68,14 @@ class Mets extends AbstractMetadata
         ];
 
         foreach ($dcElementNames as $elementName) {
-            $values = $this->item->value("dcterms:$elementName", ['all' => true]);
+            $values = $item->value("dcterms:$elementName", ['all' => true]);
             foreach ($values as $value) {
                 $this->appendNewElement($dcXml, "dc:$elementName", (string) $value);
             }
         }
 
         $fileIds = [];
-        $mediaList = $this->item->media();
+        $mediaList = $item->media();
         if (count($mediaList)) {
             $fileSection = $this->appendNewElement($mets, 'fileSec');
             $fileGroup = $this->appendNewElement($fileSection, 'fileGrp');

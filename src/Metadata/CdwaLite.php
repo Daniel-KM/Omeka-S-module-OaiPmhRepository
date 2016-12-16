@@ -8,6 +8,9 @@
 
 namespace OaiPmhRepository\Metadata;
 
+use DOMElement;
+use Omeka\Api\Representation\ItemRepresentation;
+use Omeka\Settings\SettingsInterface;
 use OaiPmhRepository\OaiIdentifier;
 
 /**
@@ -27,16 +30,27 @@ class CdwaLite extends AbstractMetadata
     const METADATA_SCHEMA = 'http://www.getty.edu/CDWA/CDWALite/CDWALite-xsd-public-v1-1.xsd';
 
     /**
+     * @var SettingsInterface
+     */
+    protected $settings;
+
+    public function __construct(SettingsInterface $settings)
+    {
+        $this->settings = $settings;
+    }
+
+    /**
      * Appends CDWALite metadata.
      *
      * Appends a metadata element, an child element with the required format,
      * and further children for each of the Dublin Core fields present in the
      * item.
      */
-    public function appendMetadata($metadataElement)
+    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
-        $cdwaliteWrap = $this->document->createElementNS(
-            self::METADATA_NAMESPACE, 'cdwalite:cdwaliteWrap');
+        $document = $metadataElement->ownerDocument;
+        $cdwaliteWrap = $document->createElementNS(self::METADATA_NAMESPACE,
+            'cdwalite:cdwaliteWrap');
         $metadataElement->appendChild($cdwaliteWrap);
 
         /* Must manually specify XML schema uri per spec, but DOM won't include
@@ -59,7 +73,7 @@ class CdwaLite extends AbstractMetadata
         /* Type => objectWorkTypeWrap->objectWorkType
          * Required.  Fill with 'Unknown' if omitted.
          */
-        $types = $this->item->value('dcterms:type', ['all' => true]);
+        $types = $item->value('dcterms:type', ['all' => true]);
         $objectWorkTypeWrap = $this->appendNewElement($descriptive, 'cdwalite:objectWorkTypeWrap');
         if (empty($types)) {
             $types[] = 'Unknown';
@@ -72,7 +86,7 @@ class CdwaLite extends AbstractMetadata
         /* Title => titleWrap->titleSet->title
          * Required.  Fill with 'Unknown' if omitted.
          */
-        $titles = $this->item->value('dcterms:title', ['all' => true]);
+        $titles = $item->value('dcterms:title', ['all' => true]);
         $titleWrap = $this->appendNewElement($descriptive, 'cdwalite:titleWrap');
 
         foreach ($titles as $title) {
@@ -84,7 +98,7 @@ class CdwaLite extends AbstractMetadata
          * Required.  Fill with 'Unknown' if omitted.
          * Non-repeatable, implode for inclusion of many creators.
          */
-        $creators = $this->item->value('dcterms:creator', ['all' => true]);
+        $creators = $item->value('dcterms:creator', ['all' => true]);
 
         $creatorTexts = [];
         foreach ($creators as $creator) {
@@ -119,7 +133,7 @@ class CdwaLite extends AbstractMetadata
          * Required. Fill with 'Unknown' if omitted.
          * Non-repeatable, include only first date.
          */
-        $date = $this->item->value('dcterms:date');
+        $date = $item->value('dcterms:date');
         $dateText = $date ? (string) $date : 'Unknown';
         $this->appendNewElement($descriptive, 'cdwalite:displayCreationDate', $dateText);
 
@@ -128,7 +142,7 @@ class CdwaLite extends AbstractMetadata
          * Required.  Fill with 'Unknown' if omitted.
          */
         $indexingDatesWrap = $this->appendNewElement($descriptive, 'cdwalite:indexingDatesWrap');
-        $dates = $this->item->value('dcterms:date', ['all' => true]);
+        $dates = $item->value('dcterms:date', ['all' => true]);
         foreach ($dates as $date) {
             $indexingDatesSet = $this->appendNewElement($indexingDatesWrap, 'cdwalite:indexingDatesSet');
             $this->appendNewElement($indexingDatesSet, 'cdwalite:earliestDate', (string) $date);
@@ -145,7 +159,7 @@ class CdwaLite extends AbstractMetadata
         /* Subject => classWrap->classification
          * Not required.
          */
-        $subjects = $this->item->value('dcterms:subject', ['all' => true]);
+        $subjects = $item->value('dcterms:subject', ['all' => true]);
         $classWrap = $this->appendNewElement($descriptive, 'cdwalite:classWrap');
         foreach ($subjects as $subject) {
             $this->appendNewElement($classWrap, 'cdwalite:classification', (string) $subject);
@@ -154,7 +168,7 @@ class CdwaLite extends AbstractMetadata
         /* Description => descriptiveNoteWrap->descriptiveNoteSet->descriptiveNote
          * Not required.
          */
-        $descriptions = $this->item->value('dcterms:description', ['all' => true]);
+        $descriptions = $item->value('dcterms:description', ['all' => true]);
         if (!empty($descriptions)) {
             $descriptiveNoteWrap = $this->appendNewElement($descriptive, 'cdwalite:descriptiveNoteWrap');
             foreach ($descriptions as $description) {
@@ -173,7 +187,7 @@ class CdwaLite extends AbstractMetadata
         /* Rights => rightsWork
          * Not required.
          */
-        $rights = $this->item->value('dcterms:rights', ['all' => true]);
+        $rights = $item->value('dcterms:rights', ['all' => true]);
         foreach ($rights as $right) {
             $this->appendNewElement($administrative, 'cdwalite:rightsWork', (string) $right);
         }
@@ -183,18 +197,17 @@ class CdwaLite extends AbstractMetadata
          * Required.
          */
         $recordWrap = $this->appendNewElement($administrative, 'cdwalite:recordWrap');
-        $this->appendNewElement($recordWrap, 'cdwalite:recordID', $this->item->id());
+        $this->appendNewElement($recordWrap, 'cdwalite:recordID', $item->id());
         $this->appendNewElement($recordWrap, 'cdwalite:recordType', 'item');
         $recordInfoWrap = $this->appendNewElement($recordWrap, 'cdwalite:recordInfoWrap');
-        $recordInfoID = $this->appendNewElement($recordInfoWrap, 'cdwalite:recordInfoID', OaiIdentifier::itemToOaiId($this->item->id()));
+        $recordInfoID = $this->appendNewElement($recordInfoWrap, 'cdwalite:recordInfoID', OaiIdentifier::itemToOaiId($item->id()));
         $recordInfoID->setAttribute('cdwalite:type', 'oai');
 
         /* file link => resourceWrap->resourceSet->linkResource
          * Not required.
          */
-        $settings = $this->serviceLocator->get('Omeka\Settings');
-        if ($settings->get('oaipmh_repository_expose_files', false)) {
-            $mediaList = $this->item->media();
+        if ($this->settings->get('oaipmh_repository_expose_files', false)) {
+            $mediaList = $item->media();
             if (!empty($mediaList)) {
                 $resourceWrap = $this->appendNewElement($administrative, 'cdwalite:resourceWrap');
                 foreach ($mediaList as $media) {

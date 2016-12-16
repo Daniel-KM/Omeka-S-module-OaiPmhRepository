@@ -10,6 +10,7 @@ namespace OaiPmhRepository;
 
 use DomDocument;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Zend\Http\Request;
 
 /**
  * ResponseGenerator generates the XML responses to OAI-PMH
@@ -18,7 +19,15 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class ResponseGenerator extends OaiXmlGeneratorAbstract
 {
+    /**
+     * @var Request
+     */
     protected $request;
+
+    /**
+     * @var DOMDocument
+     */
+    protected $document;
 
     /**
      * HTTP query string or POST vars formatted as an associative array.
@@ -27,14 +36,6 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
      */
     private $query;
 
-    /**
-     * Array of all supported metadata formats.
-     * $metdataFormats['metadataPrefix'] = ImplementingClassName.
-     *
-     * @var array
-     */
-    private $metadataFormats;
-
     private $_listLimit;
 
     private $_tokenExpirationTime;
@@ -42,16 +43,23 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
     protected $serviceLocator;
 
     /**
+     * Flags if an error has occurred during the response.
+     *
+     * @var bool
+     */
+    protected $error;
+
+    /**
      * Constructor.
      *
      * Creates the DomDocument object, and adds XML elements common to all
      * OAI-PMH responses.  Dispatches control to appropriate verb, if any.
      *
-     * @param array $query HTTP POST/GET query key-value pair array
+     * @param Request $request HTTP POST/GET query key-value pair array
      *
      * @uses dispatchRequest()
      */
-    public function __construct($request, $serviceLocator)
+    public function __construct(Request $request, $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 
@@ -82,8 +90,6 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
             \OaiPmhRepository\Date::unixToUtc(time()));
         $root->appendChild($responseDate);
 
-        $this->metadataFormats = $this->getFormats();
-
         $this->dispatchRequest();
     }
 
@@ -110,8 +116,7 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
         $viewHelpers = $this->serviceLocator->get('ViewHelperManager');
         $serverUrlHelper = $viewHelpers->get('serverUrl');
 
-        $request = $this->document->createElement('request',
-            $serverUrlHelper());
+        $request = $this->document->createElement('request', $serverUrlHelper());
         $this->document->documentElement->appendChild($request);
 
         $requiredArgs = [];
@@ -165,8 +170,6 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
             elseif ($verb == 'ListRecords' || $verb == 'ListIdentifiers') {
                 $this->initListResponse();
             } else {
-                /* This Inflector use means verb-implementing functions must be
-                   the lowerCamelCased version of the verb name. */
                 $functionName = lcfirst($verb);
                 $this->$functionName();
             }
@@ -221,7 +224,8 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
 
         $metadataPrefix = $this->_getParam('metadataPrefix');
 
-        if ($metadataPrefix && !array_key_exists($metadataPrefix, $this->metadataFormats)) {
+        $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
+        if ($metadataPrefix && !$metadataFormatManager->has($metadataPrefix)) {
             $this->throwError(self::OAI_ERR_CANNOT_DISSEMINATE_FORMAT);
         }
     }
@@ -324,8 +328,10 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
         if (!$this->error) {
             $getRecord = $this->document->createElement('GetRecord');
             $this->document->documentElement->appendChild($getRecord);
-            $record = new $this->metadataFormats[$metadataPrefix]($item, $this->document, $this->serviceLocator);
-            $record->appendRecord($getRecord);
+            $settings = $this->serviceLocator->get('Omeka\Settings');
+            $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
+            $metadataFormat = $metadataFormatManager->get($metadataPrefix);
+            $metadataFormat->appendRecord($getRecord, $item);
         }
     }
 
@@ -353,9 +359,9 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
         if (!$this->error) {
             $listMetadataFormats = $this->document->createElement('ListMetadataFormats');
             $this->document->documentElement->appendChild($listMetadataFormats);
-            foreach ($this->metadataFormats as $format) {
-                $formatObject = new $format(null, $this->document);
-                $formatObject->declareMetadataFormat($listMetadataFormats);
+            $settings = $this->serviceLocator->get('Omeka\Settings');
+            foreach ($this->getFormats() as $format) {
+                $format->declareMetadataFormat($listMetadataFormats);
             }
         }
     }
@@ -511,12 +517,15 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
             $adapters = $this->serviceLocator->get('Omeka\ApiAdapterManager');
             $itemAdapter = $adapters->get('items');
 
+            $settings = $this->serviceLocator->get('Omeka\Settings');
+            $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
+
             $verbElement = $this->document->createElement($verb);
             $this->document->documentElement->appendChild($verbElement);
             foreach ($paginator as $itemEntity) {
                 $item = $itemAdapter->getRepresentation($itemEntity);
-                $record = new $this->metadataFormats[$metadataPrefix]($item, $this->document, $this->serviceLocator);
-                $record->$method($verbElement);
+                $metadataFormat = $metadataFormatManager->get($metadataPrefix);
+                $metadataFormat->$method($verbElement, $item);
             }
             if ($rows > ($cursor + $this->_listLimit)) {
                 $token = $this->createResumptionToken($verb, $metadataPrefix,
@@ -572,13 +581,13 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
      */
     private function getFormats()
     {
-        $config = $this->serviceLocator->get('Config');
+        $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
 
         $metadataFormats = [];
-
-        $formats = $config['oaipmhrepository']['formats'];
-        foreach ($formats as $metadataPrefix => $class) {
-            $metadataFormats[$metadataPrefix] = $class;
+        foreach ($metadataFormatManager->getRegisteredNames() as $name) {
+            $metadataFormat = $metadataFormatManager->get($name);
+            $metadataPrefix = $metadataFormat->getMetadataPrefix();
+            $metadataFormats[$metadataPrefix] = $metadataFormat;
         }
 
         return $metadataFormats;
@@ -591,6 +600,20 @@ class ResponseGenerator extends OaiXmlGeneratorAbstract
         }
 
         return null;
+    }
+
+    /**
+     * Throws an OAI-PMH error on the given response.
+     *
+     * @param string $error   OAI-PMH error code
+     * @param string $message Optional human-readable error message
+     */
+    protected function throwError($error, $message = null)
+    {
+        $this->error = true;
+        $errorElement = $this->document->createElement('error', $message);
+        $this->document->documentElement->appendChild($errorElement);
+        $errorElement->setAttribute('code', $error);
     }
 
     /**

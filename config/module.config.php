@@ -16,6 +16,11 @@ return [
             'oaipmh_repository_tokens' => 'OaiPmhRepository\Api\Adapter\OaiPmhRepositoryTokenAdapter',
         ],
     ],
+    'service_manager' => [
+        'factories' => [
+            'OaiPmhRepository\MetadataFormatManager' => 'OaiPmhRepository\Service\MetadataFormatManagerFactory',
+        ],
+    ],
     'router' => [
         'routes' => [
             'site' => [
@@ -41,11 +46,15 @@ return [
         ],
     ],
     'oaipmhrepository' => [
-        'formats' => [
-            'cdwalite' => 'OaiPmhRepository\Metadata\CdwaLite',
-            'mets' => 'OaiPmhRepository\Metadata\Mets',
-            'mods' => 'OaiPmhRepository\Metadata\Mods',
-            'oai_dc' => 'OaiPmhRepository\Metadata\OaiDc',
+        'metadata_formats' => [
+            'invokables' => [
+                'mets' => 'OaiPmhRepository\Metadata\Mets',
+                'mods' => 'OaiPmhRepository\Metadata\Mods',
+            ],
+            'factories' => [
+                'cdwalite' => 'OaiPmhRepository\Service\Metadata\CdwaLiteFactory',
+                'oai_dc' => 'OaiPmhRepository\Service\Metadata\OaiDcFactory',
+            ],
         ],
     ],
 ];

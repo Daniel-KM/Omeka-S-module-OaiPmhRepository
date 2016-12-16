@@ -8,6 +8,10 @@
 
 namespace OaiPmhRepository\Metadata;
 
+use DOMElement;
+use Omeka\Api\Representation\ItemRepresentation;
+use Omeka\Settings\SettingsInterface;
+
 /**
  * Class implmenting metadata output for the required oai_dc metadata format.
  * oai_dc is output of the 15 unqualified Dublin Core fields.
@@ -27,16 +31,27 @@ class OaiDc extends AbstractMetadata
     const DC_NAMESPACE_URI = 'http://purl.org/dc/elements/1.1/';
 
     /**
+     * @var SettingsInterface
+     */
+    protected $settings;
+
+    public function __construct(SettingsInterface $settings)
+    {
+        $this->settings = $settings;
+    }
+
+    /**
      * Appends Dublin Core metadata.
      *
      * Appends a metadata element, an child element with the required format,
      * and further children for each of the Dublin Core fields present in the
      * item.
      */
-    public function appendMetadata($metadataElement)
+    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
-        $oai_dc = $this->document->createElementNS(
-            self::METADATA_NAMESPACE, 'oai_dc:dc');
+        $document = $metadataElement->ownerDocument;
+
+        $oai_dc = $document->createElementNS(self::METADATA_NAMESPACE, 'oai_dc:dc');
         $metadataElement->appendChild($oai_dc);
 
         /* Must manually specify XML schema uri per spec, but DOM won't include
@@ -61,7 +76,7 @@ class OaiDc extends AbstractMetadata
          * compliant per-node declarations.
          */
         foreach ($dcElementNames as $elementName) {
-            $values = $this->item->value("dcterms:$elementName", ['all' => true]);
+            $values = $item->value("dcterms:$elementName", ['all' => true]);
             if (!empty($values)) {
                 foreach ($values as $value) {
                     $this->appendNewElement($oai_dc, "dc:$elementName", (string) $value);
@@ -69,12 +84,11 @@ class OaiDc extends AbstractMetadata
             }
         }
 
-        $this->appendNewElement($oai_dc, 'dc:identifier', $this->item->siteUrl());
+        $this->appendNewElement($oai_dc, 'dc:identifier', $item->siteUrl());
 
         // Also append an identifier for each file
-        $settings = $this->serviceLocator->get('Omeka\Settings');
-        if ($settings->get('oaipmh_repository_expose_files', false)) {
-            foreach ($this->item->media() as $media) {
+        if ($this->settings->get('oaipmh_repository_expose_files', false)) {
+            foreach ($item->media() as $media) {
                 $this->appendNewElement($oai_dc, 'dc:identifier', $media->originalUrl());
             }
         }

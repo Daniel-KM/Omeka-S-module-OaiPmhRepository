@@ -8,19 +8,14 @@
 
 namespace OaiPmhRepository;
 
+use DOMElement;
+
 /**
  * Parent class for all XML-generating classes.
  */
 class XmlGeneratorAbstract
 {
     const XML_SCHEMA_NAMESPACE_URI = 'http://www.w3.org/2001/XMLSchema-instance';
-
-    /**
-     * The XML document being generated.
-     *
-     * @var DomDocument
-     */
-    protected $document;
 
     /**
      * Creates a new XML element with the specified children.
@@ -35,9 +30,9 @@ class XmlGeneratorAbstract
      *
      * @return DomElement The new tree of elements
      */
-    protected function createElementWithChildren($parent, $name, $children)
+    protected function createElementWithChildren(DOMElement $parent, $name, $children)
     {
-        $document = $this->document;
+        $document = $parent->ownerDocument;
         $newElement = $document->createElement($name);
         foreach ($children as $tag => $value) {
             if (is_array($value)) {
@@ -62,9 +57,9 @@ class XmlGeneratorAbstract
      *
      * @return DomElement The new element
      */
-    protected function appendNewElement($parent, $name, $text = null)
+    protected function appendNewElement(DOMElement $parent, $name, $text = null)
     {
-        $document = $this->document;
+        $document = $parent->ownerDocument;
         $newElement = $document->createElement($name);
         // Use a TextNode, causes escaping of input text
         if ($text) {

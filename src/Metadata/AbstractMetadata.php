@@ -9,6 +9,8 @@
 namespace OaiPmhRepository\Metadata;
 
 use DateTime;
+use DOMElement;
+use Omeka\Api\Representation\ItemRepresentation;
 use OaiPmhRepository\OaiXmlGeneratorAbstract;
 use OaiPmhRepository\OaiIdentifier;
 
@@ -20,43 +22,8 @@ use OaiPmhRepository\OaiIdentifier;
  *       static, as they should be
  */
 abstract class AbstractMetadata extends OaiXmlGeneratorAbstract
+    implements MetadataInterface
 {
-    /**
-     * Item object for this record.
-     *
-     * @var ItemRepresentation
-     */
-    protected $item;
-
-    /**
-     * Document to append to.
-     *
-     * @var DOMDocument
-     */
-    protected $document;
-
-    protected $serviceLocator;
-
-    /**
-     * Metadata_Abstract constructor.
-     *
-     * Sets base class properties.
-     *
-     * @param ItemRepresentation item Item object whose metadata will be output
-     * @param DOMDocument $document
-     */
-    public function __construct($item = null, $document = null, $serviceLocator = null)
-    {
-        if ($item) {
-            $this->item = $item;
-        }
-        if ($document) {
-            $this->document = $document;
-        }
-
-        $this->serviceLocator = $serviceLocator;
-    }
-
     /**
      * Appends the record to the XML response.
      *
@@ -66,17 +33,18 @@ abstract class AbstractMetadata extends OaiXmlGeneratorAbstract
      * @uses appendHeader
      * @uses appendMetadata
      *
-     * @param DOMElement $parentElement
+     * @param DOMElement $parent
      */
-    public function appendRecord($parentElement)
+    public function appendRecord(DOMElement $parent, ItemRepresentation $item)
     {
-        $record = $this->document->createElement('record');
-        $parentElement->appendChild($record);
-        $this->appendHeader($record);
+        $document = $parent->ownerDocument;
+        $record = $document->createElement('record');
+        $parent->appendChild($record);
+        $this->appendHeader($record, $item);
 
-        $metadata = $this->document->createElement('metadata');
+        $metadata = $document->createElement('metadata');
         $record->appendChild($metadata);
-        $this->appendMetadata($metadata);
+        $this->appendMetadata($metadata, $item);
     }
 
     /**
@@ -85,20 +53,20 @@ abstract class AbstractMetadata extends OaiXmlGeneratorAbstract
      * Adds the identifier, datestamp and setSpec to a header element, and
      * appends in to the document.
      *
-     * @param DOMElement $parentElement
+     * @param DOMElement $parent
      */
-    public function appendHeader($parentElement)
+    public function appendHeader(DOMElement $parent, ItemRepresentation $item)
     {
-        $headerData['identifier'] = OaiIdentifier::itemToOaiId($this->item->id());
+        $headerData['identifier'] = OaiIdentifier::itemToOaiId($item->id());
 
-        $datestamp = $this->item->modified();
+        $datestamp = $item->modified();
         if (!$datestamp) {
-            $datestamp = $this->item->created();
+            $datestamp = $item->created();
         }
         $headerData['datestamp'] = $datestamp->format(DateTime::ATOM);
 
-        $header = $this->createElementWithChildren($parentElement, 'header', $headerData);
-        foreach ($this->item->itemSets() as $itemSet) {
+        $header = $this->createElementWithChildren($parent, 'header', $headerData);
+        foreach ($item->itemSets() as $itemSet) {
             $this->appendNewElement($header, 'setSpec', $itemSet->id());
         }
     }
@@ -109,16 +77,16 @@ abstract class AbstractMetadata extends OaiXmlGeneratorAbstract
      * Declares the metadataPrefix, schema URI, and namespace for the oai_dc
      * metadata format.
      *
-     * @param DOMElement $parentElement
+     * @param DOMElement $parent
      */
-    public function declareMetadataFormat($parentElement)
+    public function declareMetadataFormat(DOMElement $parent)
     {
         $elements = [
             'metadataPrefix' => $this->getMetadataPrefix(),
             'schema' => $this->getMetadataSchema(),
             'metadataNamespace' => $this->getMetadataNamespace(),
         ];
-        $this->createElementWithChildren($parentElement, 'metadataFormat', $elements);
+        $this->createElementWithChildren($parent, 'metadataFormat', $elements);
     }
 
     /**
@@ -145,7 +113,7 @@ abstract class AbstractMetadata extends OaiXmlGeneratorAbstract
     /**
      * Appends the metadata for one Omeka item to the XML document.
      *
-     * @param DOMElement $parentElement
+     * @param DOMElement $parent
      */
-    abstract public function appendMetadata($parentElement);
+    abstract public function appendMetadata(DOMElement $parent, ItemRepresentation $item);
 }

@@ -47,27 +47,6 @@ class OaiXmlGeneratorAbstract extends XmlGeneratorAbstract
     const OAI_GRANULARITY_DATETIME = 2;
 
     /**
-     * Flags if an error has occurred during the response.
-     *
-     * @var bool
-     */
-    protected $error;
-
-    /**
-     * Throws an OAI-PMH error on the given response.
-     *
-     * @param string $error   OAI-PMH error code
-     * @param string $message Optional human-readable error message
-     */
-    public function throwError($error, $message = null)
-    {
-        $this->error = true;
-        $errorElement = $this->document->createElement('error', $message);
-        $this->document->documentElement->appendChild($errorElement);
-        $errorElement->setAttribute('code', $error);
-    }
-
-    /**
      * Returns the granularity of the given utcDateTime string.  Returns zero
      * if the given string is not in utcDateTime format.
      *
