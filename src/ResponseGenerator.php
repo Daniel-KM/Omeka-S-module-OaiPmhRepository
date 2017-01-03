@@ -238,7 +238,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
         /* Checks (essentially), if there are more arguments in the query string
            than in PHP's returned array, if so there were duplicate arguments,
            which is not allowed. */
-        if ($this->request->isGet() && $this->request->getUri()->getQuery() != urldecode(http_build_query($this->query))) {
+        if ($this->request->isGet() && urldecode($this->request->getUri()->getQuery()) != urldecode(http_build_query($this->query))) {
             $this->throwError(self::OAI_ERR_BAD_ARGUMENT, 'Duplicate arguments in request.');
         }
 
