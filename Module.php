@@ -10,6 +10,7 @@ namespace OaiPmhRepository;
 use Omeka\Module\AbstractModule;
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\Mvc\Controller\AbstractController;
+use Zend\Mvc\MvcEvent;
 use Zend\View\Renderer\PhpRenderer;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -72,6 +73,14 @@ class Module extends AbstractModule
         $connection = $serviceLocator->get('Omeka\Connection');
         $sql = 'DROP TABLE IF EXISTS `oai_pmh_repository_token`;';
         $connection->exec($sql);
+    }
+
+    public function onBootstrap(MvcEvent $event)
+    {
+        parent::onBootstrap($event);
+
+        $acl = $this->getServiceLocator()->get('Omeka\Acl');
+        $acl->allow(null, 'OaiPmhRepository\Controller\Request');
     }
 
     public function handleConfigForm(AbstractController $controller)
