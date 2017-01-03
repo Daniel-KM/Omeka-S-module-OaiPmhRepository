@@ -330,13 +330,13 @@ class ResponseGenerator extends XmlGeneratorAbstract
         $version = $modules->getModule('OaiPmhRepository')->getIni('version');
 
         $elements = [
-            'title' => 'Omeka OAI-PMH Repository Plugin',
+            'title' => 'Omeka S OAI-PMH Repository Plugin',
             'author' => [
-                'name' => 'John Flatness',
-                'email' => 'john@zerocrates.org',
+                'name' => 'Julian Maurice',
+                'email' => 'julian.maurice@biblibre.com',
             ],
             'version' => $version,
-            'URL' => 'http://omeka.org/codex/Plugins/OaiPmhRepository',
+            'URL' => 'https://github.com/biblibre/omeka-s-module-OaiPmhRepository',
         ];
         $toolkit = $this->createElementWithChildren($parentElement, 'toolkit', $elements);
         $toolkit->setAttribute('xsi:schemaLocation', "$toolkitNamespace $toolkitSchema");
