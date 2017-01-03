@@ -81,6 +81,8 @@ class Module extends AbstractModule
 
         $acl = $this->getServiceLocator()->get('Omeka\Acl');
         $acl->allow(null, 'OaiPmhRepository\Controller\Request');
+        $acl->allow(null, 'OaiPmhRepository\Api\Adapter\OaiPmhRepositoryTokenAdapter');
+        $acl->allow(null, 'OaiPmhRepository\Entity\OaiPmhRepositoryToken');
     }
 
     public function handleConfigForm(AbstractController $controller)
