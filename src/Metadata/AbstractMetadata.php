@@ -63,7 +63,8 @@ abstract class AbstractMetadata extends XmlGeneratorAbstract
         if (!$datestamp) {
             $datestamp = $item->created();
         }
-        $headerData['datestamp'] = $datestamp->format(DateTime::ATOM);
+        $dateFormat = \OaiPmhRepository\Date::OAI_DATE_FORMAT;
+        $headerData['datestamp'] = $datestamp->format($dateFormat);
 
         $header = $this->createElementWithChildren($parent, 'header', $headerData);
         foreach ($item->itemSets() as $itemSet) {
