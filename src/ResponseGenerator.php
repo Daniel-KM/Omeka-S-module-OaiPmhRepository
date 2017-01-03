@@ -529,15 +529,31 @@ class ResponseGenerator extends XmlGeneratorAbstract
         }
         if ($from) {
             $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->gte('Item.modified', $from),
-                $qb->expr()->gte('Item.created', $from)
+                $qb->expr()->andX(
+                    $qb->expr()->isNotNull('Item.modified'),
+                    $qb->expr()->gte('Item.modified', ':from_1')
+                ),
+                $qb->expr()->andX(
+                    $qb->expr()->isNull('Item.modified'),
+                    $qb->expr()->gte('Item.created', ':from_2')
+                )
             ));
+            $qb->setParameter('from_1', $from);
+            $qb->setParameter('from_2', $from);
         }
         if ($until) {
             $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->gte('Item.modified', $until),
-                $qb->expr()->gte('Item.created', $until)
+                $qb->expr()->andX(
+                    $qb->expr()->isNotNull('Item.modified'),
+                    $qb->expr()->lte('Item.modified', ':until_1')
+                ),
+                $qb->expr()->andX(
+                    $qb->expr()->isNull('Item.modified'),
+                    $qb->expr()->lte('Item.created', ':until_2')
+                )
             ));
+            $qb->setParameter('until_1', $until);
+            $qb->setParameter('until_2', $until);
         }
         $qb->groupBy('Item.id');
 
