@@ -523,8 +523,8 @@ class ResponseGenerator extends XmlGeneratorAbstract
         if ($set) {
             $qb->innerJoin(
                 'Item.itemSets',
-                'is', 'WITH',
-                $qb->expr()->in('is.id', [$set])
+                'is_', 'WITH',
+                $qb->expr()->in('is_.id', [$set])
             );
         }
         if ($from) {
