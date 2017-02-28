@@ -8,6 +8,7 @@
 
 namespace OaiPmhRepository;
 
+use DateTime;
 use DomDocument;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Zend\Http\Request;
@@ -455,10 +456,10 @@ class ResponseGenerator extends XmlGeneratorAbstract
         $untilDate = null;
 
         if (($from = $this->_getParam('from'))) {
-            $fromDate = \OaiPmhRepository\Date::utcToDb($from);
+            $fromDate = new DateTime($from);
         }
         if (($until = $this->_getParam('until'))) {
-            $untilDate = \OaiPmhRepository\Date::utcToDb($until);
+            $untilDate = new DateTime($until);
         }
 
         $this->listResponse($this->query['verb'],
@@ -508,8 +509,8 @@ class ResponseGenerator extends XmlGeneratorAbstract
      * @param string $metadataPrefix Metadata prefix
      * @param int    $cursor         Offset in response to begin output at
      * @param mixed  $set            Optional set argument
-     * @param string $from           Optional from date argument
-     * @param string $until          Optional until date argument
+     * @param DateTime $from           Optional from date argument
+     * @param DateTime $until          Optional until date argument
      *
      * @uses createResumptionToken()
      */
@@ -612,14 +613,17 @@ class ResponseGenerator extends XmlGeneratorAbstract
      * @param string $metadataPrefix Metadata prefix
      * @param int    $cursor         Offset in response to begin output at
      * @param mixed  $set            Optional set argument
-     * @param string $from           Optional from date argument
-     * @param string $until          Optional until date argument
+     * @param DateTime $from           Optional from date argument
+     * @param DateTime $until          Optional until date argument
      *
      * @return OaiPmhRepositoryTokenRepresentation
      */
     private function createResumptionToken($verb, $metadataPrefix, $cursor, $set, $from, $until)
     {
         $api = $this->serviceLocator->get('Omeka\ApiManager');
+
+        $expiration = new DateTime();
+        $expiration->setTimestamp(time() + ($this->_tokenExpirationTime * 60));
 
         $token = $api->create('oaipmh_repository_tokens', [
             'o:verb' => $verb,
@@ -628,7 +632,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
             'o:set' => $set ?: null,
             'o:from' => $from ?: null,
             'o:until' => $until ?: null,
-            'o:expiration' => \OaiPmhRepository\Date::unixToDb(time() + ($this->_tokenExpirationTime * 60)),
+            'o:expiration' => $expiration,
         ])->getContent();
 
         return $token;

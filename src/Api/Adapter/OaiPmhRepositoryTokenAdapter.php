@@ -65,13 +65,13 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
         if ($this->shouldHydrate($request, 'o:from')) {
             $from = $request->getValue('o:from');
             if ($from) {
-                $entity->setFrom(new DateTime($from));
+                $entity->setFrom($from);
             }
         }
         if ($this->shouldHydrate($request, 'o:until')) {
             $until = $request->getValue('o:until');
             if ($until) {
-                $entity->setUntil(new DateTime($until));
+                $entity->setUntil($until);
             }
         }
         if ($this->shouldHydrate($request, 'o:set')) {
@@ -80,7 +80,7 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
         if ($this->shouldHydrate($request, 'o:expiration')) {
             $expiration = $request->getValue('o:expiration');
             if ($expiration) {
-                $entity->setExpiration(new DateTime($expiration));
+                $entity->setExpiration($expiration);
             }
         }
     }
