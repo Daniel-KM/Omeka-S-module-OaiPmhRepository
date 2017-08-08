@@ -2,7 +2,7 @@
 /**
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
- * @copyright BibLibre, 2016
+ * @copyright BibLibre, 2016-2017
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 
@@ -516,27 +516,39 @@ class ResponseGenerator extends XmlGeneratorAbstract
      */
     private function listResponse($verb, $metadataPrefix, $cursor, $set, $from, $until)
     {
+        $apiAdapterManager = $this->serviceLocator->get('Omeka\ApiAdapterManager');
         $entityManager = $this->serviceLocator->get('Omeka\EntityManager');
-        $itemRepository = $entityManager->getRepository('Omeka\Entity\Item');
-        $qb = $itemRepository->createQueryBuilder('Item');
+        $controllerPluginManager = $this->serviceLocator->get('ControllerPluginManager');
 
-        $qb->andWhere($qb->expr()->eq('Item.isPublic', true));
+        $itemRepository = $entityManager->getRepository('Omeka\Entity\Item');
+        $qb = $itemRepository->createQueryBuilder('Omeka\Entity\Item');
+
+        $query = [
+            'is_public' => true,
+        ];
+
         if ($set) {
-            $qb->innerJoin(
-                'Item.itemSets',
-                'is_', 'WITH',
-                $qb->expr()->in('is_.id', [$set])
-            );
+            $query['item_set_id'] = $set;
         }
+
+        $currentSitePlugin = $controllerPluginManager->get('currentSite');
+        $currentSite = $currentSitePlugin();
+        if ($currentSite) {
+            $query['site_id'] = $currentSite->id();
+        }
+
+        $itemAdapter = $apiAdapterManager->get('items');
+        $itemAdapter->buildQuery($qb, $query);
+
         if ($from) {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->andX(
-                    $qb->expr()->isNotNull('Item.modified'),
-                    $qb->expr()->gte('Item.modified', ':from_1')
+                    $qb->expr()->isNotNull('Omeka\Entity\Item.modified'),
+                    $qb->expr()->gte('Omeka\Entity\Item.modified', ':from_1')
                 ),
                 $qb->expr()->andX(
-                    $qb->expr()->isNull('Item.modified'),
-                    $qb->expr()->gte('Item.created', ':from_2')
+                    $qb->expr()->isNull('Omeka\Entity\Item.modified'),
+                    $qb->expr()->gte('Omeka\Entity\Item.created', ':from_2')
                 )
             ));
             $qb->setParameter('from_1', $from);
@@ -545,20 +557,20 @@ class ResponseGenerator extends XmlGeneratorAbstract
         if ($until) {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->andX(
-                    $qb->expr()->isNotNull('Item.modified'),
-                    $qb->expr()->lte('Item.modified', ':until_1')
+                    $qb->expr()->isNotNull('Omeka\Entity\Item.modified'),
+                    $qb->expr()->lte('Omeka\Entity\Item.modified', ':until_1')
                 ),
                 $qb->expr()->andX(
-                    $qb->expr()->isNull('Item.modified'),
-                    $qb->expr()->lte('Item.created', ':until_2')
+                    $qb->expr()->isNull('Omeka\Entity\Item.modified'),
+                    $qb->expr()->lte('Omeka\Entity\Item.created', ':until_2')
                 )
             ));
             $qb->setParameter('until_1', $until);
             $qb->setParameter('until_2', $until);
         }
-        $qb->groupBy('Item.id');
+        $qb->groupBy('Omeka\Entity\Item.id');
 
-        $qb->select('Item');
+        $qb->select('Omeka\Entity\Item');
 
         // This limit call will form the basis of the flow control
         $qb->setMaxResults($this->_listLimit);
@@ -575,9 +587,6 @@ class ResponseGenerator extends XmlGeneratorAbstract
             } elseif ($verb == 'ListRecords') {
                 $method = 'appendRecord';
             }
-
-            $adapters = $this->serviceLocator->get('Omeka\ApiAdapterManager');
-            $itemAdapter = $adapters->get('items');
 
             $settings = $this->serviceLocator->get('Omeka\Settings');
             $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
