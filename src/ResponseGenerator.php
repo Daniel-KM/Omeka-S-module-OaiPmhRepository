@@ -5,7 +5,6 @@
  * @copyright BibLibre, 2016-2017
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
-
 namespace OaiPmhRepository;
 
 use DateTime;

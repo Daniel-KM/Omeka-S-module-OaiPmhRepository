@@ -56,7 +56,7 @@ return [
                 'oai_dc' => 'OaiPmhRepository\Service\Metadata\OaiDcFactory',
             ],
         ],
-        /**
+        /*
          * Number of individual records that can be returned in a response at
          * once.
          * Larger values will increase memory usage but reduce the number of
@@ -64,7 +64,7 @@ return [
          * memory usage but increase the number of DB queries and requests.
          */
         'list_limit' => 50,
-        /**
+        /*
          * In minutes, the length of time a resumption token is valid for.
          * This means harvesters can re-try old partial list requests for
          * this amount of time.

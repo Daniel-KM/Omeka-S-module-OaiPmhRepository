@@ -5,10 +5,8 @@
  * @copyright BibLibre, 2016
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
-
 namespace OaiPmhRepository\Metadata;
 
-use DateTime;
 use DOMElement;
 use Omeka\Api\Representation\ItemRepresentation;
 use OaiPmhRepository\XmlGeneratorAbstract;
@@ -21,8 +19,7 @@ use OaiPmhRepository\OaiIdentifier;
  * @todo Migration to PHP 5.3 will allow the abstract getter functions to be
  *       static, as they should be
  */
-abstract class AbstractMetadata extends XmlGeneratorAbstract
-    implements MetadataInterface
+abstract class AbstractMetadata extends XmlGeneratorAbstract implements MetadataInterface
 {
     /**
      * Appends the record to the XML response.

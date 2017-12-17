@@ -4,7 +4,6 @@
  * @copyright John Flatness, Center for History and New Media, 2013-2014
  * @copyright BibLibre, 2016
  */
-
 namespace OaiPmhRepository;
 
 use Omeka\Module\AbstractModule;

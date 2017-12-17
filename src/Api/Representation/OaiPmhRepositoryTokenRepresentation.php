@@ -4,7 +4,6 @@
  * @copyright BibLibre, 2016
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
-
 namespace OaiPmhRepository\Api\Representation;
 
 use Omeka\Api\Representation\AbstractEntityRepresentation;
