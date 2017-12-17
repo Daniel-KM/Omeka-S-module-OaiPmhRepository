@@ -6,7 +6,7 @@ return Symfony\CS\Config\Config::create()
     ->setUsingCache(true)
     ->level(Symfony\CS\FixerInterface::SYMFONY_LEVEL)
     ->fixers([
-        '-concat_wtihout_spaces',
+        '-concat_without_spaces',
         '-new_with_braces',
         '-pre_increment',
         'concat_with_spaces',

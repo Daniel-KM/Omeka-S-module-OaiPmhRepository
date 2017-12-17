@@ -8,7 +8,7 @@ return [
     ],
     'entity_manager' => [
         'mapping_classes_paths' => [
-            __DIR__ . '/../src/Entity',
+            dirname(__DIR__) . '/src/Entity',
         ],
     ],
     'api_adapters' => [
@@ -42,7 +42,7 @@ return [
     ],
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            dirname(__DIR__) . '/view',
         ],
     ],
     'oaipmhrepository' => [

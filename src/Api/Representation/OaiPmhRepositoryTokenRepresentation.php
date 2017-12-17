@@ -11,9 +11,6 @@ use Omeka\Api\Representation\AbstractEntityRepresentation;
 
 class OaiPmhRepositoryTokenRepresentation extends AbstractEntityRepresentation
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getJsonLdType()
     {
         return 'o:OaiPmhRepositoryToken';

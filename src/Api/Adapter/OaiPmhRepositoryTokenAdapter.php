@@ -16,40 +16,25 @@ use Omeka\Stdlib\ErrorStore;
 
 class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
 {
-    /**
-     * {@inheritdoc}
-     */
     protected $sortFields = [
         'id' => 'id',
     ];
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResourceName()
     {
         return 'oaipmh_repository_tokens';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getRepresentationClass()
     {
         return 'OaiPmhRepository\Api\Representation\OaiPmhRepositoryTokenRepresentation';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getEntityClass()
     {
         return 'OaiPmhRepository\Entity\OaiPmhRepositoryToken';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hydrate(Request $request, EntityInterface $entity,
         ErrorStore $errorStore
     ) {
