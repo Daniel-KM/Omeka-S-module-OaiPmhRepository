@@ -103,6 +103,15 @@ class ConfigForm extends Form implements TranslatorAwareInterface
         ]);
 
         $this->add([
+            'name' => 'oaipmhrepository_human_interface',
+            'type' => Checkbox::class,
+            'options' => [
+                'label' => 'Human interface', // @translate
+                'info' => $this->translate('The OAI-PMH pages can be displayed with a themable responsive human interface based on Bootstrap (https://getbootstrap.com).'), // @translate
+            ],
+        ]);
+
+        $this->add([
             'name' => 'oaipmhrepository_redirect_route',
             'type' => Text::class,
             'options' => [

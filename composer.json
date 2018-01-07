@@ -1,4 +1,72 @@
 {
+    "name": "daniel-km/omeka-s-module-oai-pmh-repository",
+    "description": "Exposes items as an OAI-PMH repository (module for Omeka S).",
+    "type": "library",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Daniel Berthereau",
+            "email": "Daniel.packagist@Berthereau.net"
+        },
+        {
+            "name": "Julian Maurice",
+            "email": "julian.maurice@biblibre.com"
+        },
+        {
+            "name": "Walt Rice, Jr",
+            "email": "WaltRiceJr@gmail.com"
+        },
+        {
+            "name": "Garrick S. Bodine",
+            "email": "garrick.bodine@gmail.com"
+        },
+        {
+            "name": "Roberto Sanchez",
+            "email": "rsanc77@yahoo.com"
+        },
+        {
+            "name": "patrickmj",
+            "email": "patrickmjchnm@gmail.com"
+        },
+        {
+            "name": "Jim Safley",
+            "email": "jimsafley@gmail.com"
+        },
+        {
+            "name": "Dave Lester",
+            "email": "davelester@gmail.com"
+        },
+        {
+            "name": "Yu-Hsun Lin",
+            "email": "oceanl@vt.edu"
+        },
+        {
+            "name": "John Flatness",
+            "email": "john@zerocrates.org"
+        }
+    ],
+    "homepage": "https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
+    "support": {
+        "issues": "https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
+        "forum": "https://forum.omeka.org/"
+    },
+    "keywords": [
+        "Omeka S",
+        "Omeka S module",
+        "share",
+        "open data",
+        "library protocol",
+        "OAI-PMH",
+        "Dublin Core",
+        "METS",
+        "MODS",
+        "CDWA Lite"
+    ],
+    "autoload": {
+        "psr-4": {
+            "OaiPmhRepository\\": "src/"
+        }
+    },
     "require-dev": {
         "biblibre/omeka-s-test-helper": "dev-master"
     },

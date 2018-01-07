@@ -1,0 +1,106 @@
+/* Styles to adapt bootstrap. */
+body {
+  padding-top: 70px;
+}
+footer a {
+  color: #000000;
+}
+footer a:hover {
+  color: #000000;
+}
+a#logo {
+  background: transparent none no-repeat scroll 0 0 / 100% 100%;
+/*  padding: 8px 51px; */
+}
+.vertical-space {
+  height: 20px;
+}
+.xoai-contexts div:nth-child(even) {
+  background-color: #eee;
+}
+pre {
+  line-height: 0.8;
+}
+
+/* Styles specific to OAI-PMH. */
+.oaipmh h2 {
+  border-bottom-style: inset;
+}
+.oaipmh table small {
+  font-style: italic;
+  margin-left: 10px;
+}
+.oaipmh-response .panel-heading a {
+    color: #3c763d;
+}
+.oaipmh-description {
+  padding-top: 16px;
+}
+.oaipmh-formats table thead th:first-child,
+.oaipmh-formats table tbody th,
+.oaipmh-sets table thead th:first-child,
+.oaipmh-sets table tbody th,
+.oaipmh-identifiers table thead th:first-child,
+.oaipmh-identifiers table tbody th,
+.oaipmh-records table thead th:first-child,
+.oaipmh-records table tbody th {
+  text-align: right;
+}
+.oaipmh-formats table dl {
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+.oaipmh-records table {
+  width: 100%;
+}
+.oaipmh-records table table {
+  table-layout:fixed;
+}
+.oaipmh-records table tr.collapse td {
+  word-wrap: break-word;
+}
+.oaipmh-record .panel-body {
+  word-wrap: break-word;
+}
+
+/* Stylesheet from http://www2.informatik.hu-berlin.de/~obecker/XSLT/xmlverbatim/xmlverbatim.css */
+.xmlverb-default {
+  color: #333333;
+  background-color: #ffffff;
+  font-family: monospace;
+}
+.xmlverb-element-name {
+  color: #990000;
+}
+.xmlverb-element-nsprefix {
+  color: #666600;
+}
+.xmlverb-attr-name {
+  color: #660000;
+}
+.xmlverb-attr-content {
+  color: #000099;
+  font-weight: bold;
+}
+.xmlverb-ns-name {
+  color: #666600;
+}
+.xmlverb-ns-uri {
+  color: #330099;
+}
+.xmlverb-text {
+  color: #000000;
+  font-weight: bold;
+}
+.xmlverb-comment {
+  color: #006600;
+  font-style: italic;
+}
+.xmlverb-pi-name {
+  color: #006600;
+  font-style: italic;
+}
+.xmlverb-pi-content {
+  color: #006666;
+  font-style: italic;
+}

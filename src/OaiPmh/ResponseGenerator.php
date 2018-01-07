@@ -201,6 +201,13 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->document->formatOutput = true;
         $this->document->xmlStandalone = true;
 
+        if ($settings->get('oaipmhrepository_human_interface')) {
+            $assetUrl = $viewHelpers->get('assetUrl');
+            $stylesheet = $assetUrl('xsl/oai-pmh-repository.xsl', 'OaiPmhRepository', true);
+            $xslt = $this->document->createProcessingInstruction('xml-stylesheet', 'type="text/xsl" href="' . $stylesheet . '"');
+            $this->document->appendChild($xslt);
+        }
+
         $root = $this->document->createElementNS(self::OAI_PMH_NAMESPACE_URI,
             'OAI-PMH');
         $this->document->appendChild($root);

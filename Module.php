@@ -128,6 +128,8 @@ SQL;
             $settings->set('oaipmhrepository_by_site_repository', 'item_set');
             $settings->set('oaipmhrepository_oai_set_format',
                 $defaultSettings['oaipmhrepository_oai_set_format']);
+            $settings->set('oaipmhrepository_human_interface',
+                $defaultSettings['oaipmhrepository_human_interface']);
         }
     }
 
