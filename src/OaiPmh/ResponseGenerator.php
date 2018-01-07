@@ -11,7 +11,9 @@ namespace OaiPmhRepository\OaiPmh;
 use DateTime;
 use DomDocument;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use OaiPmhRepository\Api\Representation\OaiPmhRepositoryTokenRepresentation;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
+use Omeka\Api\Representation\SiteRepresentation;
 use Omeka\Stdlib\Message;
 use Zend\Http\Request;
 
@@ -82,6 +84,13 @@ class ResponseGenerator extends AbstractXmlGenerator
     protected $error;
 
     /**
+     * Add the current site in order to provide a specific response by site.
+     *
+     * @var SiteRepresentation
+     */
+    protected $site;
+
+    /**
      * Returns the granularity of the given utcDateTime string.  Returns zero
      * if the given string is not in utcDateTime format.
      *
@@ -125,6 +134,9 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->document = new DomDocument('1.0', 'UTF-8');
 
         OaiIdentifier::initializeNamespace($settings->get('oaipmhrepository_namespace_id'));
+
+        $currentSite = $serviceLocator->get('ControllerPluginManager')->get('currentSite');
+        $this->site = $currentSite();
 
         //formatOutput makes DOM output "pretty" XML.  Good for debugging, but
         //adds some overhead, especially on large outputs.
@@ -354,15 +366,23 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         if (!$itemId) {
             $this->throwError(self::OAI_ERR_ID_DOES_NOT_EXIST);
-
             return;
         }
 
         $api = $this->serviceLocator->get('Omeka\ApiManager');
 
-        $item = $api->read('items', $itemId)->getContent();
+        $data = [];
+        $data['id'] = $itemId;
+        $data['limit'] = 1;
+        if ($this->site) {
+            $data['site_id'] = $this->site->id();
+        }
+        $items = $api->search('items', $data)->getContent();
 
-        if (!$item) {
+        if ($items) {
+            $item = reset($items);
+        } else {
+            $item = null;
             $this->throwError(self::OAI_ERR_ID_DOES_NOT_EXIST);
         }
 
@@ -417,7 +437,15 @@ class ResponseGenerator extends AbstractXmlGenerator
     private function listSets()
     {
         $api = $this->serviceLocator->get('Omeka\ApiManager');
-        $collections = $api->search('item_sets')->getContent();
+        if ($this->site) {
+            $collections = [];
+            $siteItemSets = $this->site->siteItemSets();
+            foreach ($siteItemSets as $siteItemSet) {
+                $collections[] = $siteItemSet->itemSet();
+            }
+        } else {
+            $collections = $api->search('item_sets')->getContent();
+        }
 
         if (count($collections) == 0) {
             $this->throwError(self::OAI_ERR_NO_SET_HIERARCHY);
@@ -518,18 +546,16 @@ class ResponseGenerator extends AbstractXmlGenerator
         $itemRepository = $entityManager->getRepository('Omeka\Entity\Item');
         $qb = $itemRepository->createQueryBuilder('Omeka\Entity\Item');
 
-        $query = [
-            'is_public' => true,
-        ];
+        $query = [];
+
+        // Public/private is automatically managed for anonymous requests.
 
         if ($set) {
             $query['item_set_id'] = $set;
         }
 
-        $currentSitePlugin = $controllerPluginManager->get('currentSite');
-        $currentSite = $currentSitePlugin();
-        if ($currentSite) {
-            $query['site_id'] = $currentSite->id();
+        if ($this->site) {
+            $query['site_id'] = $this->site->id();
         }
 
         $itemAdapter = $apiAdapterManager->get('items');
