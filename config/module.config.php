@@ -1,9 +1,10 @@
 <?php
+namespace OaiPmhRepository;
 
 return [
-    'controllers' => [
-        'factories' => [
-            'OaiPmhRepository\Controller\Request' => 'OaiPmhRepository\Service\Controller\RequestControllerFactory',
+    'api_adapters' => [
+        'invokables' => [
+            'oaipmh_repository_tokens' => Api\Adapter\OaiPmhRepositoryTokenAdapter::class,
         ],
     ],
     'entity_manager' => [
@@ -11,14 +12,19 @@ return [
             dirname(__DIR__) . '/src/Entity',
         ],
     ],
-    'api_adapters' => [
-        'invokables' => [
-            'oaipmh_repository_tokens' => 'OaiPmhRepository\Api\Adapter\OaiPmhRepositoryTokenAdapter',
+    'view_manager' => [
+        'template_path_stack' => [
+            dirname(__DIR__) . '/view',
+        ],
+    ],
+    'controllers' => [
+        'factories' => [
+            'OaiPmhRepository\Controller\Request' => Service\Controller\RequestControllerFactory::class,
         ],
     ],
     'service_manager' => [
         'factories' => [
-            'OaiPmhRepository\MetadataFormatManager' => 'OaiPmhRepository\Service\MetadataFormatManagerFactory',
+            'OaiPmhRepository\MetadataFormatManager' => Service\MetadataFormatManagerFactory::class,
         ],
     ],
     'router' => [
@@ -40,20 +46,15 @@ return [
             ],
         ],
     ],
-    'view_manager' => [
-        'template_path_stack' => [
-            dirname(__DIR__) . '/view',
-        ],
-    ],
     'oaipmhrepository' => [
         'metadata_formats' => [
             'invokables' => [
-                'mets' => 'OaiPmhRepository\Metadata\Mets',
-                'mods' => 'OaiPmhRepository\Metadata\Mods',
+                'mets' => Metadata\Mets::class,
+                'mods' => Metadata\Mods::class,
             ],
             'factories' => [
-                'cdwalite' => 'OaiPmhRepository\Service\Metadata\CdwaLiteFactory',
-                'oai_dc' => 'OaiPmhRepository\Service\Metadata\OaiDcFactory',
+                'cdwalite' => Service\Metadata\CdwaLiteFactory::class,
+                'oai_dc' => Service\Metadata\OaiDcFactory::class,
             ],
         ],
         /*
