@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xsl:stylesheet>
 <!--
 Stylesheet to display responses to OAI-PMH requests with a Bootstrap theme.
 
