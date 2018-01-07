@@ -125,6 +125,8 @@ SQL;
             $settings->set('oaipmhrepository_global_repository',
                 $defaultSettings['oaipmhrepository_global_repository']);
             $settings->set('oaipmhrepository_by_site_repository', 'all');
+            $settings->set('oaipmhrepository_oai_set_format',
+                $defaultSettings['oaipmhrepository_oai_set_format']);
         }
     }
 

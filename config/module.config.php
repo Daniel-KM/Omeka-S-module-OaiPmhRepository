@@ -33,6 +33,7 @@ return [
     'service_manager' => [
         'factories' => [
             OaiPmh\MetadataFormatManager::class => Service\OaiPmh\MetadataFormatManagerFactory::class,
+            OaiPmh\OaiSetManager::class => Service\OaiPmh\OaiSetManagerFactory::class,
         ],
     ],
     'router' => [
@@ -88,12 +89,18 @@ return [
                 'oai_dc' => Service\OaiPmh\Metadata\OaiDcFactory::class,
             ],
         ],
+        'oai_set_formats' => [
+            'factories' => [
+                'base' => Service\OaiPmh\OaiSet\BaseFactory::class,
+            ],
+        ],
         'settings' => [
             'oaipmhrepository_name' => '',
             'oaipmhrepository_namespace_id' => '',
             'oaipmhrepository_expose_media' => true,
             'oaipmhrepository_global_repository' => 'item_set',
             'oaipmhrepository_by_site_repository' => 'none',
+            'oaipmhrepository_oai_set_format' => 'base',
             'oaipmhrepository_list_limit' => 50,
             'oaipmhrepository_token_expiration_time' => 10,
         ],
