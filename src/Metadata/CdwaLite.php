@@ -205,7 +205,7 @@ class CdwaLite extends AbstractMetadata
         /* file link => resourceWrap->resourceSet->linkResource
          * Not required.
          */
-        if ($this->settings->get('oaipmh_repository_expose_files', false)) {
+        if ($this->settings->get('oaipmhrepository_expose_media', false)) {
             $mediaList = $item->media();
             if (!empty($mediaList)) {
                 $resourceWrap = $this->appendNewElement($administrative, 'cdwalite:resourceWrap');

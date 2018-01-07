@@ -40,7 +40,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         ]);
         $this->item = $response->getContent();
 
-        $this->settings()->set('oaipmh_repository_namespace_id', 'test');
+        $this->settings()->set('oaipmhrepository_namespace_id', 'test');
 
         $this->resetApplication();
     }

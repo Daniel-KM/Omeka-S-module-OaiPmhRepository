@@ -20,6 +20,11 @@ return [
             dirname(__DIR__) . '/view',
         ],
     ],
+    'form_elements' => [
+        'invokables' => [
+            Form\ConfigForm::class => Form\ConfigForm::class,
+        ],
+    ],
     'controllers' => [
         'factories' => [
             'OaiPmhRepository\Controller\Request' => Service\Controller\RequestControllerFactory::class,
@@ -60,20 +65,12 @@ return [
                 'oai_dc' => Service\Metadata\OaiDcFactory::class,
             ],
         ],
-        /*
-         * Number of individual records that can be returned in a response at
-         * once.
-         * Larger values will increase memory usage but reduce the number of
-         * database queries and HTTP requests.  Smaller values will reduce
-         * memory usage but increase the number of DB queries and requests.
-         */
-        'list_limit' => 50,
-        /*
-         * In minutes, the length of time a resumption token is valid for.
-         * This means harvesters can re-try old partial list requests for
-         * this amount of time.
-         * Larger values will make the tokens table grow somewhat larger.
-         */
-        'token_expiration_time' => 10,
+        'settings' => [
+            'oaipmhrepository_name' => '',
+            'oaipmhrepository_namespace_id' => '',
+            'oaipmhrepository_expose_media' => true,
+            'oaipmhrepository_list_limit' => 50,
+            'oaipmhrepository_token_expiration_time' => 10,
+        ],
     ],
 ];

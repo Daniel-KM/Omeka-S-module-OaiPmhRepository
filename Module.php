@@ -8,12 +8,14 @@
 
 namespace OaiPmhRepository;
 
+use OaiPmhRepository\Form\ConfigForm;
 use Omeka\Module\AbstractModule;
+use Zend\EventManager\Event;
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\Mvc\MvcEvent;
-use Zend\View\Renderer\PhpRenderer;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\View\Renderer\PhpRenderer;
 
 /**
  * OaiPmhRepository plugin class.
@@ -25,13 +27,14 @@ class Module extends AbstractModule
         return include __DIR__ . '/config/module.config.php';
     }
 
+    public function onBootstrap(MvcEvent $event)
+    {
+        parent::onBootstrap($event);
+        $this->addAclRules();
+    }
+
     public function install(ServiceLocatorInterface $serviceLocator)
     {
-        $settings = $serviceLocator->get('Omeka\Settings');
-        $settings->set('oaipmh_repository_name', $settings->get('installation_title'));
-        $settings->set('oaipmh_repository_namespace_id', $this->getServerName($serviceLocator));
-        $settings->set('oaipmh_repository_namespace_expose_files', 1);
-
         $connection = $serviceLocator->get('Omeka\Connection');
 
         /* Table: Stores currently active resumptionTokens
@@ -60,20 +63,24 @@ CREATE TABLE oai_pmh_repository_token (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 SQL;
         $connection->exec($sql);
+
+        $settings = $serviceLocator->get('Omeka\Settings');
+        $this->manageSettings($settings, 'install');
+        $settings->set('oaipmhrepository_name', $settings->get('installation_title'));
+        $settings->set('oaipmhrepository_namespace_id', $this->getServerName($serviceLocator));
     }
 
     public function uninstall(ServiceLocatorInterface $serviceLocator)
     {
-        $settings = $serviceLocator->get('Omeka\Settings');
-        $settings->delete('oaipmh_repository_name');
-        $settings->delete('oaipmh_repository_namespace_id');
-        $settings->delete('oaipmh_repository_record_limit');
-        $settings->delete('oaipmh_repository_expiration_time');
-        $settings->delete('oaipmh_repository_expose_files');
+        $sql = <<<'SQL'
+SET foreign_key_checks = 0;
+DROP TABLE IF EXISTS oai_pmh_repository_token;
+SET foreign_key_checks = 1;
+SQL;
+        $conn = $serviceLocator->get('Omeka\Connection');
+        $conn->exec($sql);
 
-        $connection = $serviceLocator->get('Omeka\Connection');
-        $sql = 'DROP TABLE IF EXISTS `oai_pmh_repository_token`;';
-        $connection->exec($sql);
+        $this->manageSettings($serviceLocator->get('Omeka\Settings'), 'uninstall');
     }
 
     public function upgrade($oldVersion, $newVersion, ServiceLocatorInterface $serviceLocator)
@@ -86,32 +93,57 @@ DROP INDEX expiration ON oai_pmh_repository_token;
 CREATE INDEX IDX_E9AC4F9524CD504D ON oai_pmh_repository_token (expiration);
 SQL;
             $connection->exec($sql);
+
+            $config = require __DIR__ . '/config/module.config.php';
+            $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
+            $settings = $serviceLocator->get('Omeka\Settings');
+
+            $settings->set('oaipmhrepository_name', $settings->get('oaipmh_repository_name',
+                $settings->get('installation_title')));
+            $settings->set('oaipmhrepository_namespace_id', $settings->get('oaipmhrepository_namespace_id',
+                $this->getServerName($serviceLocator)));
+            $settings->set('oaipmhrepository_expose_media', $settings->get('oaipmh_repository_namespace_expose_files',
+                $defaultSettings['oaipmhrepository_expose_media']));
+            $settings->set('oaipmhrepository_list_limit',
+                $defaultSettings['oaipmhrepository_list_limit']);
+            $settings->set('oaipmhrepository_token_expiration_time',
+                $defaultSettings['oaipmhrepository_token_expiration_time']);
+
+            $settings->delete('oaipmh_repository_name');
+            $settings->delete('oaipmh_repository_namespace_id');
+            $settings->delete('oaipmh_repository_namespace_expose_files');
+            $settings->delete('oaipmh_repository_record_limit');
+            $settings->delete('oaipmh_repository_list_limit');
+            $settings->delete('oaipmh_repository_expiration_time');
+            $settings->delete('oaipmh_repository_token_expiration_time');
         }
     }
 
-    public function onBootstrap(MvcEvent $event)
+    protected function manageSettings($settings, $process, $key = 'settings')
     {
-        parent::onBootstrap($event);
+        $config = require __DIR__ . '/config/module.config.php';
+        $defaultSettings = $config[strtolower(__NAMESPACE__)][$key];
+        foreach ($defaultSettings as $name => $value) {
+            switch ($process) {
+                case 'install':
+                    $settings->set($name, $value);
+                    break;
+                case 'uninstall':
+                    $settings->delete($name);
+                    break;
+            }
+        }
+    }
 
+    /**
+     * Add ACL rules for this module.
+     */
+    protected function addAclRules()
+    {
         $acl = $this->getServiceLocator()->get('Omeka\Acl');
+        $acl->allow(null, Entity\OaiPmhRepositoryToken::class);
+        $acl->allow(null, Api\Adapter\OaiPmhRepositoryTokenAdapter::class);
         $acl->allow(null, 'OaiPmhRepository\Controller\Request');
-        $acl->allow(null, 'OaiPmhRepository\Api\Adapter\OaiPmhRepositoryTokenAdapter');
-        $acl->allow(null, 'OaiPmhRepository\Entity\OaiPmhRepositoryToken');
-    }
-
-    public function handleConfigForm(AbstractController $controller)
-    {
-        $settings = $this->getServiceLocator()->get('Omeka\Settings');
-        $post = $controller->getRequest()->getPost();
-
-        $settings->set('oaipmh_repository_name', $post['oaipmh_repository_name']);
-        $settings->set('oaipmh_repository_namespace_id', $post['oaipmh_repository_namespace_id']);
-        $settings->set('oaipmh_repository_expose_files', $post['oaipmh_repository_expose_files']);
-    }
-
-    public function getConfigForm(PhpRenderer $renderer)
-    {
-        return $renderer->render('oai-pmh-repository/config-form');
     }
 
     public function attachListeners(SharedEventManagerInterface $sharedEventManager)
@@ -123,23 +155,63 @@ SQL;
         );
     }
 
-    public function filterAdminDashboardPanels()
+    public function getConfigForm(PhpRenderer $renderer)
+    {
+        $services = $this->getServiceLocator();
+        $config = $services->get('Config');
+        $settings = $services->get('Omeka\Settings');
+        $formElementManager = $services->get('FormElementManager');
+
+        $data = [];
+        $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
+        foreach ($defaultSettings as $name => $value) {
+            $data[$name] = $settings->get($name);
+        }
+
+        $form = $formElementManager->get(ConfigForm::class);
+        $form->init();
+        $form->setData($data);
+        $html = $renderer->formCollection($form);
+        return $html;
+    }
+
+    public function handleConfigForm(AbstractController $controller)
+    {
+        $services = $this->getServiceLocator();
+        $config = $services->get('Config');
+        $settings = $services->get('Omeka\Settings');
+
+        $params = $controller->getRequest()->getPost();
+
+        $form = $this->getServiceLocator()->get('FormElementManager')
+            ->get(ConfigForm::class);
+        $form->init();
+        $form->setData($params);
+        if (!$form->isValid()) {
+            $controller->messenger()->addErrors($form->getMessages());
+            return false;
+        }
+
+        $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
+        foreach ($params as $name => $value) {
+            if (isset($defaultSettings[$name])) {
+                $settings->set($name, $value);
+            }
+        }
+    }
+
+    public function filterAdminDashboardPanels(Event $event)
     {
         $api = $this->getServiceLocator()->get('Omeka\ApiManager');
         $sites = $api->search('sites')->getContent();
 
-        if (!empty($sites)) {
-            echo '<div class="panel">';
-            echo '<h2>OAI-PMH Repository</h2>';
-            echo '<p>Harvester can access metadata from these URLs: ';
-            echo '<ul>';
-            foreach ($sites as $site) {
-                $oaiUrl = $site->siteUrl() . '/oai';
-                echo '<li><a href="' . $oaiUrl . '">' . $oaiUrl . '</a></li>';
-            }
-            echo '</ul></p>';
-            echo '</div>';
+        if (empty($sites)) {
+            return;
         }
+        $view = $event->getTarget();
+        echo $view->partial('common/admin/oai-pmh-repository-dashboard', [
+            'sites' => $sites,
+        ]);
     }
 
     protected function getServerName($serviceLocator)

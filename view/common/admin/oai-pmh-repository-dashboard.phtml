@@ -1,0 +1,11 @@
+<div id="oai-pmh-repository" class="panel">
+    <h2><?php echo $this->escapeHtml($this->translate('OAI-PMH Repository')); ?></h2>
+    <p><?php echo $this->escapeHtml($this->translate('Harvester can access metadata from these URLs:')); ?>
+        <ul>
+            <?php foreach ($sites as $site): ?>
+            <?php $oaiUrl = $site->siteUrl() . '/oai'; ?>
+            <li><?php echo $this->hyperlink($oaiUrl, $oaiUrl); ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </p>
+</div>

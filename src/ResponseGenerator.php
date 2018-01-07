@@ -113,14 +113,15 @@ class ResponseGenerator extends XmlGeneratorAbstract
 
         $settings = $serviceLocator->get('Omeka\Settings');
 
-        $this->_loadConfig();
+        $this->_listLimit = $settings->get('oaipmhrepository_list_limit');
+        $this->_tokenExpirationTime = $settings->get('oaipmhrepository_token_expiration_time');
 
         $this->error = false;
         $this->request = $request;
         $this->query = $request->getQuery()->toArray();
         $this->document = new DomDocument('1.0', 'UTF-8');
 
-        OaiIdentifier::initializeNamespace($settings->get('oaipmh_repository_namespace_id'));
+        OaiIdentifier::initializeNamespace($settings->get('oaipmhrepository_namespace_id'));
 
         //formatOutput makes DOM output "pretty" XML.  Good for debugging, but
         //adds some overhead, especially on large outputs.
@@ -139,14 +140,6 @@ class ResponseGenerator extends XmlGeneratorAbstract
         $root->appendChild($responseDate);
 
         $this->dispatchRequest();
-    }
-
-    private function _loadConfig()
-    {
-        $config = $this->serviceLocator->get('Config');
-
-        $this->_listLimit = $config['oaipmhrepository']['list_limit'];
-        $this->_tokenExpirationTime = $config['oaipmhrepository']['token_expiration_time'];
     }
 
     /**
@@ -293,7 +286,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
         /* according to the schema, this order of elements is required for the
            response to validate */
         $elements = [
-            'repositoryName' => $settings->get('oaipmh_repository_name'),
+            'repositoryName' => $settings->get('oaipmhrepository_name'),
             'baseURL' => $serverUrlHelper(),
             'protocolVersion' => self::OAI_PMH_PROTOCOL_VERSION,
             'adminEmail' => $settings->get('administrator_email'),
