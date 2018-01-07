@@ -1,0 +1,134 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-18 00:00+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:2
+msgid "OAI-PMH Repository"
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:3
+msgid "Harvester can access metadata from these URLs:"
+msgstr ""
+
+#: src/Form/ConfigForm.php:19
+msgid "Repository name"
+msgstr ""
+
+#: src/Form/ConfigForm.php:20
+msgid "Name for this OAI-PMH repository."
+msgstr ""
+
+#: src/Form/ConfigForm.php:31
+msgid "Namespace identifier"
+msgstr ""
+
+#: src/Form/ConfigForm.php:32
+msgid ""
+"This will be used to form globally unique IDs for the exposed metadata items."
+msgstr ""
+
+#: src/Form/ConfigForm.php:33
+msgid "This value is required to be a domain name you have registered."
+msgstr ""
+
+#: src/Form/ConfigForm.php:34
+msgid "Using other values will generate invalid identifiers."
+msgstr ""
+
+#: src/Form/ConfigForm.php:45
+msgid "Expose media"
+msgstr ""
+
+#: src/Form/ConfigForm.php:46
+msgid ""
+"Whether the plugin should include identifiers for the files associated with "
+"items."
+msgstr ""
+
+#: src/Form/ConfigForm.php:47
+msgid "This provides harvesters with direct access to files."
+msgstr ""
+
+#: src/Form/ConfigForm.php:55
+msgid "List limit"
+msgstr ""
+
+#: src/Form/ConfigForm.php:56
+msgid ""
+"Number of individual records that can be returned in a response at once."
+msgstr ""
+
+#: src/Form/ConfigForm.php:57
+msgid ""
+"Larger values will increase memory usage but reduce the number of database "
+"queries and HTTP requests."
+msgstr ""
+
+#: src/Form/ConfigForm.php:58
+msgid ""
+"Smaller values will reduce memory usage but increase the number of DB "
+"queries and requests."
+msgstr ""
+
+#: src/Form/ConfigForm.php:69
+msgid "Token expiration time"
+msgstr ""
+
+#: src/Form/ConfigForm.php:70
+msgid "In minutes, the length of time a resumption token is valid for."
+msgstr ""
+
+#: src/Form/ConfigForm.php:71
+msgid ""
+"This means harvesters can re-try old partial list requests for this amount "
+"of time."
+msgstr ""
+
+#: src/Form/ConfigForm.php:72
+msgid "Larger values will make the tokens table grow somewhat larger."
+msgstr ""
+
+#: src/ResponseGenerator.php:164
+msgid "No verb specified."
+msgstr ""
+
+#: src/ResponseGenerator.php:236
+msgid "Duplicate arguments in request."
+msgstr ""
+
+#: src/ResponseGenerator.php:242
+#, php-format
+msgid "Missing required argument %s."
+msgstr ""
+
+#: src/ResponseGenerator.php:245
+#, php-format
+msgid "Unknown argument %s."
+msgstr ""
+
+#: src/ResponseGenerator.php:255 src/ResponseGenerator.php:258
+msgid "Invalid date/time argument."
+msgstr ""
+
+#: src/ResponseGenerator.php:261
+msgid "Date/time arguments of differing granularity."
+msgstr ""
+
+#: src/ResponseGenerator.php:576
+msgid "No records match the given criteria."
+msgstr ""
