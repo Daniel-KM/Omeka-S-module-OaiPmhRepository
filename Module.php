@@ -124,7 +124,7 @@ SQL;
 
             $settings->set('oaipmhrepository_global_repository',
                 $defaultSettings['oaipmhrepository_global_repository']);
-            $settings->set('oaipmhrepository_by_site_repository', 'all');
+            $settings->set('oaipmhrepository_by_site_repository', 'item_set');
             $settings->set('oaipmhrepository_oai_set_format',
                 $defaultSettings['oaipmhrepository_oai_set_format']);
         }
@@ -206,6 +206,9 @@ SQL;
         $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
         foreach ($params as $name => $value) {
             if (isset($defaultSettings[$name])) {
+                if ($name === 'oaipmhrepository_namespace_id' && $value === 'localhost') {
+                    $value = 'default.must.change';
+                }
                 $settings->set($name, $value);
             }
         }

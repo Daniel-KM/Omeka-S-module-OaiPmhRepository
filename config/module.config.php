@@ -97,7 +97,7 @@ return [
             'oaipmhrepository_namespace_id' => '',
             'oaipmhrepository_expose_media' => true,
             'oaipmhrepository_global_repository' => 'item_set',
-            'oaipmhrepository_by_site_repository' => 'none',
+            'oaipmhrepository_by_site_repository' => 'disabled',
             'oaipmhrepository_oai_set_format' => 'base',
             'oaipmhrepository_list_limit' => 50,
             'oaipmhrepository_token_expiration_time' => 10,

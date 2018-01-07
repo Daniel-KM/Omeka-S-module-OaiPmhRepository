@@ -47,7 +47,8 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->site = $response->getContent();
 
         $this->settings()->set('oaipmhrepository_namespace_id', 'test');
-        $this->settings()->set('oaipmhrepository_by_site_repository', 'all');
+        $this->settings()->set('oaipmhrepository_global_repository', 'none');
+        $this->settings()->set('oaipmhrepository_by_site_repository', 'item_set');
 
         $this->resetApplication();
     }

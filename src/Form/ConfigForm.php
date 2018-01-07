@@ -56,9 +56,10 @@ class ConfigForm extends Form
                 'info' => new Message('The global repository contains all the resources of Omeka S, in one place.') // @translate
                     . ' ' . new Message('Note that the oai set identifiers are different (item set id or site id).'), // @translate
                 'value_options' => [
-                    'none' => 'No global repository', // @translate
+                    'disabled' => 'Disabled', // @translate
+                    'none' => 'Without oai sets', // @translate
                     'item_set' => 'With item sets as oai sets', // @translate
-                    'site_pool' => 'With site pools as oai sets', // @translate
+                    'site_pool' => 'With sites as oai sets', // @translate
                 ],
             ],
         ]);
@@ -70,8 +71,9 @@ class ConfigForm extends Form
                 'label' => 'Site repositories', // @translate
                 'info' => 'The site repositories simulate multiple oai servers, with the site pools of items and the attached item sets as oai sets.', // @translate
                 'value_options' => [
-                    'none' => 'No site repositories', // @translate
-                    'all' => 'Enable for all', // @translate
+                    'disabled' => 'Disabled', // @translate
+                    'none' => 'Without oai sets', // @translate
+                    'item_set' => 'With item sets as oai sets', // @translate
                 ],
             ],
         ]);

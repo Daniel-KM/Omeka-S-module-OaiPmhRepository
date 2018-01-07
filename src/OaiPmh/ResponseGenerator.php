@@ -87,7 +87,6 @@ class ResponseGenerator extends AbstractXmlGenerator
     private $_tokenExpirationTime;
 
     /**
-     *
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
@@ -170,9 +169,15 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->site = $currentSite();
 
         if ($this->site) {
-            $this->setSpecType = 'item_sets';
+            $this->setSpecType = $settings->get('oaipmhrepository_by_site_repository', 'none');
+            if (!in_array($this->setSpecType, ['item_set', 'none'])) {
+                $this->setSpecType = 'none';
+            }
         } else {
             $this->setSpecType = $settings->get('oaipmhrepository_global_repository', 'none');
+            if (!in_array($this->setSpecType, ['item_set', 'site_pool', 'none'])) {
+                $this->setSpecType = 'none';
+            }
         }
 
         $oaiSetManager = $serviceLocator->get('OaiPmhRepository\OaiPmh\OaiSetManager');
@@ -586,23 +591,19 @@ class ResponseGenerator extends AbstractXmlGenerator
             if (empty($resourceSet)) {
                 $this->throwError(self::OAI_ERR_NO_RECORDS_MATCH,
                     new Message('The set "%s" doesn’t exist.', $set)); // @translate
-                    return;
+                return;
             }
-            if ($this->site) {
-                $query['item_set_id'] = $resourceSet->id();
-            } else {
-                switch ($this->setSpecType) {
-                    case 'site_pool':
-                        $query['site_id'] = $resourceSet->id();
-                        break;
-                    case 'item_set':
-                        $query['item_set_id'] = $resourceSet->id();
-                        break;
-                    case 'none':
-                    default:
-                        $this->throwError(self::OAI_ERR_NO_SET_HIERARCHY);
-                        return;
-                }
+            switch ($this->setSpecType) {
+                case 'site_pool':
+                    $query['site_id'] = $resourceSet->id();
+                    break;
+                case 'item_set':
+                    $query['item_set_id'] = $resourceSet->id();
+                    break;
+                case 'none':
+                default:
+                    $this->throwError(self::OAI_ERR_NO_SET_HIERARCHY);
+                    return;
             }
         }
 

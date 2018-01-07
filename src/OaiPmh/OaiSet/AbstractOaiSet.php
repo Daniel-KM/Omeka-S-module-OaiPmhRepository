@@ -6,7 +6,6 @@
  */
 namespace OaiPmhRepository\OaiPmh\OaiSet;
 
-use DOMElement;
 use OaiPmhRepository\OaiPmh\AbstractXmlGenerator;
 use Omeka\Api\Manager as ApiManager;
 use Omeka\Api\Representation\AbstractEntityRepresentation;
@@ -66,9 +65,13 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
     {
         $oaiSets = [];
         if ($this->site) {
-            $siteItemSets = $this->site->siteItemSets();
-            foreach ($siteItemSets as $siteItemSet) {
-                $oaiSets[] = $siteItemSet->itemSet();
+            switch ($this->setSpecType) {
+                case 'item_set':
+                    $siteItemSets = $this->site->siteItemSets();
+                    foreach ($siteItemSets as $siteItemSet) {
+                        $oaiSets[] = $siteItemSet->itemSet();
+                    }
+                    break;
             }
         } else {
             switch ($this->setSpecType) {
@@ -112,7 +115,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                         $itemSets[$itemSet->id()] = $itemSet;
                     }
                     $siteItemSets = [];
-                    foreach ($site->siteItemSets() as $siteItemSet) {
+                    foreach ($this->site->siteItemSets() as $siteItemSet) {
                         $itemSet = $siteItemSet->itemSet();
                         $siteItemSets[$itemSet->id()] = $itemSet;
                     }
@@ -130,11 +133,6 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                 foreach ($sites as $site) {
                     $setSpecs[] = $this->getSetSpecSite($site);
                 }
-                break;
-
-            case 'none':
-            default:
-                // Nothing to do.
                 break;
         }
         return $setSpecs;

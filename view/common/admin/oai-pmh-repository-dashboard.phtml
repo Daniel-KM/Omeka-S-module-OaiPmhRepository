@@ -8,11 +8,14 @@ $options = ['query' => ['verb' => 'Identify']];
     <h4><?php echo $escape($translate('Global repository')); ?></h4>
     <p><?php
     switch ($globalRepository):
+    case 'none':
+        echo $this->hyperlink($translate('Without oai sets'), $this->url('oai-pmh', [], $options));
+        break;
     case 'item_set':
         echo $this->hyperlink($translate('With item sets as oai sets'), $this->url('oai-pmh', [], $options));
         break;
     case 'site_pool':
-        echo $this->hyperlink($translate('With site pools as oai sets'), $this->url('oai-pmh', [], $options));
+        echo $this->hyperlink($translate('With sites as oai sets'), $this->url('oai-pmh', [], $options));
         break;
     default:
         echo $escape($translate('Disabled.'));
@@ -23,7 +26,10 @@ $options = ['query' => ['verb' => 'Identify']];
     <h4><?php echo $escape($translate('Site repositories')); ?></h4>
     <p><?php
     switch ($bySiteRepository):
-    case 'all':
+    case 'none':
+        echo $escape($translate('Without oai sets.')) . ' ';
+        // No break.
+    case 'item_set':
         if (empty($sites)):
             echo $escape($translate('No site.'));
         else:

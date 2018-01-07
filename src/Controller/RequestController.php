@@ -34,7 +34,7 @@ class RequestController extends AbstractActionController
         $oaiRepositoryOption = $oaiRepository === 'global'
             ? $this->settings()->get('oaipmhrepository_global_repository')
             : $this->settings()->get('oaipmhrepository_by_site_repository');
-        if (empty($oaiRepositoryOption) || $oaiRepositoryOption === 'none') {
+        if (empty($oaiRepositoryOption) || $oaiRepositoryOption === 'disabled') {
             return  $this->notFoundAction();
         }
 
