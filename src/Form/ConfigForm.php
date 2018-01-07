@@ -1,16 +1,19 @@
 <?php
 namespace OaiPmhRepository\Form;
 
-use Omeka\Stdlib\Message;
 use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Radio;
 use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
+use Zend\I18n\Translator\TranslatorAwareInterface;
+use Zend\I18n\Translator\TranslatorAwareTrait;
 
-class ConfigForm extends Form
+class ConfigForm extends Form implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
+
     /**
      * @var array
      */
@@ -35,9 +38,9 @@ class ConfigForm extends Form
             'type' => Text::class,
             'options' => [
                 'label' => 'Namespace identifier', // @translate
-                'info' => new Message('This will be used to form globally unique IDs for the exposed metadata items.') // @translate
-                    . ' ' . new Message('This value is required to be a domain name you have registered.') // @translate
-                    . ' ' . new Message('Using other values will generate invalid identifiers.'), // @translate
+                'info' => $this->translate('This will be used to form globally unique IDs for the exposed metadata items.') // @translate
+                    . ' ' . $this->translate('This value is required to be a domain name you have registered.') // @translate
+                    . ' ' . $this->translate('Using other values will generate invalid identifiers.'), // @translate
             ],
             'attributes' => [
                 'required' => true,
@@ -49,8 +52,8 @@ class ConfigForm extends Form
             'type' => Checkbox::class,
             'options' => [
                 'label' => 'Expose media', // @translate
-                'info' => new Message('Whether the plugin should include identifiers for the files associated with items.') // @translate
-                    . ' ' . new Message('This provides harvesters with direct access to files.'), // @translate
+                'info' => $this->translate('Whether the plugin should include identifiers for the files associated with items.') // @translate
+                    . ' ' . $this->translate('This provides harvesters with direct access to files.'), // @translate
             ],
         ]);
 
@@ -59,8 +62,8 @@ class ConfigForm extends Form
             'type' => Radio::class,
             'options' => [
                 'label' => 'Global repository', // @translate
-                'info' => new Message('The global repository contains all the resources of Omeka S, in one place.') // @translate
-                    . ' ' . new Message('Note that the oai set identifiers are different (item set id or site id).'), // @translate
+                'info' => $this->translate('The global repository contains all the resources of Omeka S, in one place.') // @translate
+                    . ' ' . $this->translate('Note that the oai set identifiers are different (item set id or site id).'), // @translate
                 'value_options' => [
                     'disabled' => 'Disabled', // @translate
                     'none' => 'Without oai sets', // @translate
@@ -113,9 +116,9 @@ class ConfigForm extends Form
             'type' => Number::class,
             'options' => [
                 'label' => 'List limit', // @translate
-                'info' => new Message('Number of individual records that can be returned in a response at once.') // @translate
-                    . ' ' . new Message('Larger values will increase memory usage but reduce the number of database queries and HTTP requests.') // @translate
-                    . ' ' . new Message('Smaller values will reduce memory usage but increase the number of DB queries and requests.'), // @translate
+                'info' => $this->translate('Number of individual records that can be returned in a response at once.') // @translate
+                    . ' ' . $this->translate('Larger values will increase memory usage but reduce the number of database queries and HTTP requests.') // @translate
+                    . ' ' . $this->translate('Smaller values will reduce memory usage but increase the number of DB queries and requests.'), // @translate
             ],
             'attributes' => [
                 'min' => '1',
@@ -127,14 +130,20 @@ class ConfigForm extends Form
             'type' => Number::class,
             'options' => [
                 'label' => 'Token expiration time', // @translate
-                'info' => new Message('In minutes, the length of time a resumption token is valid for.') // @translate
-                    . ' ' . new Message('This means harvesters can re-try old partial list requests for this amount of time.') // @translate
-                    . ' ' . new Message('Larger values will make the tokens table grow somewhat larger.'), // @translate
+                'info' => $this->translate('In minutes, the length of time a resumption token is valid for.') // @translate
+                    . ' ' . $this->translate('This means harvesters can re-try old partial list requests for this amount of time.') // @translate
+                    . ' ' . $this->translate('Larger values will make the tokens table grow somewhat larger.'), // @translate
             ],
             'attributes' => [
                 'min' => '1',
             ],
         ]);
+    }
+
+    protected function translate($args)
+    {
+        $translator = $this->getTranslator();
+        return $translator->translate($args);
     }
 
     /**
