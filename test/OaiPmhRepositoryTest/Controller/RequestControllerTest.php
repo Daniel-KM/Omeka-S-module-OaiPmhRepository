@@ -51,6 +51,8 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->settings()->set('oaipmhrepository_by_site_repository', 'item_set');
 
         $this->resetApplication();
+
+        $_SERVER['REQUEST_URI'] = '/';
     }
 
     public function tearDown()

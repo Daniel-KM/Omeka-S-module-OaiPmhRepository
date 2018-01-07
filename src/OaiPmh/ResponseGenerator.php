@@ -87,6 +87,13 @@ class ResponseGenerator extends AbstractXmlGenerator
     private $_tokenExpirationTime;
 
     /**
+     * The base url of the server, used for the OAI-PMH request.
+     *
+     * @var string
+     */
+    protected $baseUrl;
+
+    /**
      * @var ServiceLocatorInterface
      */
     protected $serviceLocator;
@@ -158,6 +165,10 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->_listLimit = $settings->get('oaipmhrepository_list_limit');
         $this->_tokenExpirationTime = $settings->get('oaipmhrepository_token_expiration_time');
 
+        $viewHelpers = $serviceLocator->get('ViewHelperManager');
+        $serverUrlHelper = $viewHelpers->get('serverUrl');
+        $this->baseUrl = strtok($serverUrlHelper(true), '?');
+
         $this->error = false;
         $this->request = $request;
         $this->query = $request->getQuery()->toArray();
@@ -213,10 +224,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      */
     private function dispatchRequest()
     {
-        $viewHelpers = $this->serviceLocator->get('ViewHelperManager');
-        $serverUrlHelper = $viewHelpers->get('serverUrl');
-
-        $request = $this->document->createElement('request', $serverUrlHelper());
+        $request = $this->document->createElement('request', $this->baseUrl);
         $this->document->documentElement->appendChild($request);
 
         $requiredArgs = [];
@@ -342,14 +350,12 @@ class ResponseGenerator extends AbstractXmlGenerator
         }
 
         $settings = $this->serviceLocator->get('Omeka\Settings');
-        $viewHelpers = $this->serviceLocator->get('ViewHelperManager');
-        $serverUrlHelper = $viewHelpers->get('serverUrl');
 
         /* according to the schema, this order of elements is required for the
            response to validate */
         $elements = [
             'repositoryName' => $settings->get('oaipmhrepository_name'),
-            'baseURL' => $serverUrlHelper(),
+            'baseURL' => $this->baseUrl,
             'protocolVersion' => self::OAI_PMH_PROTOCOL_VERSION,
             'adminEmail' => $settings->get('administrator_email'),
             'earliestDatestamp' => \OaiPmhRepository\OaiPmh\Plugin\Date::unixToUtc(0),
