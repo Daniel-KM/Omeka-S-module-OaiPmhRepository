@@ -1,22 +1,23 @@
 <?php
 
-namespace OaiPmhRepository\Service\Metadata;
+namespace OaiPmhRepository\Service\OaiPmh\Metadata;
 
 use Interop\Container\ContainerInterface;
+use OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata;
+use OaiPmhRepository\OaiPmh\Metadata\OaiDc;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use OaiPmhRepository\Metadata\CdwaLite;
 
-class CdwaLiteFactory implements FactoryInterface
+class OaiDcFactory implements FactoryInterface
 {
     /**
      * Create the media ingester manager service.
      *
-     * @return Manager
+     * @return AbstractMetadata
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $settings = $container->get('Omeka\Settings');
 
-        return new CdwaLite($settings);
+        return new OaiDc($settings);
     }
 }

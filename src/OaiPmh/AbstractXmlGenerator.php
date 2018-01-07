@@ -3,16 +3,17 @@
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
  * @copyright BibLibre, 2016
+ * @copyright Daniel Berthereau, 2014-2017
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
-namespace OaiPmhRepository;
+namespace OaiPmhRepository\OaiPmh;
 
 use DOMElement;
 
 /**
  * Parent class for all XML-generating classes.
  */
-class XmlGeneratorAbstract
+class AbstractXmlGenerator
 {
     const XML_SCHEMA_NAMESPACE_URI = 'http://www.w3.org/2001/XMLSchema-instance';
 
@@ -26,7 +27,6 @@ class XmlGeneratorAbstract
      * @param DomElement $parent   Existing parent of all the new nodes
      * @param string     $name     Name of the new parent element
      * @param array      $children Child names and values, as name => value
-     *
      * @return DomElement The new tree of elements
      */
     protected function createElementWithChildren(DOMElement $parent, $name, $children)
@@ -53,7 +53,6 @@ class XmlGeneratorAbstract
      * @param DomElement $parent Existing parent of all the new nodes
      * @param string     $name   Name of the new parent element
      * @param string     $text   Text of the new element
-     *
      * @return DomElement The new element
      */
     protected function appendNewElement(DOMElement $parent, $name, $text = null)

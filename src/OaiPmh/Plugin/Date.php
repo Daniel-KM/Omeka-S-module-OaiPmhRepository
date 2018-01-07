@@ -3,9 +3,10 @@
  * @author John Flatness
  * @copyright Copyright 2012 John Flatness
  * @copyright BibLibre, 2016
+ * @copyright Daniel Berthereau, 2014-2017
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
-namespace OaiPmhRepository;
+namespace OaiPmhRepository\OaiPmh\Plugin;
 
 /**
  * Class containing static functions for date tasks.

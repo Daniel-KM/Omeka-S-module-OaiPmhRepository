@@ -1,10 +1,11 @@
 <?php
 
-namespace OaiPmhRepository\Metadata;
+namespace OaiPmhRepository\OaiPmh;
 
+use OaiPmhRepository\OaiPmh\Metadata\MetadataInterface;
 use Omeka\ServiceManager\AbstractPluginManager;
 
-class Manager extends AbstractPluginManager
+class MetadataFormatManager extends AbstractPluginManager
 {
     protected $autoAddInvokableClass = false;
 

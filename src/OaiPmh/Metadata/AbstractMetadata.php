@@ -3,14 +3,15 @@
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
  * @copyright BibLibre, 2016
+ * @copyright Daniel Berthereau, 2014-2017
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
-namespace OaiPmhRepository\Metadata;
+namespace OaiPmhRepository\OaiPmh\Metadata;
 
 use DOMElement;
+use OaiPmhRepository\OaiPmh\AbstractXmlGenerator;
+use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\ItemRepresentation;
-use OaiPmhRepository\XmlGeneratorAbstract;
-use OaiPmhRepository\OaiIdentifier;
 
 /**
  * Abstract class on which all other metadata format handlers are based.
@@ -19,7 +20,7 @@ use OaiPmhRepository\OaiIdentifier;
  * @todo Migration to PHP 5.3 will allow the abstract getter functions to be
  *       static, as they should be
  */
-abstract class AbstractMetadata extends XmlGeneratorAbstract implements MetadataInterface
+abstract class AbstractMetadata extends AbstractXmlGenerator implements MetadataInterface
 {
     /**
      * Appends the record to the XML response.
@@ -60,7 +61,7 @@ abstract class AbstractMetadata extends XmlGeneratorAbstract implements Metadata
         if (!$datestamp) {
             $datestamp = $item->created();
         }
-        $dateFormat = \OaiPmhRepository\Date::OAI_DATE_FORMAT;
+        $dateFormat = \OaiPmhRepository\OaiPmh\Plugin\Date::OAI_DATE_FORMAT;
         $headerData['datestamp'] = $datestamp->format($dateFormat);
 
         $header = $this->createElementWithChildren($parent, 'header', $headerData);

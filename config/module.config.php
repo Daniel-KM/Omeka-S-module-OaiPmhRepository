@@ -32,7 +32,7 @@ return [
     ],
     'service_manager' => [
         'factories' => [
-            'OaiPmhRepository\MetadataFormatManager' => Service\MetadataFormatManagerFactory::class,
+            OaiPmh\MetadataFormatManager::class => Service\OaiPmh\MetadataFormatManagerFactory::class,
         ],
     ],
     'router' => [
@@ -67,12 +67,12 @@ return [
     'oaipmhrepository' => [
         'metadata_formats' => [
             'invokables' => [
-                'mets' => Metadata\Mets::class,
-                'mods' => Metadata\Mods::class,
+                'mets' => OaiPmh\Metadata\Mets::class,
+                'mods' => OaiPmh\Metadata\Mods::class,
             ],
             'factories' => [
-                'cdwalite' => Service\Metadata\CdwaLiteFactory::class,
-                'oai_dc' => Service\Metadata\OaiDcFactory::class,
+                'cdwalite' => Service\OaiPmh\Metadata\CdwaLiteFactory::class,
+                'oai_dc' => Service\OaiPmh\Metadata\OaiDcFactory::class,
             ],
         ],
         'settings' => [

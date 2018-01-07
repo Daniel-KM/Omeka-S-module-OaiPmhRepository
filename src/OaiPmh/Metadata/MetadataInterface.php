@@ -1,6 +1,6 @@
 <?php
 
-namespace OaiPmhRepository\Metadata;
+namespace OaiPmhRepository\OaiPmh\Metadata;
 
 use DOMElement;
 use Omeka\Api\Representation\ItemRepresentation;

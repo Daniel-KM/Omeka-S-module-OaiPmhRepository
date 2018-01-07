@@ -3,22 +3,24 @@
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
  * @copyright BibLibre, 2016-2017
+ * @copyright Daniel Berthereau, 2014-2017
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
-namespace OaiPmhRepository;
+namespace OaiPmhRepository\OaiPmh;
 
 use DateTime;
 use DomDocument;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Stdlib\Message;
 use Zend\Http\Request;
 
 /**
- * ResponseGenerator generates the XML responses to OAI-PMH
+ * OaiPmhXmlGenerator generates the XML responses to OAI-PMH
  * requests recieved by the repository.  The DOM extension is used to generate
  * all the XML output on-the-fly.
  */
-class ResponseGenerator extends XmlGeneratorAbstract
+class ResponseGenerator extends AbstractXmlGenerator
 {
     /**
      * General OAI-PMH constants
@@ -137,7 +139,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
             self::OAI_PMH_NAMESPACE_URI . ' ' . self::OAI_PMH_SCHEMA_URI);
 
         $responseDate = $this->document->createElement('responseDate',
-            \OaiPmhRepository\Date::unixToUtc(time()));
+            \OaiPmhRepository\OaiPmh\Plugin\Date::unixToUtc(time()));
         $root->appendChild($responseDate);
 
         $this->dispatchRequest();
@@ -263,7 +265,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
 
         $metadataPrefix = $this->_getParam('metadataPrefix');
 
-        $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
+        $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
         if ($metadataPrefix && !$metadataFormatManager->has($metadataPrefix)) {
             $this->throwError(self::OAI_ERR_CANNOT_DISSEMINATE_FORMAT);
         }
@@ -291,7 +293,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
             'baseURL' => $serverUrlHelper(),
             'protocolVersion' => self::OAI_PMH_PROTOCOL_VERSION,
             'adminEmail' => $settings->get('administrator_email'),
-            'earliestDatestamp' => \OaiPmhRepository\Date::unixToUtc(0),
+            'earliestDatestamp' => \OaiPmhRepository\OaiPmh\Plugin\Date::unixToUtc(0),
             'deletedRecord' => 'no',
             'granularity' => self::OAI_GRANULARITY_STRING,
         ];
@@ -368,7 +370,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
             $getRecord = $this->document->createElement('GetRecord');
             $this->document->documentElement->appendChild($getRecord);
             $settings = $this->serviceLocator->get('Omeka\Settings');
-            $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
+            $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
             $metadataFormat = $metadataFormatManager->get($metadataPrefix);
             $metadataFormat->appendRecord($getRecord, $item);
         }
@@ -582,7 +584,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
             }
 
             $settings = $this->serviceLocator->get('Omeka\Settings');
-            $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
+            $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
 
             $verbElement = $this->document->createElement($verb);
             $this->document->documentElement->appendChild($verbElement);
@@ -648,7 +650,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
      */
     private function getFormats()
     {
-        $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\MetadataFormatManager');
+        $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
 
         $metadataFormats = [];
         foreach ($metadataFormatManager->getRegisteredNames() as $name) {

@@ -2,12 +2,16 @@
 /**
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
+ * @author Daniel Berthereau <daniel.github@berthereau.net>
+ * @copyright Daniel Berthereau, 2017
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\Api\Adapter;
 
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
+use OaiPmhRepository\Api\Representation\OaiPmhRepositoryTokenRepresentation;
+use OaiPmhRepository\Entity\OaiPmhRepositoryToken;
 use Omeka\Api\Adapter\AbstractEntityAdapter;
 use Omeka\Api\Request;
 use Omeka\Entity\EntityInterface;
@@ -26,12 +30,12 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
 
     public function getRepresentationClass()
     {
-        return 'OaiPmhRepository\Api\Representation\OaiPmhRepositoryTokenRepresentation';
+        return OaiPmhRepositoryTokenRepresentation::class;
     }
 
     public function getEntityClass()
     {
-        return 'OaiPmhRepository\Entity\OaiPmhRepositoryToken';
+        return OaiPmhRepositoryToken::class;
     }
 
     public function hydrate(Request $request, EntityInterface $entity,
