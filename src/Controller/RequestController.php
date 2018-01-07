@@ -30,6 +30,14 @@ class RequestController extends AbstractActionController
 
     public function indexAction()
     {
+        $oaiRepository = $this->params()->fromRoute('oai-repository');
+        $oaiRepositoryOption = $oaiRepository === 'global'
+            ? $this->settings()->get('oaipmhrepository_global_repository')
+            : $this->settings()->get('oaipmhrepository_by_site_repository');
+        if (empty($oaiRepositoryOption) || $oaiRepositoryOption === 'none') {
+            return  $this->notFoundAction();
+        }
+
         $request = $this->getRequest();
         $oaiResponse = new ResponseGenerator($request, $this->serviceLocator);
 

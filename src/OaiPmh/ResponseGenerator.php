@@ -91,6 +91,16 @@ class ResponseGenerator extends AbstractXmlGenerator
     protected $site;
 
     /**
+     * The type of oai sets: "item_set" (default) or "site_pool".
+     *
+     * Usefull only for global repository. For site repositories, the type is
+     * always "item_set".
+     *
+     * @var string
+     */
+    protected $setSpecType = 'item_set';
+
+    /**
      * Returns the granularity of the given utcDateTime string.  Returns zero
      * if the given string is not in utcDateTime format.
      *
@@ -137,6 +147,10 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $currentSite = $serviceLocator->get('ControllerPluginManager')->get('currentSite');
         $this->site = $currentSite();
+
+        if (empty($this->site)) {
+            $this->setSpecType = $settings->get('oaipmhrepository_global_repository');
+        }
 
         //formatOutput makes DOM output "pretty" XML.  Good for debugging, but
         //adds some overhead, especially on large outputs.
@@ -437,6 +451,7 @@ class ResponseGenerator extends AbstractXmlGenerator
     private function listSets()
     {
         $api = $this->serviceLocator->get('Omeka\ApiManager');
+        $useSitePools = false;
         if ($this->site) {
             $collections = [];
             $siteItemSets = $this->site->siteItemSets();
@@ -444,7 +459,16 @@ class ResponseGenerator extends AbstractXmlGenerator
                 $collections[] = $siteItemSet->itemSet();
             }
         } else {
-            $collections = $api->search('item_sets')->getContent();
+            switch ($this->setSpecType) {
+                case 'site_pool':
+                    $useSitePools = true;
+                    $collections = $api->search('sites')->getContent();
+                    break;
+                case 'item_set':
+                default:
+                    $collections = $api->search('item_sets')->getContent();
+                    break;
+            }
         }
 
         if (count($collections) == 0) {
@@ -456,10 +480,14 @@ class ResponseGenerator extends AbstractXmlGenerator
         if (!$this->error) {
             $this->document->documentElement->appendChild($listSets);
             foreach ($collections as $collection) {
-                $elements = [
-                    'setSpec' => $collection->id(),
-                    'setName' => $collection->value('dcterms:title'),
-                ];
+                $elements = [];
+                if ($useSitePools) {
+                    $elements['setSpec'] = 'site-' . $collection->id();
+                    $elements['setName'] = $collection->title();
+                } else {
+                    $elements['setSpec'] = $collection->id();
+                    $elements['setName'] = $collection->value('dcterms:title');
+                }
                 $this->createElementWithChildren($listSets, 'set', $elements);
             }
         }
@@ -550,12 +578,27 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         // Public/private is automatically managed for anonymous requests.
 
-        if ($set) {
-            $query['item_set_id'] = $set;
-        }
-
         if ($this->site) {
             $query['site_id'] = $this->site->id();
+            if ($set) {
+                $query['item_set_id'] = $set;
+            }
+        } elseif ($set) {
+            switch ($this->setSpecType) {
+                case 'site_pool':
+                    $siteId = (integer) substr($set, strlen('site-'));
+                    if (empty($siteId)) {
+                        $this->throwError(self::OAI_ERR_NO_RECORDS_MATCH,
+                            new Message('The set "%s" doesn’t exist.', $set)); // @translate
+                        return;
+                    }
+                    $query['site_id'] = $siteId;
+                    break;
+                case 'item_set':
+                default:
+                    $query['item_set_id'] = $set;
+                    break;
+            }
         }
 
         $itemAdapter = $apiAdapterManager->get('items');

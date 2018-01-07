@@ -23,6 +23,16 @@ use Omeka\Api\Representation\ItemRepresentation;
 abstract class AbstractMetadata extends AbstractXmlGenerator implements MetadataInterface
 {
     /**
+     * The type of oai sets: "item_set" (default) or "site_pool".
+     *
+     * Usefull only for global repository. For site repositories, the type is
+     * always "item_set".
+     *
+     * @var string
+     */
+    protected $setSpecType = 'item_set';
+
+    /**
      * Appends the record to the XML response.
      *
      * Adds both the header and metadata elements as children of a record
@@ -65,6 +75,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $headerData['datestamp'] = $datestamp->format($dateFormat);
 
         $header = $this->createElementWithChildren($parent, 'header', $headerData);
+        $this->appendSetSpec($header, $item);
         foreach ($item->itemSets() as $itemSet) {
             $this->appendNewElement($header, 'setSpec', $itemSet->id());
         }
