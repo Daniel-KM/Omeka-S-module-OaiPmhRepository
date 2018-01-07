@@ -45,10 +45,11 @@ No support (may depend on server):
     xmlns:oai_branding="http://www.openarchives.org/OAI/2.0/branding/"
     xmlns:oai_gateway="http://www.openarchives.org/OAI/2.0/gateway/"
     xmlns:oai_provenance="http://www.openarchives.org/OAI/2.0/provenance"
+    xmlns:toolkit="http://oai.dlib.vt.edu/OAI/metadata/toolkit"
     xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/"
     xmlns:dc="http://purl.org/dc/doc:elements/1.1/"
     xmlns:verb="http://informatik.hu-berlin.de/xmlverbatim"
-    exclude-result-prefixes="oai oai_identifier oai_rights oai_friends oai_branding oai_gateway oai_provenance oai_dc dc verb">
+    exclude-result-prefixes="oai oai_identifier oai_rights oai_friends oai_branding oai_gateway toolkit oai_provenance oai_dc dc verb">
 
     <xsl:output
         method="html"
@@ -226,6 +227,9 @@ No support (may depend on server):
                         }
                         .oaipmh-record .panel-body {
                             word-wrap: break-word;
+                        }
+                        .oaipmh-toolkit-icon {
+                            margin-left: 8px;
                         }
 
                         /* Stylesheet from http://www2.informatik.hu-berlin.de/~obecker/XSLT/xmlverbatim/xmlverbatim.css */
@@ -604,6 +608,57 @@ No support (may depend on server):
                         <td>
                             <a href="{oai_gateway:gatewayNotes/text()}">
                                 <xsl:value-of select="oai_gateway:gatewayNotes/text()" />
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </xsl:template>
+
+    <xsl:template match="oai:OAI-PMH/oai:Identify/oai:description/toolkit:toolkit">
+        <div class="oaipmh oaipmh-description oaipmh-toolkit">
+            <h2>Toolkit</h2>
+            <table class="table table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <th scope="row">Title</th>
+                        <td>
+                            <xsl:value-of select="toolkit:title/text()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Author</th>
+                        <td>
+                            <xsl:call-template name="authors-split">
+                                <xsl:with-param name="authors" select="toolkit:author/toolkit:name/text()" />
+                                <xsl:with-param name="emails" select="toolkit:author/toolkit:email/text()" />
+                                <xsl:with-param name="institutions" select="toolkit:author/toolkit:institution/text()" />
+                            </xsl:call-template>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Version</th>
+                        <td>
+                            <xsl:value-of select="toolkit:version/text()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Toolkit icon</th>
+                        <td>
+                            <xsl:if test="toolkit:toolkitIcon/text() != ''">
+                                <a href="{toolkit:toolkitIcon/text()}">
+                                    <xsl:value-of select="toolkit:toolkitIcon/text()" />
+                                </a>
+                                <img class="oaipmh-toolkit-icon" src="{toolkit:toolkitIcon/text()}" />
+                            </xsl:if>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Url</th>
+                        <td>
+                            <a href="{toolkit:URL/text()}">
+                                <xsl:value-of select="toolkit:URL/text()" />
                             </a>
                         </td>
                     </tr>
@@ -1143,6 +1198,75 @@ No support (may depend on server):
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+    <xsl:template match="text()" name="authors-split">
+        <xsl:param name="separator" select="';'" />
+        <xsl:param name="authors" />
+        <xsl:param name="emails" select="''" />
+        <xsl:param name="institutions" select="''" />
+
+        <xsl:variable name="author">
+            <xsl:call-template name="split">
+                <xsl:with-param name="string" select="$authors" />
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="email">
+            <xsl:call-template name="split">
+                <xsl:with-param name="string" select="$emails" />
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="institution">
+            <xsl:call-template name="split">
+                <xsl:with-param name="string" select="$institutions" />
+            </xsl:call-template>
+        </xsl:variable>
+
+        <xsl:choose>
+            <xsl:when test="string-length($author)">
+                <xsl:choose>
+                    <xsl:when test="$email != ''">
+                        <a href="{concat('mailto:', $email)}">
+                            <xsl:value-of select="$author" />
+                        </a>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$author" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:when test="string-length($email)">
+                <a href="{concat('mailto:', $email)}">
+                    <xsl:value-of select="$email" />
+                </a>
+            </xsl:when>
+        </xsl:choose>
+        <xsl:if test="string-length($institution)">
+            <xsl:value-of select="concat(' (', normalize-space($institution), ')')" />
+        </xsl:if>
+
+        <xsl:if test="$authors != '' or $emails != '' or $institutions != ''">
+            <br />
+            <xsl:call-template name="authors-split">
+                <xsl:with-param name="separator" select="$separator" />
+                <xsl:with-param name="authors" select="substring-after($authors, $separator)" />
+                <xsl:with-param name="emails" select="substring-after($emails, $separator)" />
+                <xsl:with-param name="institutions" select="substring-after($institutions, $separator)" />
+            </xsl:call-template>
+        </xsl:if>
+   </xsl:template>
+
+   <xsl:template match="text()" name="split">
+        <xsl:param name="separator" select="';'" />
+        <xsl:param name="string" select="''" />
+        <xsl:choose>
+            <xsl:when test="contains($string, $separator)">
+                <xsl:value-of select="substring-before($string, $separator)" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$string" />
+            </xsl:otherwise>
+        </xsl:choose>
+   </xsl:template>
 
     <!-- =========================================================== -->
     <!--                    Included XML Verbatim                    -->

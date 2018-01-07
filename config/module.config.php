@@ -104,5 +104,24 @@ return [
             'oaipmhrepository_list_limit' => 50,
             'oaipmhrepository_token_expiration_time' => 10,
         ],
+        'xml' => [
+            'identify' => [
+                'description' => [
+                    // The toolkit describes the app that manages the repository.
+                    // See http://oai.dlib.vt.edu/OAI/metadata/toolkit.xsd.
+                    'toolkit' => [
+                        'title' => 'Omeka S OAI-PMH Repository Module',
+                        'author' => [
+                            'name' => 'John Flatness; Julian Maurice; Daniel Berthereau; and other contributors',
+                            'email' => 'john@zerocrates.org; julian.maurice@biblibre.com; daniel.github@berthereau.net',
+                            'institution' => 'RRCHNM; BibLibre;',
+                        ],
+                        'version' => null,
+                        'toolkitIcon' => 'https://omeka.org/favicon.ico',
+                        'URL' => 'https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository',
+                    ],
+                ],
+            ],
+        ],
     ],
 ];

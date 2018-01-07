@@ -62,6 +62,9 @@ pre {
 .oaipmh-record .panel-body {
   word-wrap: break-word;
 }
+.oaipmh-toolkit-icon {
+  margin-left: 8px;
+}
 
 /* Stylesheet from http://www2.informatik.hu-berlin.de/~obecker/XSLT/xmlverbatim/xmlverbatim.css */
 .xmlverb-default {

@@ -394,18 +394,13 @@ class ResponseGenerator extends AbstractXmlGenerator
     {
         $toolkitNamespace = 'http://oai.dlib.vt.edu/OAI/metadata/toolkit';
         $toolkitSchema = 'http://oai.dlib.vt.edu/OAI/metadata/toolkit.xsd';
+
         $modules = $this->serviceLocator->get('Omeka\ModuleManager');
         $version = $modules->getModule('OaiPmhRepository')->getIni('version');
+        $config = $this->serviceLocator->get('Config');
+        $elements = $config['oaipmhrepository']['xml']['identify']['description']['toolkit'];
+        $elements['version'] = $version;
 
-        $elements = [
-            'title' => 'Omeka S OAI-PMH Repository Plugin',
-            'author' => [
-                'name' => 'Julian Maurice',
-                'email' => 'julian.maurice@biblibre.com',
-            ],
-            'version' => $version,
-            'URL' => 'https://github.com/biblibre/omeka-s-module-OaiPmhRepository',
-        ];
         $toolkit = $this->createElementWithChildren($parentElement, 'toolkit', $elements);
         $toolkit->setAttribute('xsi:schemaLocation', "$toolkitNamespace $toolkitSchema");
         $toolkit->setAttribute('xmlns', $toolkitNamespace);
