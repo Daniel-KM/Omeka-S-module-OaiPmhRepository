@@ -21,8 +21,8 @@ return [
         ],
     ],
     'form_elements' => [
-        'invokables' => [
-            Form\ConfigForm::class => Form\ConfigForm::class,
+        'factories' => [
+            Form\ConfigForm::class => Service\Form\ConfigFormFactory::class,
         ],
     ],
     'controllers' => [

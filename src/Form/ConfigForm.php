@@ -5,11 +5,17 @@ use Omeka\Stdlib\Message;
 use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Number;
 use Zend\Form\Element\Radio;
+use Zend\Form\Element\Select;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
 class ConfigForm extends Form
 {
+    /**
+     * @var array
+     */
+    protected $oaiSetFormats;
+
     public function init()
     {
         $this->add([
@@ -78,6 +84,21 @@ class ConfigForm extends Form
             ],
         ]);
 
+        $valueOptions = $this->getOaiSetFormats();
+        $valueOptions = array_combine($valueOptions, array_map('ucfirst', $valueOptions));
+        $this->add([
+            'name' => 'oaipmhrepository_oai_set_format',
+            'type' => Select::class,
+            'options' => [
+                'label' => 'Oai set format', // @translate
+                'info' => 'The format of the oai set identifiers.', // @translate
+                'value_options' => $valueOptions,
+            ],
+            'attributes' => [
+                'required' => 'true',
+            ],
+        ]);
+
         $this->add([
             'name' => 'oaipmhrepository_list_limit',
             'type' => Number::class,
@@ -105,5 +126,21 @@ class ConfigForm extends Form
                 'min' => '1',
             ],
         ]);
+    }
+
+    /**
+     * @param array
+     */
+    public function setOaiSetFormats(array $oaiSetFormats)
+    {
+        $this->oaiSetFormats = $oaiSetFormats;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOaiSetFormats()
+    {
+        return $this->oaiSetFormats;
     }
 }
