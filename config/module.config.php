@@ -11,6 +11,9 @@ return [
         'mapping_classes_paths' => [
             dirname(__DIR__) . '/src/Entity',
         ],
+        'proxy_paths' => [
+            dirname(__DIR__) . '/data/doctrine-proxies',
+        ],
     ],
     'view_manager' => [
         'template_path_stack' => [
