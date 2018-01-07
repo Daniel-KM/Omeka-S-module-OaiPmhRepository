@@ -686,9 +686,9 @@ No support (may depend on server):
                             <td>
                                 <dl class="dl-horizontal">
                                     <dt>Namespace</dt>
-                                    <dd><xsl:value-of select="oai:metadataNamespace/text()" /></dd>
+                                    <dd><a href="{oai:metadataNamespace/text()}"><xsl:value-of select="oai:metadataNamespace/text()" /></a></dd>
                                     <dt>Schema</dt>
-                                    <dd><xsl:value-of select="oai:schema/text()" /></dd>
+                                    <dd><a href="{oai:schema/text()}"><xsl:value-of select="oai:schema/text()" /></a></dd>
                                 </dl>
                             </td>
                             <td>
