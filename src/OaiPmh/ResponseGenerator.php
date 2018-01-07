@@ -195,6 +195,9 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'base'));
         $this->oaiSet->setSetSpecType($this->setSpecType);
         $this->oaiSet->setSite($this->site);
+        $this->oaiSet->setOptions([
+            'hide_empty_sets' => $settings->get('oaipmhrepository_hide_empty_sets', true),
+        ]);
 
         //formatOutput makes DOM output "pretty" XML.  Good for debugging, but
         //adds some overhead, especially on large outputs.

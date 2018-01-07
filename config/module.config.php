@@ -96,6 +96,7 @@ return [
             'oaipmhrepository_name' => '',
             'oaipmhrepository_namespace_id' => '',
             'oaipmhrepository_expose_media' => true,
+            'oaipmhrepository_hide_empty_sets' => true,
             'oaipmhrepository_global_repository' => 'item_set',
             'oaipmhrepository_by_site_repository' => 'disabled',
             'oaipmhrepository_oai_set_format' => 'basic',

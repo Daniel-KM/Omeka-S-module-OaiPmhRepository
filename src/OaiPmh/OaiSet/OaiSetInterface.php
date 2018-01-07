@@ -24,6 +24,16 @@ interface OaiSetInterface
     public function setSite(SiteRepresentation $site = null);
 
     /**
+     * Options for oai sets.
+     *
+     * Currently managed:
+     * - hide_empty_sets (bool)
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options);
+
+    /**
      * Get the list of set specs of an item.
      *
      * @return array

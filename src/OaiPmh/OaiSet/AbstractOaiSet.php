@@ -36,6 +36,16 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
     protected $site;
 
     /**
+     * Options for oai sets.
+     *
+     * Currently managed:
+     * - hide_empty_sets (bool)
+     *
+     * @var array $options
+     */
+    protected $options = [];
+
+    /**
      * @var ApiManager
      */
     protected $api;
@@ -61,6 +71,11 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         $this->site = $site;
     }
 
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+    }
+
     public function listSets()
     {
         $oaiSets = [];
@@ -84,6 +99,31 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                 case 'none':
                 default:
                     // Nothing to do.
+                    break;
+            }
+        }
+
+        // TODO Use entity manager or direct query to find sets without items.
+        $hideEmptySets = !empty($this->options['hide_empty_sets']);
+        if ($oaiSets && $hideEmptySets) {
+            switch ($this->setSpecType) {
+                case 'site_pool':
+                    foreach ($oaiSets as $key => $oaiSet) {
+                        $itemCount = $this->api
+                            ->search('items', ['limit' => 0, 'site_id' => $oaiSet->id()])
+                            ->getTotalResults();
+                        if (empty($itemCount)) {
+                           unset($oaiSets[$key]);
+                        }
+                    }
+                    break;
+                case 'item_set':
+                    foreach ($oaiSets as $key => $oaiSet) {
+                        $itemCount = $oaiSet->itemCount();
+                        if (empty($itemCount)) {
+                            unset($oaiSets[$key]);
+                        }
+                    }
                     break;
             }
         }

@@ -130,6 +130,8 @@ SQL;
                 $defaultSettings['oaipmhrepository_oai_set_format']);
             $settings->set('oaipmhrepository_human_interface',
                 $defaultSettings['oaipmhrepository_human_interface']);
+            $settings->set('oaipmhrepository_hide_empty_sets',
+                $defaultSettings['oaipmhrepository_hide_empty_sets']);
         }
     }
 

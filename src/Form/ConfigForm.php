@@ -58,6 +58,15 @@ class ConfigForm extends Form implements TranslatorAwareInterface
         ]);
 
         $this->add([
+            'name' => 'oaipmhrepository_hide_empty_sets',
+            'type' => Checkbox::class,
+            'options' => [
+                'label' => 'Hide empty oai sets', // @translate
+                'info' => 'Whether the module should hide empty oai sets.', // @translate
+            ],
+        ]);
+
+        $this->add([
             'name' => 'oaipmhrepository_global_repository',
             'type' => Radio::class,
             'options' => [
