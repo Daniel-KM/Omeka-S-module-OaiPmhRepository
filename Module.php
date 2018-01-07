@@ -3,7 +3,9 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  * @copyright John Flatness, Center for History and New Media, 2013-2014
  * @copyright BibLibre, 2016
+ * @copyright Daniel Berthereau, 2014-2017
  */
+
 namespace OaiPmhRepository;
 
 use Omeka\Module\AbstractModule;
@@ -43,20 +45,20 @@ class Module extends AbstractModule
            set: Optional set argument of original request
            expiration: Datestamp after which token is expired
         */
-        $sql = '
-            CREATE TABLE IF NOT EXISTS `oai_pmh_repository_token` (
-                `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `verb` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-                `metadata_prefix` VARCHAR(255) COLLATE utf8_unicode_ci NOT NULL,
-                `cursor` INT(10) UNSIGNED NOT NULL,
-                `from` DATETIME DEFAULT NULL,
-                `until` DATETIME DEFAULT NULL,
-                `set` INT(10) UNSIGNED DEFAULT NULL,
-                `expiration` DATETIME NOT NULL,
-                PRIMARY KEY  (`id`),
-                INDEX(`expiration`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci
-        ';
+        $sql = <<<'SQL'
+CREATE TABLE oai_pmh_repository_token (
+    id INT AUTO_INCREMENT NOT NULL,
+    verb VARCHAR(190) NOT NULL,
+    metadata_prefix VARCHAR(190) NOT NULL,
+    `cursor` INT NOT NULL,
+    `from` DATETIME DEFAULT NULL,
+    until DATETIME DEFAULT NULL,
+    `set` INT DEFAULT NULL,
+    expiration DATETIME NOT NULL,
+    INDEX IDX_E9AC4F9524CD504D (expiration),
+    PRIMARY KEY(id)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
+SQL;
         $connection->exec($sql);
     }
 
@@ -72,6 +74,19 @@ class Module extends AbstractModule
         $connection = $serviceLocator->get('Omeka\Connection');
         $sql = 'DROP TABLE IF EXISTS `oai_pmh_repository_token`;';
         $connection->exec($sql);
+    }
+
+    public function upgrade($oldVersion, $newVersion, ServiceLocatorInterface $serviceLocator)
+    {
+        if (version_compare($oldVersion, '0.3', '<')) {
+            $connection = $serviceLocator->get('Omeka\Connection');
+            $sql = <<<'SQL'
+ALTER TABLE oai_pmh_repository_token CHANGE id id INT AUTO_INCREMENT NOT NULL, CHANGE verb verb VARCHAR(190) NOT NULL, CHANGE metadata_prefix metadata_prefix VARCHAR(190) NOT NULL, CHANGE `cursor` `cursor` INT NOT NULL, CHANGE `set` `set` INT DEFAULT NULL;
+DROP INDEX expiration ON oai_pmh_repository_token;
+CREATE INDEX IDX_E9AC4F9524CD504D ON oai_pmh_repository_token (expiration);
+SQL;
+            $connection->exec($sql);
+        }
     }
 
     public function onBootstrap(MvcEvent $event)

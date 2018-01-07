@@ -2,18 +2,30 @@
 /**
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
+ * @author Daniel Berthereau <daniel.github@berthereau.net>
+ * @copyright Daniel Berthereau, 2017
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\Entity;
 
 use DateTime;
 use Omeka\Entity\AbstractEntity;
+use Omeka\Entity\Exception\InvalidArgumentException;
 
 /**
  * @Entity
+ * @Table(
+ *      indexes={@Index(columns={
+ *          "expiration"
+ *      })}
+ * )
  */
 class OaiPmhRepositoryToken extends AbstractEntity
 {
+    const VERB_LIST_IDENTIFIERS = 'ListIdentifiers';
+    const VERB_LIST_RECORDS = 'ListRecords';
+    const VERB_LIST_SETS = 'ListSets';
+
     /**
      * @Id
      * @Column(type="integer")
@@ -22,12 +34,12 @@ class OaiPmhRepositoryToken extends AbstractEntity
     protected $id;
 
     /**
-     * @Column(type="string", length=255)
+     * @Column(type="string", length=190)
      */
     protected $verb;
 
     /**
-     * @Column(type="string", length=255)
+     * @Column(type="string", length=190)
      */
     protected $metadataPrefix;
 
@@ -63,6 +75,13 @@ class OaiPmhRepositoryToken extends AbstractEntity
 
     public function setVerb($verb)
     {
+        if (!in_array($verb, [
+            self::VERB_LIST_IDENTIFIERS,
+            self::VERB_LIST_RECORDS,
+            self::VERB_LIST_SETS,
+        ])) {
+            throw new InvalidArgumentException('Invalid OAI-PMH verb.');
+        }
         $this->verb = $verb;
     }
 
