@@ -16,13 +16,6 @@ class RequestControllerTest extends OmekaControllerTestCase
 
         $this->loginAsAdmin();
 
-        $response = $this->api()->create('sites', [
-            'o:title' => 'Test site',
-            'o:slug' => 'test',
-            'o:theme' => 'default',
-        ]);
-        $this->site = $response->getContent();
-
         $response = $this->api()->create('item_sets', [
             'o:is_public' => true,
         ]);
@@ -40,7 +33,21 @@ class RequestControllerTest extends OmekaControllerTestCase
         ]);
         $this->item = $response->getContent();
 
+        $response = $this->api()->create('sites', [
+            'o:title' => 'Test site',
+            'o:slug' => 'test',
+            'o:theme' => 'default',
+            'o:is_public' => true,
+            'o:site_item_set' => [
+                [
+                    'o:item_set' => ['o:id' => $this->itemSet->id()],
+                ],
+            ],
+        ]);
+        $this->site = $response->getContent();
+
         $this->settings()->set('oaipmhrepository_namespace_id', 'test');
+        $this->settings()->set('oaipmhrepository_by_site_repository', 'all');
 
         $this->resetApplication();
     }
