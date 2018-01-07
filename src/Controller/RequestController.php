@@ -47,4 +47,11 @@ class RequestController extends AbstractActionController
 
         return $response;
     }
+
+    public function redirectAction()
+    {
+        $urlHelper = $this->viewHelpers()->get('url');
+        $url = $urlHelper('oai-pmh', [], ['query' => $this->params()->fromQuery()]);
+        return $this->redirect()->toUrl($url)->setStatusCode(301);
+    }
 }

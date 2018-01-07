@@ -100,6 +100,15 @@ class ConfigForm extends Form
         ]);
 
         $this->add([
+            'name' => 'oaipmhrepository_redirect_route',
+            'type' => Text::class,
+            'options' => [
+                'label' => 'Global repository redirect route', // @translate
+                'info' => 'An alias (redirect 301) for backward compatibility with Omeka Classic, that used "/oai-pmh-repository/request", or any other old OAI-PMH repository.', // @translate
+            ],
+        ]);
+
+        $this->add([
             'name' => 'oaipmhrepository_list_limit',
             'type' => Number::class,
             'options' => [

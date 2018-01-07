@@ -99,6 +99,7 @@ return [
             'oaipmhrepository_global_repository' => 'item_set',
             'oaipmhrepository_by_site_repository' => 'disabled',
             'oaipmhrepository_oai_set_format' => 'basic',
+            'oaipmhrepository_redirect_route' => '',
             'oaipmhrepository_list_limit' => 50,
             'oaipmhrepository_token_expiration_time' => 10,
         ],

@@ -30,6 +30,7 @@ class Module extends AbstractModule
     {
         parent::onBootstrap($event);
         $this->addAclRules();
+        $this->addRoutes();
     }
 
     public function install(ServiceLocatorInterface $serviceLocator)
@@ -155,6 +156,35 @@ SQL;
         $acl->allow(null, Entity\OaiPmhRepositoryToken::class);
         $acl->allow(null, Api\Adapter\OaiPmhRepositoryTokenAdapter::class);
         $acl->allow(null, Controller\RequestController::class);
+    }
+
+    protected function addRoutes()
+    {
+        $serviceLocator = $this->getServiceLocator();
+
+        $settings = $serviceLocator->get('Omeka\Settings');
+        $redirect = $settings->get('oaipmhrepository_redirect_route');
+        if (empty($redirect)) {
+            return;
+        }
+
+        $router = $serviceLocator->get('Router');
+        if (!$router instanceof \Zend\Router\Http\TreeRouteStack) {
+            return;
+        }
+
+        $router->addRoute('oai-pmh-repository-request', [
+            'type' => 'Literal',
+            'options' => [
+                'route' => $redirect,
+                'defaults' => [
+                    '__NAMESPACE__' => 'OaiPmhRepository\Controller',
+                    'controller' => Controller\RequestController::class,
+                    'action' => 'redirect',
+                    'oai-repository' => 'global',
+                ],
+            ],
+        ]);
     }
 
     public function attachListeners(SharedEventManagerInterface $sharedEventManager)
