@@ -27,7 +27,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            'OaiPmhRepository\Controller\Request' => Service\Controller\RequestControllerFactory::class,
+            Controller\RequestController::class => Service\Controller\RequestControllerFactory::class,
         ],
     ],
     'service_manager' => [
@@ -45,7 +45,7 @@ return [
                             'route' => '/oai',
                             'defaults' => [
                                 '__NAMESPACE__' => 'OaiPmhRepository\Controller',
-                                'controller' => 'Request',
+                                'controller' => Controller\RequestController::class,
                                 'action' => 'index',
                             ],
                         ],

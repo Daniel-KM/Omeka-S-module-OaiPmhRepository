@@ -5,7 +5,6 @@
  * @copyright BibLibre, 2016
  * @copyright Daniel Berthereau, 2014-2017
  */
-
 namespace OaiPmhRepository;
 
 use OaiPmhRepository\Form\ConfigForm;
@@ -143,7 +142,7 @@ SQL;
         $acl = $this->getServiceLocator()->get('Omeka\Acl');
         $acl->allow(null, Entity\OaiPmhRepositoryToken::class);
         $acl->allow(null, Api\Adapter\OaiPmhRepositoryTokenAdapter::class);
-        $acl->allow(null, 'OaiPmhRepository\Controller\Request');
+        $acl->allow(null, Controller\RequestController::class);
     }
 
     public function attachListeners(SharedEventManagerInterface $sharedEventManager)
