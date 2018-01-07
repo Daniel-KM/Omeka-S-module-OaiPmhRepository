@@ -92,7 +92,7 @@ return [
                 'basic' => Service\OaiPmh\OaiSet\BasicFactory::class,
             ],
         ],
-        'settings' => [
+        'config' => [
             'oaipmhrepository_name' => '',
             'oaipmhrepository_namespace_id' => '',
             'oaipmhrepository_expose_media' => true,

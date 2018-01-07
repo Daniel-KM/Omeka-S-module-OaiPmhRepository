@@ -95,7 +95,7 @@ SQL;
             $connection->exec($sql);
 
             $config = require __DIR__ . '/config/module.config.php';
-            $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
+            $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
             $settings = $serviceLocator->get('Omeka\Settings');
 
             $settings->set('oaipmhrepository_name', $settings->get('oaipmh_repository_name',
@@ -120,7 +120,7 @@ SQL;
 
         if (version_compare($oldVersion, '0.3.1', '<')) {
             $config = require __DIR__ . '/config/module.config.php';
-            $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
+            $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
             $settings = $serviceLocator->get('Omeka\Settings');
 
             $settings->set('oaipmhrepository_global_repository',
@@ -135,7 +135,7 @@ SQL;
         }
     }
 
-    protected function manageSettings($settings, $process, $key = 'settings')
+    protected function manageSettings($settings, $process, $key = 'config')
     {
         $config = require __DIR__ . '/config/module.config.php';
         $defaultSettings = $config[strtolower(__NAMESPACE__)][$key];
@@ -208,7 +208,7 @@ SQL;
         $formElementManager = $services->get('FormElementManager');
 
         $data = [];
-        $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
+        $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
         foreach ($defaultSettings as $name => $value) {
             $data[$name] = $settings->get($name);
         }
@@ -237,7 +237,7 @@ SQL;
             return false;
         }
 
-        $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
+        $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
         foreach ($params as $name => $value) {
             if (isset($defaultSettings[$name])) {
                 if ($name === 'oaipmhrepository_namespace_id' && $value === 'localhost') {
