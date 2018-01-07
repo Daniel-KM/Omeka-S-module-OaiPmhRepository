@@ -3,7 +3,7 @@
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
  * @author Daniel Berthereau <daniel.github@berthereau.net>
- * @copyright Daniel Berthereau, 2017
+ * @copyright Daniel Berthereau, 2014-2018
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\Api\Adapter;

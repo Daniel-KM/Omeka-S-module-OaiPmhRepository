@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Daniel Berthereau
- * @copyright Daniel Berthereau, 2014-2017
+ * @copyright Daniel Berthereau, 2014-2018
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\OaiSet;
