@@ -39,7 +39,7 @@ return [
         'routes' => [
             'site' => [
                 'child_routes' => [
-                    'oai' => [
+                    'oai-pmh' => [
                         'type' => 'Segment',
                         'options' => [
                             'route' => '/oai',
@@ -49,6 +49,17 @@ return [
                                 'action' => 'index',
                             ],
                         ],
+                    ],
+                ],
+            ],
+            'oai-pmh' => [
+                'type' => 'Literal',
+                'options' => [
+                    'route' => '/oai',
+                    'defaults' => [
+                        '__NAMESPACE__' => 'OaiPmhRepository\Controller',
+                        'controller' => Controller\RequestController::class,
+                        'action' => 'index',
                     ],
                 ],
             ],
@@ -79,6 +90,8 @@ return [
             'oaipmhrepository_name' => '',
             'oaipmhrepository_namespace_id' => '',
             'oaipmhrepository_expose_media' => true,
+            'oaipmhrepository_global_repository' => 'item_set',
+            'oaipmhrepository_by_site_repository' => 'none',
             'oaipmhrepository_list_limit' => 50,
             'oaipmhrepository_token_expiration_time' => 10,
         ],

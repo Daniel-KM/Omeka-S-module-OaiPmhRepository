@@ -116,6 +116,16 @@ SQL;
             $settings->delete('oaipmh_repository_expiration_time');
             $settings->delete('oaipmh_repository_token_expiration_time');
         }
+
+        if (version_compare($oldVersion, '0.3.1', '<')) {
+            $config = require __DIR__ . '/config/module.config.php';
+            $defaultSettings = $config[strtolower(__NAMESPACE__)]['settings'];
+            $settings = $serviceLocator->get('Omeka\Settings');
+
+            $settings->set('oaipmhrepository_global_repository',
+                $defaultSettings['oaipmhrepository_global_repository']);
+            $settings->set('oaipmhrepository_by_site_repository', 'all');
+        }
     }
 
     protected function manageSettings($settings, $process, $key = 'settings')
@@ -201,7 +211,10 @@ SQL;
 
     public function filterAdminDashboardPanels(Event $event)
     {
-        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+        $services = $this->getServiceLocator();
+        $settings = $services->get('Omeka\Settings');
+        $api = $services->get('Omeka\ApiManager');
+
         $sites = $api->search('sites')->getContent();
 
         if (empty($sites)) {
@@ -210,6 +223,8 @@ SQL;
         $view = $event->getTarget();
         echo $view->partial('common/admin/oai-pmh-repository-dashboard', [
             'sites' => $sites,
+            'globalRepository' => $settings->get('oaipmhrepository_global_repository'),
+            'bySiteRepository' => $settings->get('oaipmhrepository_by_site_repository'),
         ]);
     }
 

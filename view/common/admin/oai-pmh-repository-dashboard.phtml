@@ -1,11 +1,46 @@
+<?php
+$escape = $this->plugin('escapeHtml');
+$translate = $this->plugin('translate');
+$options = ['query' => ['verb' => 'Identify']];
+?>
 <div id="oai-pmh-repository" class="panel">
-    <h2><?php echo $this->escapeHtml($this->translate('OAI-PMH Repository')); ?></h2>
-    <p><?php echo $this->escapeHtml($this->translate('Harvester can access metadata from these URLs:')); ?>
+    <h2><?php echo $escape($translate('OAI-PMH Repository')); ?></h2>
+    <h4><?php echo $escape($translate('Global repository')); ?></h4>
+    <p><?php
+    switch ($globalRepository):
+    case 'item_set':
+        echo $this->hyperlink($translate('With item sets as oai sets'), $this->url('oai-pmh', [], $options));
+        break;
+    case 'site_pool':
+        echo $this->hyperlink($translate('With site pools as oai sets'), $this->url('oai-pmh', [], $options));
+        break;
+    default:
+        echo $escape($translate('Disabled.'));
+        break;
+    endswitch;
+    ?>
+    </p>
+    <h4><?php echo $escape($translate('Site repositories')); ?></h4>
+    <p><?php
+    switch ($bySiteRepository):
+    case 'all':
+        if (empty($sites)):
+            echo $escape($translate('No site.'));
+        else:
+        ?>
         <ul>
-            <?php foreach ($sites as $site): ?>
-            <?php $oaiUrl = $site->siteUrl() . '/oai'; ?>
-            <li><?php echo $this->hyperlink($oaiUrl, $oaiUrl); ?></li>
+        <?php foreach ($sites as $site): ?>
+            <?php $oaiUrl = $this->url('site/oai-pmh', ['site-slug' => $site->slug()], $options); ?>
+            <li><?php echo $this->hyperlink($site->title(), $oaiUrl); ?></li>
             <?php endforeach; ?>
         </ul>
+        <?php
+        endif;
+        break;
+    default:
+        echo $escape($translate('Disabled.'));
+        break;
+    endswitch;
+    ?>
     </p>
 </div>

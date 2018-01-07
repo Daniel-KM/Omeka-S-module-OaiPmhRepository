@@ -4,6 +4,7 @@ namespace OaiPmhRepository\Form;
 use Omeka\Stdlib\Message;
 use Zend\Form\Element\Checkbox;
 use Zend\Form\Element\Number;
+use Zend\Form\Element\Radio;
 use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
@@ -44,6 +45,34 @@ class ConfigForm extends Form
                 'label' => 'Expose media', // @translate
                 'info' => new Message('Whether the plugin should include identifiers for the files associated with items.') // @translate
                     . ' ' . new Message('This provides harvesters with direct access to files.'), // @translate
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'oaipmhrepository_global_repository',
+            'type' => Radio::class,
+            'options' => [
+                'label' => 'Global repository', // @translate
+                'info' => new Message('The global repository contains all the resources of Omeka S, in one place.') // @translate
+                    . ' ' . new Message('Note that the oai set identifiers are different (item set id or site id).'), // @translate
+                'value_options' => [
+                    'none' => 'No global repository', // @translate
+                    'item_set' => 'With item sets as oai sets', // @translate
+                    'site_pool' => 'With site pools as oai sets', // @translate
+                ],
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'oaipmhrepository_by_site_repository',
+            'type' => Radio::class,
+            'options' => [
+                'label' => 'Site repositories', // @translate
+                'info' => 'The site repositories simulate multiple oai servers, with the site pools of items and the attached item sets as oai sets.', // @translate
+                'value_options' => [
+                    'none' => 'No site repositories', // @translate
+                    'all' => 'Enable for all', // @translate
+                ],
             ],
         ]);
 
