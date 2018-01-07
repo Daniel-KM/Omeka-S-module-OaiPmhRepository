@@ -9,7 +9,7 @@ use Zend\ServiceManager\Factory\FactoryInterface;
 class MetadataFormatManagerFactory implements FactoryInterface
 {
     /**
-     * Create the media ingester manager service.
+     * Create the oai metadata format manager service.
      *
      * @return MetadataFormatManager
      */

@@ -35,6 +35,9 @@ class Mods extends AbstractMetadata
      * item.
      *
      * @link http://www.loc.gov/standards/mods/dcsimple-mods.html
+     *
+     * {@inheritDoc}
+     * @see \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::appendMetadata()
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
@@ -190,31 +193,16 @@ class Mods extends AbstractMetadata
         return strncmp($text, 'http://', 7) || strncmp($text, 'https://', 8);
     }
 
-    /**
-     * Returns the OAI-PMH metadata prefix for the output format.
-     *
-     * @return string Metadata prefix
-     */
     public function getMetadataPrefix()
     {
         return self::METADATA_PREFIX;
     }
 
-    /**
-     * Returns the XML schema for the output format.
-     *
-     * @return string XML schema URI
-     */
     public function getMetadataSchema()
     {
         return self::METADATA_SCHEMA;
     }
 
-    /**
-     * Returns the XML namespace for the output format.
-     *
-     * @return string XML namespace URI
-     */
     public function getMetadataNamespace()
     {
         return self::METADATA_NAMESPACE;

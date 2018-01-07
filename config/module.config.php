@@ -80,12 +80,10 @@ return [
     ],
     'oaipmhrepository' => [
         'metadata_formats' => [
-            'invokables' => [
-                'mets' => OaiPmh\Metadata\Mets::class,
-                'mods' => OaiPmh\Metadata\Mods::class,
-            ],
             'factories' => [
                 'cdwalite' => Service\OaiPmh\Metadata\CdwaLiteFactory::class,
+                'mets' => Service\OaiPmh\Metadata\MetsFactory::class,
+                'mods' => Service\OaiPmh\Metadata\ModsFactory::class,
                 'oai_dc' => Service\OaiPmh\Metadata\OaiDcFactory::class,
             ],
         ],

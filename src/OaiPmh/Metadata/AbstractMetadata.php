@@ -10,8 +10,10 @@ namespace OaiPmhRepository\OaiPmh\Metadata;
 
 use DOMElement;
 use OaiPmhRepository\OaiPmh\AbstractXmlGenerator;
+use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\ItemRepresentation;
+use Omeka\Settings\SettingsInterface;
 
 /**
  * Abstract class on which all other metadata format handlers are based.
@@ -23,26 +25,42 @@ use Omeka\Api\Representation\ItemRepresentation;
 abstract class AbstractMetadata extends AbstractXmlGenerator implements MetadataInterface
 {
     /**
-     * The type of oai sets: "item_set" (default) or "site_pool".
-     *
-     * Usefull only for global repository. For site repositories, the type is
-     * always "item_set".
-     *
-     * @var string
+     * @var SettingsInterface
      */
-    protected $setSpecType = 'item_set';
+    protected $settings;
 
     /**
-     * Appends the record to the XML response.
+     * The class used to create the set data (spec, name and description).
      *
-     * Adds both the header and metadata elements as children of a record
-     * element, which is appended to the document.
-     *
-     * @uses appendHeader
-     * @uses appendMetadata
-     *
-     * @param DOMElement $parent
+     * @var OaiSetInterface
      */
+    protected $oaiSet;
+
+    public function setSettings(SettingsInterface $settings)
+    {
+        $this->settings = $settings;
+    }
+
+    public function setOaiSet(OaiSetInterface $oaiSet)
+    {
+        $this->oaiSet = $oaiSet;
+    }
+
+    public function getOaiSet()
+    {
+        return $this->oaiSet;
+    }
+
+    public function declareMetadataFormat(DOMElement $parent)
+    {
+        $elements = [
+            'metadataPrefix' => $this->getMetadataPrefix(),
+            'schema' => $this->getMetadataSchema(),
+            'metadataNamespace' => $this->getMetadataNamespace(),
+        ];
+        $this->createElementWithChildren($parent, 'metadataFormat', $elements);
+    }
+
     public function appendRecord(DOMElement $parent, ItemRepresentation $item)
     {
         $document = $parent->ownerDocument;
@@ -55,14 +73,6 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $this->appendMetadata($metadata, $item);
     }
 
-    /**
-     * Appends the record's header to the XML response.
-     *
-     * Adds the identifier, datestamp and setSpec to a header element, and
-     * appends in to the document.
-     *
-     * @param DOMElement $parent
-     */
     public function appendHeader(DOMElement $parent, ItemRepresentation $item)
     {
         $headerData['identifier'] = OaiIdentifier::itemToOaiId($item->id());
@@ -75,35 +85,14 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $headerData['datestamp'] = $datestamp->format($dateFormat);
 
         $header = $this->createElementWithChildren($parent, 'header', $headerData);
-        $this->appendSetSpec($header, $item);
-        foreach ($item->itemSets() as $itemSet) {
-            $this->appendNewElement($header, 'setSpec', $itemSet->id());
+        $setSpecs = $this->oaiSet->listSetSpecs($item);
+        foreach ($setSpecs as $setSpec) {
+            $this->appendNewElement($header, 'setSpec', $setSpec);
         }
     }
 
-    /**
-     * Appends a metadataFormat element to the document.
-     *
-     * Declares the metadataPrefix, schema URI, and namespace for the oai_dc
-     * metadata format.
-     *
-     * @param DOMElement $parent
-     */
-    public function declareMetadataFormat(DOMElement $parent)
-    {
-        $elements = [
-            'metadataPrefix' => $this->getMetadataPrefix(),
-            'schema' => $this->getMetadataSchema(),
-            'metadataNamespace' => $this->getMetadataNamespace(),
-        ];
-        $this->createElementWithChildren($parent, 'metadataFormat', $elements);
-    }
+    abstract public function appendMetadata(DOMElement $parent, ItemRepresentation $item);
 
-    /**
-     * Returns the OAI-PMH metadata prefix for the output format.
-     *
-     * @return string Metadata prefix
-     */
     abstract public function getMetadataPrefix();
 
     /**
@@ -119,11 +108,4 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      * @return string XML namespace URI
      */
     abstract public function getMetadataNamespace();
-
-    /**
-     * Appends the metadata for one Omeka item to the XML document.
-     *
-     * @param DOMElement $parent
-     */
-    abstract public function appendMetadata(DOMElement $parent, ItemRepresentation $item);
 }

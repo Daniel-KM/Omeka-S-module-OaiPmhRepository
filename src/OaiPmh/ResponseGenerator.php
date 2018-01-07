@@ -12,10 +12,12 @@ use DateTime;
 use DomDocument;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use OaiPmhRepository\Api\Representation\OaiPmhRepositoryTokenRepresentation;
+use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\SiteRepresentation;
 use Omeka\Stdlib\Message;
 use Zend\Http\Request;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 /**
  * OaiPmhXmlGenerator generates the XML responses to OAI-PMH
@@ -70,10 +72,24 @@ class ResponseGenerator extends AbstractXmlGenerator
      */
     private $query;
 
+    /**
+     * Number of records to display by page.
+     *
+     * @var int
+     */
     private $_listLimit;
 
+    /**
+     * Number of minutes before expiration of token.
+     *
+     * @var int
+     */
     private $_tokenExpirationTime;
 
+    /**
+     *
+     * @var ServiceLocatorInterface
+     */
     protected $serviceLocator;
 
     /**
@@ -91,14 +107,20 @@ class ResponseGenerator extends AbstractXmlGenerator
     protected $site;
 
     /**
-     * The type of oai sets: "item_set" (default) or "site_pool".
+     * The type of oai sets: "item_set", "site_pool", or "none".
      *
-     * Usefull only for global repository. For site repositories, the type is
-     * always "item_set".
+     * "site_pool" can be used only for global oai-pmh repository.
      *
      * @var string
      */
-    protected $setSpecType = 'item_set';
+    protected $setSpecType;
+
+    /**
+     * The set format.
+     *
+     * @var OaiSetInterface
+     */
+    protected $oaiSet;
 
     /**
      * Returns the granularity of the given utcDateTime string.  Returns zero
@@ -120,16 +142,15 @@ class ResponseGenerator extends AbstractXmlGenerator
     }
 
     /**
-     * Constructor.
-     *
      * Creates the DomDocument object, and adds XML elements common to all
      * OAI-PMH responses.  Dispatches control to appropriate verb, if any.
      *
-     * @param Request $request HTTP POST/GET query key-value pair array
-     *
      * @uses dispatchRequest()
+     *
+     * @param Request $request HTTP POST/GET query key-value pair array
+     * @param ServiceLocatorInterface $serviceLocator
      */
-    public function __construct(Request $request, $serviceLocator)
+    public function __construct(Request $request, ServiceLocatorInterface $serviceLocator)
     {
         $this->serviceLocator = $serviceLocator;
 
@@ -148,9 +169,16 @@ class ResponseGenerator extends AbstractXmlGenerator
         $currentSite = $serviceLocator->get('ControllerPluginManager')->get('currentSite');
         $this->site = $currentSite();
 
-        if (empty($this->site)) {
-            $this->setSpecType = $settings->get('oaipmhrepository_global_repository');
+        if ($this->site) {
+            $this->setSpecType = 'item_sets';
+        } else {
+            $this->setSpecType = $settings->get('oaipmhrepository_global_repository', 'none');
         }
+
+        $oaiSetManager = $serviceLocator->get('OaiPmhRepository\OaiPmh\OaiSetManager');
+        $this->oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'base'));
+        $this->oaiSet->setSetSpecType($this->setSpecType);
+        $this->oaiSet->setSite($this->site);
 
         //formatOutput makes DOM output "pretty" XML.  Good for debugging, but
         //adds some overhead, especially on large outputs.
@@ -403,9 +431,9 @@ class ResponseGenerator extends AbstractXmlGenerator
         if (!$this->error) {
             $getRecord = $this->document->createElement('GetRecord');
             $this->document->documentElement->appendChild($getRecord);
-            $settings = $this->serviceLocator->get('Omeka\Settings');
             $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
             $metadataFormat = $metadataFormatManager->get($metadataPrefix);
+            $metadataFormat->setOaiSet($this->oaiSet);
             $metadataFormat->appendRecord($getRecord, $item);
         }
     }
@@ -450,46 +478,17 @@ class ResponseGenerator extends AbstractXmlGenerator
      */
     private function listSets()
     {
-        $api = $this->serviceLocator->get('Omeka\ApiManager');
-        $useSitePools = false;
-        if ($this->site) {
-            $collections = [];
-            $siteItemSets = $this->site->siteItemSets();
-            foreach ($siteItemSets as $siteItemSet) {
-                $collections[] = $siteItemSet->itemSet();
-            }
-        } else {
-            switch ($this->setSpecType) {
-                case 'site_pool':
-                    $useSitePools = true;
-                    $collections = $api->search('sites')->getContent();
-                    break;
-                case 'item_set':
-                default:
-                    $collections = $api->search('item_sets')->getContent();
-                    break;
-            }
-        }
-
-        if (count($collections) == 0) {
+        $oaiSets = $this->oaiSet->listSets();
+        if (empty($oaiSets)) {
             $this->throwError(self::OAI_ERR_NO_SET_HIERARCHY);
+            return;
         }
 
         $listSets = $this->document->createElement('ListSets');
 
-        if (!$this->error) {
-            $this->document->documentElement->appendChild($listSets);
-            foreach ($collections as $collection) {
-                $elements = [];
-                if ($useSitePools) {
-                    $elements['setSpec'] = 'site-' . $collection->id();
-                    $elements['setName'] = $collection->title();
-                } else {
-                    $elements['setSpec'] = $collection->id();
-                    $elements['setName'] = $collection->value('dcterms:title');
-                }
-                $this->createElementWithChildren($listSets, 'set', $elements);
-            }
+        $this->document->documentElement->appendChild($listSets);
+        foreach ($oaiSets as $oaiSet) {
+            $this->createElementWithChildren($listSets, 'set', $oaiSet);
         }
     }
 
@@ -580,24 +579,30 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         if ($this->site) {
             $query['site_id'] = $this->site->id();
-            if ($set) {
-                $query['item_set_id'] = $set;
+        }
+
+        if ($set) {
+            $resourceSet = $this->oaiSet->findResource($set);
+            if (empty($resourceSet)) {
+                $this->throwError(self::OAI_ERR_NO_RECORDS_MATCH,
+                    new Message('The set "%s" doesn’t exist.', $set)); // @translate
+                    return;
             }
-        } elseif ($set) {
-            switch ($this->setSpecType) {
-                case 'site_pool':
-                    $siteId = (integer) substr($set, strlen('site-'));
-                    if (empty($siteId)) {
-                        $this->throwError(self::OAI_ERR_NO_RECORDS_MATCH,
-                            new Message('The set "%s" doesn’t exist.', $set)); // @translate
+            if ($this->site) {
+                $query['item_set_id'] = $resourceSet->id();
+            } else {
+                switch ($this->setSpecType) {
+                    case 'site_pool':
+                        $query['site_id'] = $resourceSet->id();
+                        break;
+                    case 'item_set':
+                        $query['item_set_id'] = $resourceSet->id();
+                        break;
+                    case 'none':
+                    default:
+                        $this->throwError(self::OAI_ERR_NO_SET_HIERARCHY);
                         return;
-                    }
-                    $query['site_id'] = $siteId;
-                    break;
-                case 'item_set':
-                default:
-                    $query['item_set_id'] = $set;
-                    break;
+                }
             }
         }
 
@@ -652,7 +657,6 @@ class ResponseGenerator extends AbstractXmlGenerator
                 $method = 'appendRecord';
             }
 
-            $settings = $this->serviceLocator->get('Omeka\Settings');
             $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
 
             $verbElement = $this->document->createElement($verb);
@@ -660,6 +664,7 @@ class ResponseGenerator extends AbstractXmlGenerator
             foreach ($paginator as $itemEntity) {
                 $item = $itemAdapter->getRepresentation($itemEntity);
                 $metadataFormat = $metadataFormatManager->get($metadataPrefix);
+                $metadataFormat->setOaiSet($this->oaiSet);
                 $metadataFormat->$method($verbElement, $item);
             }
             if ($rows > ($cursor + $this->_listLimit)) {

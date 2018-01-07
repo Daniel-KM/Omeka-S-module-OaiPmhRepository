@@ -11,7 +11,6 @@ namespace OaiPmhRepository\OaiPmh\Metadata;
 use DOMElement;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\ItemRepresentation;
-use Omeka\Settings\SettingsInterface;
 
 /**
  * Class implmenting metadata output CDWA Lite.
@@ -30,21 +29,14 @@ class CdwaLite extends AbstractMetadata
     const METADATA_SCHEMA = 'http://www.getty.edu/CDWA/CDWALite/CDWALite-xsd-public-v1-1.xsd';
 
     /**
-     * @var SettingsInterface
-     */
-    protected $settings;
-
-    public function __construct(SettingsInterface $settings)
-    {
-        $this->settings = $settings;
-    }
-
-    /**
      * Appends CDWALite metadata.
      *
      * Appends a metadata element, an child element with the required format,
      * and further children for each of the Dublin Core fields present in the
      * item.
+     *
+     * {@inheritDoc}
+     * @see \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::appendMetadata()
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
@@ -219,31 +211,16 @@ class CdwaLite extends AbstractMetadata
         }
     }
 
-    /**
-     * Returns the OAI-PMH metadata prefix for the output format.
-     *
-     * @return string Metadata prefix
-     */
     public function getMetadataPrefix()
     {
         return self::METADATA_PREFIX;
     }
 
-    /**
-     * Returns the XML schema for the output format.
-     *
-     * @return string XML schema URI
-     */
     public function getMetadataSchema()
     {
         return self::METADATA_SCHEMA;
     }
 
-    /**
-     * Returns the XML namespace for the output format.
-     *
-     * @return string XML namespace URI
-     */
     public function getMetadataNamespace()
     {
         return self::METADATA_NAMESPACE;

@@ -10,7 +10,6 @@ namespace OaiPmhRepository\OaiPmh\Metadata;
 
 use DOMElement;
 use Omeka\Api\Representation\ItemRepresentation;
-use Omeka\Settings\SettingsInterface;
 
 /**
  * Class implmenting metadata output for the required oai_dc metadata format.
@@ -31,21 +30,14 @@ class OaiDc extends AbstractMetadata
     const DC_NAMESPACE_URI = 'http://purl.org/dc/elements/1.1/';
 
     /**
-     * @var SettingsInterface
-     */
-    protected $settings;
-
-    public function __construct(SettingsInterface $settings)
-    {
-        $this->settings = $settings;
-    }
-
-    /**
      * Appends Dublin Core metadata.
      *
      * Appends a metadata element, an child element with the required format,
      * and further children for each of the Dublin Core fields present in the
      * item.
+     *
+     * {@inheritDoc}
+     * @see \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::appendMetadata()
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
@@ -94,31 +86,16 @@ class OaiDc extends AbstractMetadata
         }
     }
 
-    /**
-     * Returns the OAI-PMH metadata prefix for the output format.
-     *
-     * @return string Metadata prefix
-     */
     public function getMetadataPrefix()
     {
         return self::METADATA_PREFIX;
     }
 
-    /**
-     * Returns the XML schema for the output format.
-     *
-     * @return string XML schema URI
-     */
     public function getMetadataSchema()
     {
         return self::METADATA_SCHEMA;
     }
 
-    /**
-     * Returns the XML namespace for the output format.
-     *
-     * @return string XML namespace URI
-     */
     public function getMetadataNamespace()
     {
         return self::METADATA_NAMESPACE;
