@@ -13,7 +13,7 @@ class OaiSetManager extends AbstractPluginManager
      * @var array
      */
     protected $sortedNames = [
-        'base',
+        'basic',
     ];
 
     protected $autoAddInvokableClass = false;

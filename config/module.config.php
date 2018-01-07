@@ -89,7 +89,7 @@ return [
         ],
         'oai_set_formats' => [
             'factories' => [
-                'base' => Service\OaiPmh\OaiSet\BaseFactory::class,
+                'basic' => Service\OaiPmh\OaiSet\BasicFactory::class,
             ],
         ],
         'settings' => [
@@ -98,7 +98,7 @@ return [
             'oaipmhrepository_expose_media' => true,
             'oaipmhrepository_global_repository' => 'item_set',
             'oaipmhrepository_by_site_repository' => 'disabled',
-            'oaipmhrepository_oai_set_format' => 'base',
+            'oaipmhrepository_oai_set_format' => 'basic',
             'oaipmhrepository_list_limit' => 50,
             'oaipmhrepository_token_expiration_time' => 10,
         ],
