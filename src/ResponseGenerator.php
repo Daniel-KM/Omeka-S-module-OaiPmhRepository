@@ -10,6 +10,7 @@ namespace OaiPmhRepository;
 use DateTime;
 use DomDocument;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Omeka\Stdlib\Message;
 use Zend\Http\Request;
 
 /**
@@ -160,7 +161,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
         $requiredArgs = [];
         $optionalArgs = [];
         if (!($verb = $this->_getParam('verb'))) {
-            $this->throwError(self::OAI_ERR_BAD_VERB, 'No verb specified.');
+            $this->throwError(self::OAI_ERR_BAD_VERB, new Message('No verb specified.')); // @translate
 
             return;
         }
@@ -232,16 +233,16 @@ class ResponseGenerator extends XmlGeneratorAbstract
            than in PHP's returned array, if so there were duplicate arguments,
            which is not allowed. */
         if ($this->request->isGet() && urldecode($this->request->getUri()->getQuery()) != urldecode(http_build_query($this->query))) {
-            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, 'Duplicate arguments in request.');
+            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, new Message('Duplicate arguments in request.')); // @translate
         }
 
         $keys = array_keys($this->query);
 
         foreach (array_diff($requiredArgs, $keys) as $arg) {
-            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, "Missing required argument $arg.");
+            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, new Message('Missing required argument %s.', $arg)); // @translate
         }
         foreach (array_diff($keys, $requiredArgs, $optionalArgs) as $arg) {
-            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, "Unknown argument $arg.");
+            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, new Message('Unknown argument %s.', $arg)); // @translate
         }
 
         $from = $this->_getParam('from');
@@ -251,13 +252,13 @@ class ResponseGenerator extends XmlGeneratorAbstract
         $untilGran = self::getGranularity($until);
 
         if ($from && !$fromGran) {
-            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, 'Invalid date/time argument.');
+            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, new Message('Invalid date/time argument.')); // @translate
         }
         if ($until && !$untilGran) {
-            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, 'Invalid date/time argument.');
+            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, new Message('Invalid date/time argument.')); // @translate
         }
         if ($from && $until && $fromGran != $untilGran) {
-            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, 'Date/time arguments of differing granularity.');
+            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, new Message('Date/time arguments of differing granularity.')); // @translate
         }
 
         $metadataPrefix = $this->_getParam('metadataPrefix');
@@ -572,7 +573,7 @@ class ResponseGenerator extends XmlGeneratorAbstract
         $rows = count($paginator);
 
         if ($rows == 0) {
-            $this->throwError(self::OAI_ERR_NO_RECORDS_MATCH, 'No records match the given criteria');
+            $this->throwError(self::OAI_ERR_NO_RECORDS_MATCH, new Message('No records match the given criteria.')); // @translate
         } else {
             if ($verb == 'ListIdentifiers') {
                 $method = 'appendHeader';
