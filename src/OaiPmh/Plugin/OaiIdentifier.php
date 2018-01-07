@@ -8,6 +8,8 @@
  */
 namespace OaiPmhRepository\OaiPmh\Plugin;
 
+use DOMElement;
+
 /**
  * Utility class for dealing with OAI identifiers.
  *
