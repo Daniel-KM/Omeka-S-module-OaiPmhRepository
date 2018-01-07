@@ -129,9 +129,21 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                 break;
 
             case 'site_pool':
+                // TODO Improve query to get all item sets of an item that are attached to sites.
+                $itemSets = [];
+                foreach ($item->itemSets() as $itemSet) {
+                    $itemSets[$itemSet->id()] = $itemSet;
+                }
                 $sites = $this->api->search('sites')->getContent();
+                $siteItemSets = [];
                 foreach ($sites as $site) {
-                    $setSpecs[] = $this->getSetSpecSite($site);
+                    foreach ($site->siteItemSets() as $siteItemSet) {
+                        $itemSetId = $siteItemSet->itemSet()->id();
+                        if (isset($itemSets[$itemSetId])) {
+                            $setSpecs[] = $this->getSetSpecSite($site);
+                            break;
+                        }
+                    }
                 }
                 break;
         }
