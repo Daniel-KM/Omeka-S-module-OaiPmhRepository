@@ -171,7 +171,10 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $this->error = false;
         $this->request = $request;
-        $this->query = $request->getQuery()->toArray();
+        $this->query = $request->isGet()
+            ? $request->getQuery()->toArray()
+            : $request->getPost()->toArray();
+
         $this->document = new DomDocument('1.0', 'UTF-8');
 
         OaiIdentifier::initializeNamespace($settings->get('oaipmhrepository_namespace_id'));
@@ -322,10 +325,18 @@ class ResponseGenerator extends AbstractXmlGenerator
     {
         $requiredArgs[] = 'verb';
 
-        /* Checks (essentially), if there are more arguments in the query string
-           than in PHP's returned array, if so there were duplicate arguments,
-           which is not allowed. */
-        if ($this->request->isGet() && urldecode($this->request->getUri()->getQuery()) != urldecode(http_build_query($this->query))) {
+        // Checks (essentially), if there are more arguments in the query string
+        // than in PHP's returned array, if so there were duplicate arguments,
+        // which is not allowed.
+        switch ($this->request->getMethod()) {
+            case 'GET':
+                $query = $this->request->getUri()->getQuery();
+                break;
+            case 'POST':
+                $query = $this->request->getContent();
+                break;
+        }
+        if (urldecode($query) !== urldecode(http_build_query($this->query))) {
             $this->throwError(self::OAI_ERR_BAD_ARGUMENT, new Message('Duplicate arguments in request.')); // @translate
         }
 
