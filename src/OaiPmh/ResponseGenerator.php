@@ -237,6 +237,8 @@ class ResponseGenerator extends AbstractXmlGenerator
         $request = $this->document->createElement('request', $this->baseUrl);
         $this->document->documentElement->appendChild($request);
 
+        $this->checkRequestMethod();
+
         $requiredArgs = [];
         $optionalArgs = [];
         if (!($verb = $this->_getParam('verb'))) {
@@ -291,6 +293,18 @@ class ResponseGenerator extends AbstractXmlGenerator
                 $functionName = lcfirst($verb);
                 $this->$functionName();
             }
+        }
+    }
+
+    /**
+     * Check the method of the request.
+     */
+    private function checkRequestMethod()
+    {
+        $method = $this->request->getMethod();
+        if (!in_array($method, ['GET', 'POST'])) {
+            $this->throwError(self::OAI_ERR_BAD_ARGUMENT, new Message(
+                'The OAI-PMH protocol version 2.0 supports only "GET" and "POST" requests, not "%s".', $method)); // @translate
         }
     }
 
