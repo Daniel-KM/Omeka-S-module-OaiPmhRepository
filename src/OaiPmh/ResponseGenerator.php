@@ -571,7 +571,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      */
     private function resumeListResponse($token)
     {
-        $api = $this->serviceLocator->get('Omeka\ApiManager');
+        $api = $this->serviceLocator->get('ControllerPluginManager')->get('api');
         $expiredTokens = $api->search('oaipmh_repository_tokens', [
             'expired' => true,
         ])->getContent();
@@ -579,17 +579,21 @@ class ResponseGenerator extends AbstractXmlGenerator
             $api->delete('oaipmh_repository_tokens', $expiredToken->id());
         }
 
-        $tokenObject = $api->read('oaipmh_repository_tokens', $token)->getContent();
+        // TODO Purge tokens.
+
+        $tokenObject = $api->searchOne('oaipmh_repository_tokens', ['id' => $token])->getContent();
 
         if (!$tokenObject || ($tokenObject->verb() != $this->query['verb'])) {
             $this->throwError(self::OAI_ERR_BAD_RESUMPTION_TOKEN);
         } else {
-            $this->listResponse($tokenObject->verb(),
-                                $tokenObject->metadataPrefix(),
-                                $tokenObject->cursor(),
-                                $tokenObject->set(),
-                                $tokenObject->from(),
-                                $tokenObject->until());
+            $this->listResponse(
+                $tokenObject->verb(),
+                $tokenObject->metadataPrefix(),
+                $tokenObject->cursor(),
+                $tokenObject->set(),
+                $tokenObject->from(),
+                $tokenObject->until()
+            );
         }
     }
 
