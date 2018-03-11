@@ -42,7 +42,7 @@ class RequestController extends AbstractActionController
         $oaiResponse = new ResponseGenerator($request, $this->serviceLocator);
 
         $response = $this->getResponse();
-        $response->getHeaders()->addHeaderLine('Content-Type', 'text/xml; charset=utf-8');
+        $response->getHeaders()->addHeaderLine('Content-Type', 'text/xml; charset=UTF-8');
         $response->setContent((string) $oaiResponse);
 
         return $response;
