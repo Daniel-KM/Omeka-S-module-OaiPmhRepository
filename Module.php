@@ -67,7 +67,7 @@ SQL;
         $settings = $serviceLocator->get('Omeka\Settings');
         $this->manageSettings($settings, 'install');
         $settings->set('oaipmhrepository_name', $settings->get('installation_title'));
-        $settings->set('oaipmhrepository_namespace_id', $this->getServerName($serviceLocator));
+        $settings->set('oaipmhrepository_namespace_id', $this->getServerNameWithoutProtocol($serviceLocator));
     }
 
     public function uninstall(ServiceLocatorInterface $serviceLocator)
@@ -101,7 +101,7 @@ SQL;
             $settings->set('oaipmhrepository_name', $settings->get('oaipmh_repository_name',
                 $settings->get('installation_title')));
             $settings->set('oaipmhrepository_namespace_id', $settings->get('oaipmhrepository_namespace_id',
-                $this->getServerName($serviceLocator)));
+                $this->getServerNameWithoutProtocol($serviceLocator)));
             $settings->set('oaipmhrepository_expose_media', $settings->get('oaipmh_repository_namespace_expose_files',
                 $defaultSettings['oaipmhrepository_expose_media']));
             $settings->set('oaipmhrepository_list_limit',
@@ -267,14 +267,15 @@ SQL;
         ]);
     }
 
-    protected function getServerName($serviceLocator)
+    protected function getServerNameWithoutProtocol($serviceLocator)
     {
         $viewHelpers = $serviceLocator->get('ViewHelperManager');
         $serverUrlHelper = $viewHelpers->get('serverUrl');
-        $serverName = $serverUrlHelper->getHost();
+
+        $serverName = preg_replace('~(?:\w+://)?([^:]+)(?::\d*)?$~', '$1', $serverUrlHelper->getHost());
 
         $name = preg_replace('/[^a-z0-9\-\.]/i', '', $serverName);
-        if (empty($name) || $name == 'localhost') {
+        if (empty($name) || $name === 'localhost') {
             $name = 'default.must.change';
         }
 
