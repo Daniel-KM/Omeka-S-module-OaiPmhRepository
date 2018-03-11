@@ -37,7 +37,9 @@ class AbstractXmlGenerator
             if (is_array($value)) {
                 $this->createElementWithChildren($newElement, $tag, $value);
             } else {
-                $newElement->appendChild($document->createElement($tag, $value));
+                $element = $document->createElement($tag);
+                $element->appendChild($document->createTextNode($value));
+                $newElement->appendChild($element);
             }
         }
         $parent->appendChild($newElement);
