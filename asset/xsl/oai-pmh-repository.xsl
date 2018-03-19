@@ -6,7 +6,7 @@ Stylesheet to display responses to OAI-PMH requests with a Bootstrap theme.
 This stylesheet is primarily designed for Omeka Classic / Omeka S (https://omeka.org)
 and the plugins OAI-PMH Repository (https://omeka.org/classic/plugins/OaiPmhRepository /
 https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository)
-and OAI-PMH Gateway (https://github.com/Daniel-KM/OaiPmhGateway), but can be used by
+and OAI-PMH Gateway (https://github.com/Daniel-KM/Omeka-plugin-OaiPmhGateway), but can be used by
 any OAI-PMH Data Provider (https://www.openarchives.org/pmh/register_data_provider).
 To customize it, you may need to adapt the paths to the css and js for your application.
 CDN are used by default.
