@@ -50,16 +50,16 @@ class Module extends AbstractModule
         */
         $sql = <<<'SQL'
 CREATE TABLE oai_pmh_repository_token (
-    id INT AUTO_INCREMENT NOT NULL,
-    verb VARCHAR(190) NOT NULL,
-    metadata_prefix VARCHAR(190) NOT NULL,
+    `id` INT AUTO_INCREMENT NOT NULL,
+    `verb` VARCHAR(190) NOT NULL,
+    `metadata_prefix` VARCHAR(190) NOT NULL,
     `cursor` INT NOT NULL,
     `from` DATETIME DEFAULT NULL,
-    until DATETIME DEFAULT NULL,
-    `set` INT DEFAULT NULL,
-    expiration DATETIME NOT NULL,
-    INDEX IDX_E9AC4F9524CD504D (expiration),
-    PRIMARY KEY(id)
+    `until` DATETIME DEFAULT NULL,
+    `set` VARCHAR(190) DEFAULT NULL,
+    `expiration` DATETIME NOT NULL,
+    INDEX IDX_E9AC4F9524CD504D (`expiration`),
+    PRIMARY KEY(`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
 SQL;
         $connection->exec($sql);
@@ -132,6 +132,14 @@ SQL;
                 $defaultSettings['oaipmhrepository_human_interface']);
             $settings->set('oaipmhrepository_hide_empty_sets',
                 $defaultSettings['oaipmhrepository_hide_empty_sets']);
+        }
+
+        if (version_compare($oldVersion, '3.2.2', '<')) {
+            $connection = $serviceLocator->get('Omeka\Connection');
+            $sql = <<<'SQL'
+ALTER TABLE oai_pmh_repository_token CHANGE `set` `set` VARCHAR(190) DEFAULT NULL;
+SQL;
+            $connection->exec($sql);
         }
     }
 

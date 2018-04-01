@@ -59,7 +59,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
     protected $until;
 
     /**
-     * @Column(name="`set`", type="integer", nullable=true)
+     * @Column(name="`set`", type="string", length=190, nullable=true)
      */
     protected $set;
 
