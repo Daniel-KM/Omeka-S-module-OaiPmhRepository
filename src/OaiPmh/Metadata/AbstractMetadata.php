@@ -12,6 +12,7 @@ use DOMElement;
 use OaiPmhRepository\OaiPmh\AbstractXmlGenerator;
 use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
+use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\ItemRepresentation;
 use Omeka\Settings\SettingsInterface;
 
@@ -36,6 +37,11 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     protected $oaiSet;
 
+    /**
+     * @var bool
+     */
+    protected $isGlobalRepository;
+
     public function setSettings(SettingsInterface $settings)
     {
         $this->settings = $settings;
@@ -49,6 +55,11 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     public function getOaiSet()
     {
         return $this->oaiSet;
+    }
+
+    public function setIsGlobalRepository($isGlobalRepository)
+    {
+        $this->isGlobalRepository = $isGlobalRepository;
     }
 
     public function declareMetadataFormat(DOMElement $parent)
@@ -88,6 +99,41 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $setSpecs = $this->oaiSet->listSetSpecs($item);
         foreach ($setSpecs as $setSpec) {
             $this->appendNewElement($header, 'setSpec', $setSpec);
+        }
+    }
+
+    protected function isGlobalRepository()
+    {
+        return $this->isGlobalRepository;
+    }
+
+    protected function singleIdentifier(AbstractResourceEntityRepresentation $resource)
+    {
+        if ($this->isGlobalRepository()) {
+            $append = $this->settings->get('oaipmhrepository_append_identifier_global');
+            switch ($append) {
+                case 'api_url':
+                    return $resource->apiUrl();
+                case 'relative_site_url':
+                case 'absolute_site_url':
+                    $mainSite = $this->settings->get('default_site');
+                    if ($mainSite) {
+                        $mainSiteSlug = $resource->getServiceLocator()->get('ControllerPluginManager')
+                            ->get('api')->read('sites', $mainSite)->getContent()->slug();
+                        return $resource->siteUrl($mainSiteSlug, $append === 'absolute_site_url');
+                    }
+                    break;
+            }
+        } else {
+            $append = $this->settings->get('oaipmhrepository_append_identifier_site');
+            switch ($append) {
+                case 'api_url':
+                    return $resource->apiUrl();
+                case 'relative_site_url':
+                    return $resource->siteUrl();
+                case 'absolute_site_url':
+                    return $resource->siteUrl(null, true);
+            }
         }
     }
 

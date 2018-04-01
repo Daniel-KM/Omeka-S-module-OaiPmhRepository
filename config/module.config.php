@@ -41,7 +41,7 @@ return [
             'site' => [
                 'child_routes' => [
                     'oai-pmh' => [
-                        'type' => 'Segment',
+                        'type' => \Zend\Router\Http\Segment::class,
                         'options' => [
                             'route' => '/oai',
                             'defaults' => [
@@ -55,7 +55,7 @@ return [
                 ],
             ],
             'oai-pmh' => [
-                'type' => 'Literal',
+                'type' => \Zend\Router\Http\Literal::class,
                 'options' => [
                     'route' => '/oai',
                     'defaults' => [
@@ -99,6 +99,8 @@ return [
             'oaipmhrepository_hide_empty_sets' => true,
             'oaipmhrepository_global_repository' => 'item_set',
             'oaipmhrepository_by_site_repository' => 'disabled',
+            'oaipmhrepository_append_identifier_global' => 'api_url',
+            'oaipmhrepository_append_identifier_site' => 'absolute_site_url',
             'oaipmhrepository_oai_set_format' => 'basic',
             'oaipmhrepository_human_interface' => true,
             'oaipmhrepository_redirect_route' => '',

@@ -74,7 +74,10 @@ class OaiDc extends AbstractMetadata
             }
         }
 
-        $this->appendNewElement($oai_dc, 'dc:identifier', $item->siteUrl());
+        $appendIdentifier = $this->singleIdentifier($item);
+        if ($appendIdentifier) {
+            $this->appendNewElement($oai_dc, 'dc:identifier', $appendIdentifier);
+        }
 
         // Also append an identifier for each file
         if ($this->settings->get('oaipmhrepository_expose_media', false)) {

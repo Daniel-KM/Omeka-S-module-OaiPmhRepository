@@ -21,6 +21,9 @@ class MetsFactory implements FactoryInterface
         $metadataFormat = new Mets();
         $metadataFormat->setSettings($settings);
         $metadataFormat->setOaiSet($oaiSet);
+        $isGlobalRepository = !$services->get('ControllerPluginManager')
+            ->get('params')->fromRoute('__SITE__', false);
+        $metadataFormat->setIsGlobalRepository($isGlobalRepository);
         return $metadataFormat;
     }
 }

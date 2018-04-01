@@ -21,6 +21,9 @@ class CdwaLiteFactory implements FactoryInterface
         $metadataFormat = new CdwaLite();
         $metadataFormat->setSettings($settings);
         $metadataFormat->setOaiSet($oaiSet);
+        $isGlobalRepository = !$services->get('ControllerPluginManager')
+            ->get('params')->fromRoute('__SITE__', false);
+        $metadataFormat->setIsGlobalRepository($isGlobalRepository);
         return $metadataFormat;
     }
 }

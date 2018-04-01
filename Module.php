@@ -85,6 +85,10 @@ SQL;
 
     public function upgrade($oldVersion, $newVersion, ServiceLocatorInterface $serviceLocator)
     {
+        $config = require __DIR__ . '/config/module.config.php';
+        $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
+        $settings = $serviceLocator->get('Omeka\Settings');
+
         if (version_compare($oldVersion, '0.3', '<')) {
             $connection = $serviceLocator->get('Omeka\Connection');
             $sql = <<<'SQL'
@@ -93,10 +97,6 @@ DROP INDEX expiration ON oai_pmh_repository_token;
 CREATE INDEX IDX_E9AC4F9524CD504D ON oai_pmh_repository_token (expiration);
 SQL;
             $connection->exec($sql);
-
-            $config = require __DIR__ . '/config/module.config.php';
-            $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
-            $settings = $serviceLocator->get('Omeka\Settings');
 
             $settings->set('oaipmhrepository_name', $settings->get('oaipmh_repository_name',
                 $settings->get('installation_title')));
@@ -119,10 +119,6 @@ SQL;
         }
 
         if (version_compare($oldVersion, '0.3.1', '<')) {
-            $config = require __DIR__ . '/config/module.config.php';
-            $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
-            $settings = $serviceLocator->get('Omeka\Settings');
-
             $settings->set('oaipmhrepository_global_repository',
                 $defaultSettings['oaipmhrepository_global_repository']);
             $settings->set('oaipmhrepository_by_site_repository', 'item_set');
@@ -140,6 +136,11 @@ SQL;
 ALTER TABLE oai_pmh_repository_token CHANGE `set` `set` VARCHAR(190) DEFAULT NULL;
 SQL;
             $connection->exec($sql);
+
+            $settings->set('oaipmhrepository_append_identifier_global',
+                $defaultSettings['oaipmhrepository_append_identifier_global']);
+            $settings->set('oaipmhrepository_append_identifier_site',
+                $defaultSettings['oaipmhrepository_append_identifier_site']);
         }
     }
 
@@ -245,8 +246,10 @@ SQL;
             return false;
         }
 
+        $data = $form->getData();
+
         $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
-        foreach ($params as $name => $value) {
+        foreach ($data as $name => $value) {
             if (isset($defaultSettings[$name])) {
                 if ($name === 'oaipmhrepository_namespace_id' && $value === 'localhost') {
                     $value = 'default.must.change';

@@ -1,11 +1,7 @@
 <?php
 namespace OaiPmhRepository\Form;
 
-use Zend\Form\Element\Checkbox;
-use Zend\Form\Element\Number;
-use Zend\Form\Element\Radio;
-use Zend\Form\Element\Select;
-use Zend\Form\Element\Text;
+use Zend\Form\Element;
 use Zend\Form\Form;
 use Zend\I18n\Translator\TranslatorAwareInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
@@ -23,7 +19,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
     {
         $this->add([
             'name' => 'oaipmhrepository_name',
-            'type' => Text::class,
+            'type' => Element\Text::class,
             'options' => [
                 'label' => 'Repository name', // @translate
                 'info' => 'Name for this OAI-PMH repository.', // @translate
@@ -35,7 +31,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_namespace_id',
-            'type' => Text::class,
+            'type' => Element\Text::class,
             'options' => [
                 'label' => 'Namespace identifier', // @translate
                 'info' => $this->translate('This will be used to form globally unique IDs for the exposed metadata items.') // @translate
@@ -49,7 +45,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_expose_media',
-            'type' => Checkbox::class,
+            'type' => Element\Checkbox::class,
             'options' => [
                 'label' => 'Expose media', // @translate
                 'info' => $this->translate('Whether the plugin should include identifiers for the files associated with items.') // @translate
@@ -59,7 +55,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_hide_empty_sets',
-            'type' => Checkbox::class,
+            'type' => Element\Checkbox::class,
             'options' => [
                 'label' => 'Hide empty oai sets', // @translate
                 'info' => 'Whether the module should hide empty oai sets.', // @translate
@@ -68,7 +64,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_global_repository',
-            'type' => Radio::class,
+            'type' => Element\Radio::class,
             'options' => [
                 'label' => 'Global repository', // @translate
                 'info' => $this->translate('The global repository contains all the resources of Omeka S, in one place.') // @translate
@@ -84,7 +80,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_by_site_repository',
-            'type' => Radio::class,
+            'type' => Element\Radio::class,
             'options' => [
                 'label' => 'Site repositories', // @translate
                 'info' => 'The site repositories simulate multiple oai servers, with the site pools of items and the attached item sets as oai sets.', // @translate
@@ -96,11 +92,45 @@ class ConfigForm extends Form implements TranslatorAwareInterface
             ],
         ]);
 
+        $this->add([
+            'name' => 'oaipmhrepository_append_identifier_global',
+            'type' => Element\Radio::class,
+            'options' => [
+                'label' => 'Add identifier for global repository', // @translate
+                'info' => $this->translate('An identifier may be added to simplify harvests, in particular when there is no unique identifier (ark, noid, call number, etc.).') // @translate
+                    . ' ' . $this->translate('Only one identifier may be added and it can be the api url or a site specific url.') // @translate
+                    . ' ' . $this->translate('Some formats add their own identifier and other ones skip this option.'), // @translate
+                'value_options' => [
+                    'disabled' => 'None', // @translate
+                    'api_url' => 'Api url', // @translate
+                    'relative_site_url' => 'Relative site url', // @translate
+                    'absolute_site_url' => 'Absolute site url', // @translate
+                ],
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'oaipmhrepository_append_identifier_site',
+            'type' => Element\Radio::class,
+            'options' => [
+                'label' => 'Add identifier for site repositories', // @translate
+                'info' => $this->translate('An identifier may be added to simplify harvests, in particular when there is no unique identifier (ark, noid, call number, etc.).') // @translate
+                    . ' ' . $this->translate('Only one identifier may be added and it can be the api url or a site specific url.') // @translate
+                    . ' ' . $this->translate('Some formats add their own identifier and other ones skip this option.'), // @translate
+                'value_options' => [
+                    'disabled' => 'None', // @translate
+                    'api_url' => 'Api url', // @translate
+                    'relative_site_url' => 'Relative site url', // @translate
+                    'absolute_site_url' => 'Absolute site url', // @translate
+                ],
+            ],
+        ]);
+
         $valueOptions = $this->getOaiSetFormats();
         $valueOptions = array_combine($valueOptions, array_map('ucfirst', $valueOptions));
         $this->add([
             'name' => 'oaipmhrepository_oai_set_format',
-            'type' => Select::class,
+            'type' => Element\Select::class,
             'options' => [
                 'label' => 'Oai set format', // @translate
                 'info' => 'The format of the oai set identifiers.', // @translate
@@ -113,7 +143,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_human_interface',
-            'type' => Checkbox::class,
+            'type' => Element\Checkbox::class,
             'options' => [
                 'label' => 'Human interface', // @translate
                 'info' => $this->translate('The OAI-PMH pages can be displayed with a themable responsive human interface based on Bootstrap (https://getbootstrap.com).'), // @translate
@@ -122,7 +152,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_redirect_route',
-            'type' => Text::class,
+            'type' => Element\Text::class,
             'options' => [
                 'label' => 'Global repository redirect route', // @translate
                 'info' => 'An alias (redirect 301) for backward compatibility with Omeka Classic, that used "/oai-pmh-repository/request", or any other old OAI-PMH repository.', // @translate
@@ -131,7 +161,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_list_limit',
-            'type' => Number::class,
+            'type' => Element\Number::class,
             'options' => [
                 'label' => 'List limit', // @translate
                 'info' => $this->translate('Number of individual records that can be returned in a response at once.') // @translate
@@ -145,7 +175,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_token_expiration_time',
-            'type' => Number::class,
+            'type' => Element\Number::class,
             'options' => [
                 'label' => 'Token expiration time', // @translate
                 'info' => $this->translate('In minutes, the length of time a resumption token is valid for.') // @translate
