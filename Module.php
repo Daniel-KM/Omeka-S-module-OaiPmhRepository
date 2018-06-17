@@ -214,7 +214,7 @@ SQL;
         $services = $this->getServiceLocator();
         $config = $services->get('Config');
         $settings = $services->get('Omeka\Settings');
-        $formElementManager = $services->get('FormElementManager');
+        $form = $services->get('FormElementManager')->get(ConfigForm::class);
 
         $data = [];
         $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
@@ -222,7 +222,6 @@ SQL;
             $data[$name] = $settings->get($name);
         }
 
-        $form = $formElementManager->get(ConfigForm::class);
         $form->init();
         $form->setData($data);
         $html = $renderer->formCollection($form);
@@ -237,8 +236,7 @@ SQL;
 
         $params = $controller->getRequest()->getPost();
 
-        $form = $this->getServiceLocator()->get('FormElementManager')
-            ->get(ConfigForm::class);
+        $form = $services->get('FormElementManager')->get(ConfigForm::class);
         $form->init();
         $form->setData($params);
         if (!$form->isValid()) {
@@ -250,7 +248,7 @@ SQL;
 
         $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
         foreach ($data as $name => $value) {
-            if (isset($defaultSettings[$name])) {
+            if (array_key_exists($name, $defaultSettings)) {
                 if ($name === 'oaipmhrepository_namespace_id' && $value === 'localhost') {
                     $value = 'default.must.change';
                 }

@@ -110,10 +110,11 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                 case 'site_pool':
                     foreach ($oaiSets as $key => $oaiSet) {
                         $itemCount = $this->api
+                            // TODO Check if this limit is useful.
                             ->search('items', ['limit' => 0, 'site_id' => $oaiSet->id()])
                             ->getTotalResults();
                         if (empty($itemCount)) {
-                           unset($oaiSets[$key]);
+                            unset($oaiSets[$key]);
                         }
                     }
                     break;
