@@ -256,7 +256,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
             return;
         }
         $set = null;
-        if ((integer) $setSpec) {
+        if ((int) $setSpec) {
             try {
                 $set = $this->api->read('item_sets', ['id' => $setSpec])->getContent();
             } catch (\Omeka\Api\Exception\NotFoundException $e) {
