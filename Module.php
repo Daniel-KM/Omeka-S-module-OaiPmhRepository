@@ -207,6 +207,14 @@ SQL;
             'view.browse.after',
             [$this, 'filterAdminDashboardPanels']
         );
+
+        // The AbstractMetadata class is used in order to manage all formats,
+        // even if OaiDcTerms doesn't require it.
+        $sharedEventManager->attach(
+            \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::class,
+            'oaipmhrepository.values',
+            [$this, 'filterOaiPmhRepositoryValues']
+        );
     }
 
     public function getConfigForm(PhpRenderer $renderer)
@@ -274,6 +282,57 @@ SQL;
             'globalRepository' => $settings->get('oaipmhrepository_global_repository'),
             'bySiteRepository' => $settings->get('oaipmhrepository_by_site_repository'),
         ]);
+    }
+
+    public function filterOaiPmhRepositoryValues(Event $event)
+    {
+        static $genericDcterms;
+
+        if (is_null($genericDcterms)) {
+            $services = $this->getServiceLocator();
+            $settings = $services->get('Omeka\Settings');
+            $genericDcterms = $settings->get('oaipmhrepository_generic_dcterms', false);
+        }
+        if (!$genericDcterms) {
+            return;
+        }
+
+        $prefix = $event->getParam('prefix');
+        if ($prefix === 'oai_dcterms') {
+            return;
+        }
+
+        $map = include __DIR__ . '/data/mappings/dc_generic.php';
+        $term = $event->getParam('term');
+        if (empty($map[$term])) {
+            return;
+        }
+
+        $resource = $event->getParam('resource');
+        $values = $event->getParam('values');
+
+        $single = !is_array($values);
+        if ($single) {
+            if (count($values)) {
+                return;
+            }
+
+            foreach ($map[$term] as $refinedTerm) {
+                $refinedValue = $resource->value($refinedTerm);
+                if ($refinedValue) {
+                    $event->setParam('values', $refinedValue);
+                    return;
+                }
+            }
+
+            return;
+        }
+
+        foreach ($map[$term] as $refinedTerm) {
+            $refinedValues = $resource->value($refinedTerm, ['all' => true, 'default' => []]);
+            $values = array_merge($values, $refinedValues);
+        }
+        $event->setParam('values', $values);
     }
 
     protected function getServerNameWithoutProtocol($serviceLocator)

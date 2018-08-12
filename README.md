@@ -86,6 +86,14 @@ items and the attached item sets as oai sets.
 There is only one format currently, but new ones can be added, for example when
 the resource have a unique standard identifier.
 
+### Genericize Dublin Core terms
+
+This option allows to expose all metadata in the standard oai_dc and use refined
+terms for Dublin Core elements, for example "dcterms:abstract" will be merged
+with "dc:description". For other merges, the event `oaipmhrepository.values` can
+be used. For a quick hack, the file `data/mapping/generic_dcterms.php` can be
+used.
+
 ### Human interface
 
 The OAI-PMH pages can be displayed and browsed with a themable responsive human

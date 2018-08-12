@@ -103,6 +103,7 @@ return [
             'oaipmhrepository_append_identifier_global' => 'api_url',
             'oaipmhrepository_append_identifier_site' => 'absolute_site_url',
             'oaipmhrepository_oai_set_format' => 'basic',
+            'oaipmhrepository_generic_dcterms' => true,
             'oaipmhrepository_human_interface' => true,
             'oaipmhrepository_redirect_route' => '',
             'oaipmhrepository_list_limit' => 50,
