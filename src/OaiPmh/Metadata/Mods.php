@@ -131,7 +131,7 @@ class Mods extends AbstractMetadata
         if ($this->isGlobalRepository()) {
             $mainSite = $this->settings->get('default_site');
             if ($mainSite) {
-                $mainSiteSlug = $resource->getServiceLocator()->get('ControllerPluginManager')
+                $mainSiteSlug = $item->getServiceLocator()->get('ControllerPluginManager')
                     ->get('api')->read('sites', $mainSite)->getContent()->slug();
                 $append = $this->settings->get('oaipmhrepository_append_identifier_global');
                 $url = $item->siteUrl($mainSiteSlug, $append === 'absolute_site_url');
