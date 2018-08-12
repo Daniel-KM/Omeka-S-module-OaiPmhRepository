@@ -111,9 +111,9 @@ class Mets extends AbstractMetadata
                     $fileIds[] = $fileId;
 
                     foreach ($dcElementNames as $elementName) {
-                        $dcElements = $media->value("dcterms:$elementName", ['all' => true]);
-                        if ($dcElements) {
-                            $this->appendNewElement($fileDcXml, "dc:$elementName", $dcElements);
+                        $dcElements = $media->value("dcterms:$elementName", ['all' => true, 'default' => []]);
+                        foreach ($dcElements as $value) {
+                            $this->appendNewElement($fileDcXml, "dc:$elementName", (string) $value);
                         }
                     }
                 }
