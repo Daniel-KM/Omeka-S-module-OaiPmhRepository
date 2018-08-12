@@ -12,9 +12,9 @@ use DOMElement;
 use Omeka\Api\Representation\ItemRepresentation;
 
 /**
- * Class implmenting MODS metadata output format.
+ * Class implementing METS metadata output format.
  *
- * @link http://www.loc.gov/standards/mods/
+ * @link https://www.loc.gov/standards/mets/
  */
 class Mets extends AbstractMetadata
 {
@@ -31,14 +31,9 @@ class Mets extends AbstractMetadata
     const DC_NAMESPACE_URI = 'http://purl.org/dc/elements/1.1/';
 
     /**
-     * Appends MODS metadata.
-     *
-     * Appends a metadata element, an child element with the required format,
-     * and further children for each of the Dublin Core fields present in the
-     * item.
+     * Appends METS metadata.
      *
      * {@inheritDoc}
-     * @see \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::appendMetadata()
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
@@ -71,7 +66,7 @@ class Mets extends AbstractMetadata
         ];
 
         foreach ($dcElementNames as $elementName) {
-            $values = $item->value("dcterms:$elementName", ['all' => true]) ?: [];
+            $values = $item->value("dcterms:$elementName", ['all' => true, 'default' => []]);
             foreach ($values as $value) {
                 $this->appendNewElement($dcXml, "dc:$elementName", (string) $value);
             }

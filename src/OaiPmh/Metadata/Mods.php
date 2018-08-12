@@ -12,9 +12,9 @@ use DOMElement;
 use Omeka\Api\Representation\ItemRepresentation;
 
 /**
- * Class implmenting MODS metadata output format.
+ * Class implementing MODS metadata output format.
  *
- * @link http://www.loc.gov/standards/mods/
+ * @link https://www.loc.gov/standards/mods/
  */
 class Mods extends AbstractMetadata
 {
@@ -30,14 +30,9 @@ class Mods extends AbstractMetadata
     /**
      * Appends MODS metadata.
      *
-     * Appends a metadata element, an child element with the required format,
-     * and further children for each of the Dublin Core fields present in the
-     * item.
-     *
      * @link http://www.loc.gov/standards/mods/dcsimple-mods.html
      *
      * {@inheritDoc}
-     * @see \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::appendMetadata()
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
@@ -53,13 +48,13 @@ class Mods extends AbstractMetadata
         $mods->setAttribute('xsi:schemaLocation', self::METADATA_NAMESPACE
             . ' ' . self::METADATA_SCHEMA);
 
-        $titles = $item->value('dcterms:title', ['all' => true]) ?: [];
+        $titles = $item->value('dcterms:title', ['all' => true, 'default' => []]);
         foreach ($titles as $title) {
             $titleInfo = $this->appendNewElement($mods, 'titleInfo');
             $this->appendNewElement($titleInfo, 'title', (string) $title);
         }
 
-        $creators = $item->value('dcterms:creator', ['all' => true]) ?: [];
+        $creators = $item->value('dcterms:creator', ['all' => true, 'default' => []]);
         foreach ($creators as $creator) {
             $name = $this->appendNewElement($mods, 'name');
             $this->appendNewElement($name, 'namePart', (string) $creator);
@@ -68,7 +63,7 @@ class Mods extends AbstractMetadata
             $roleTerm->setAttribute('type', 'text');
         }
 
-        $contributors = $item->value('dcterms:contributor', ['all' => true]) ?: [];
+        $contributors = $item->value('dcterms:contributor', ['all' => true, 'default' => []]);
         foreach ($contributors as $contributor) {
             $name = $this->appendNewElement($mods, 'name');
             $this->appendNewElement($name, 'namePart', (string) $contributor);
@@ -77,41 +72,41 @@ class Mods extends AbstractMetadata
             $roleTerm->setAttribute('type', 'text');
         }
 
-        $subjects = $item->value('dcterms:contributor', ['all' => true]) ?: [];
+        $subjects = $item->value('dcterms:contributor', ['all' => true, 'default' => []]);
         foreach ($subjects as $subject) {
             $subjectTag = $this->appendNewElement($mods, 'subject');
             $this->appendNewElement($subjectTag, 'topic', (string) $subject);
         }
 
-        $descriptions = $item->value('dcterms:description', ['all' => true]) ?: [];
+        $descriptions = $item->value('dcterms:description', ['all' => true, 'default' => []]);
         foreach ($descriptions as $description) {
             $this->appendNewElement($mods, 'note', (string) $description);
         }
 
-        $formats = $item->value('dcterms:format', ['all' => true]) ?: [];
+        $formats = $item->value('dcterms:format', ['all' => true, 'default' => []]);
         foreach ($formats as $format) {
             $physicalDescription = $this->appendNewElement($mods, 'physicalDescription');
             $this->appendNewElement($physicalDescription, 'form', (string) $format);
         }
 
-        $languages = $item->value('dcterms:language', ['all' => true]) ?: [];
+        $languages = $item->value('dcterms:language', ['all' => true, 'default' => []]);
         foreach ($languages as $language) {
             $languageElement = $this->appendNewElement($mods, 'language');
             $languageTerm = $this->appendNewElement($languageElement, 'languageTerm', (string) $language);
             $languageTerm->setAttribute('type', 'text');
         }
 
-        $rights = $item->value('dcterms:rights', ['all' => true]) ?: [];
+        $rights = $item->value('dcterms:rights', ['all' => true, 'default' => []]);
         foreach ($rights as $right) {
             $this->appendNewElement($mods, 'accessCondition', (string) $right);
         }
 
-        $types = $item->value('dcterms:type', ['all' => true]) ?: [];
+        $types = $item->value('dcterms:type', ['all' => true, 'default' => []]);
         foreach ($types as $type) {
             $this->appendNewElement($mods, 'genre', (string) $type);
         }
 
-        $identifiers = $item->value('dcterms:identifier', ['all' => true]) ?: [];
+        $identifiers = $item->value('dcterms:identifier', ['all' => true, 'default' => []]);
         foreach ($identifiers as $identifier) {
             $text = (string) $identifier;
             $idElement = $this->appendNewElement($mods, 'identifier', $text);
@@ -122,12 +117,12 @@ class Mods extends AbstractMetadata
             }
         }
 
-        $sources = $item->value('dcterms:source', ['all' => true]) ?: [];
+        $sources = $item->value('dcterms:source', ['all' => true, 'default' => []]);
         foreach ($sources as $source) {
             $this->_addRelatedItem($mods, (string) $source, true);
         }
 
-        $relations = $item->value('dcterms:relation', ['all' => true]) ?: [];
+        $relations = $item->value('dcterms:relation', ['all' => true, 'default' => []]);
         foreach ($relations as $relation) {
             $this->_addRelatedItem($mods, (string) $relation);
         }
@@ -150,8 +145,8 @@ class Mods extends AbstractMetadata
         $url = $this->appendNewElement($location, 'url', $url);
         $url->setAttribute('usage', 'primary display');
 
-        $publishers = $item->value('dcterms:publisher', ['all' => true]) ?: [];
-        $dates = $item->value('dcterms:date', ['all' => true]) ?: [];
+        $publishers = $item->value('dcterms:publisher', ['all' => true, 'default' => []]);
+        $dates = $item->value('dcterms:date', ['all' => true, 'default' => []]);
 
         // Empty originInfo sections are illegal
         if (count($publishers) + count($dates) > 0) {
@@ -177,8 +172,8 @@ class Mods extends AbstractMetadata
      * location subelement if so. Otherwise, a titleInfo is used.
      *
      * @param DomElement $mods
-     * @param string     $text
-     * @param bool       $original
+     * @param string $text
+     * @param bool $original
      */
     private function _addRelatedItem($mods, $text, $original = false)
     {
@@ -199,7 +194,6 @@ class Mods extends AbstractMetadata
      * Returns whether the given test is (looks like) a URL.
      *
      * @param string $text
-     *
      * @return bool
      */
     private function _isUrl($text)

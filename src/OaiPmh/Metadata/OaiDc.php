@@ -12,7 +12,7 @@ use DOMElement;
 use Omeka\Api\Representation\ItemRepresentation;
 
 /**
- * Class implmenting metadata output for the required oai_dc metadata format.
+ * Class implementing metadata output for the required oai_dc metadata format.
  * oai_dc is output of the 15 unqualified Dublin Core fields.
  */
 class OaiDc extends AbstractMetadata
@@ -32,12 +32,7 @@ class OaiDc extends AbstractMetadata
     /**
      * Appends Dublin Core metadata.
      *
-     * Appends a metadata element, an child element with the required format,
-     * and further children for each of the Dublin Core fields present in the
-     * item.
-     *
      * {@inheritDoc}
-     * @see \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::appendMetadata()
      */
     public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
     {
@@ -54,7 +49,7 @@ class OaiDc extends AbstractMetadata
         $oai_dc->setAttribute('xsi:schemaLocation', self::METADATA_NAMESPACE . ' ' .
             self::METADATA_SCHEMA);
 
-        /* Each of the 16 unqualified Dublin Core elements, in the order
+        /* Each of the 15 unqualified Dublin Core elements, in the order
          * specified by the oai_dc XML schema
          */
         $dcElementNames = [
@@ -68,7 +63,7 @@ class OaiDc extends AbstractMetadata
          * compliant per-node declarations.
          */
         foreach ($dcElementNames as $elementName) {
-            $values = $item->value("dcterms:$elementName", ['all' => true]) ?: [];
+            $values = $item->value("dcterms:$elementName", ['all' => true, 'default' => []]);
             foreach ($values as $value) {
                 $this->appendNewElement($oai_dc, "dc:$elementName", (string) $value);
             }

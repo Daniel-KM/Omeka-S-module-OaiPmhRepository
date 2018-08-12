@@ -51,6 +51,7 @@ interface MetadataInterface
      * @uses appendMetadata
      *
      * @param DOMElement $parent
+     * @param ItemRepresentation $item
      */
     public function appendRecord(DOMElement $parent, ItemRepresentation $item);
 
@@ -61,6 +62,7 @@ interface MetadataInterface
      * appends in to the document.
      *
      * @param DOMElement $parent
+     * @param ItemRepresentation $item
      */
     public function appendHeader(DOMElement $parent, ItemRepresentation $item);
 
@@ -68,6 +70,7 @@ interface MetadataInterface
      * Appends the metadata for one Omeka item to the XML document.
      *
      * @param DOMElement $parent
+     * @param ItemRepresentation $item
      */
     public function appendMetadata(DOMElement $parent, ItemRepresentation $item);
 }
