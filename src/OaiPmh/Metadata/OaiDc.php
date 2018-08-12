@@ -63,7 +63,9 @@ class OaiDc extends AbstractMetadata
          * compliant per-node declarations.
          */
         foreach ($dcElementNames as $elementName) {
-            $values = $item->value("dcterms:$elementName", ['all' => true, 'default' => []]);
+            $term = 'dcterms:' . $elementName;
+            $values = $item->value($term, ['all' => true, 'default' => []]);
+            $values = $this->filterValues($item, $term, $values);
             foreach ($values as $value) {
                 $this->appendNewElement($oai_dc, "dc:$elementName", (string) $value);
             }

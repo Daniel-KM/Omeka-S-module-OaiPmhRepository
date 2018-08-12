@@ -49,12 +49,14 @@ class Mods extends AbstractMetadata
             . ' ' . self::METADATA_SCHEMA);
 
         $titles = $item->value('dcterms:title', ['all' => true, 'default' => []]);
+        $titles = $this->filterValues($item, 'dcterms:title', $titles);
         foreach ($titles as $title) {
             $titleInfo = $this->appendNewElement($mods, 'titleInfo');
             $this->appendNewElement($titleInfo, 'title', (string) $title);
         }
 
         $creators = $item->value('dcterms:creator', ['all' => true, 'default' => []]);
+        $creators = $this->filterValues($item, 'dcterms:creator', $creators);
         foreach ($creators as $creator) {
             $name = $this->appendNewElement($mods, 'name');
             $this->appendNewElement($name, 'namePart', (string) $creator);
@@ -64,6 +66,7 @@ class Mods extends AbstractMetadata
         }
 
         $contributors = $item->value('dcterms:contributor', ['all' => true, 'default' => []]);
+        $contributors = $this->filterValues($item, 'dcterms:contributor', $contributors);
         foreach ($contributors as $contributor) {
             $name = $this->appendNewElement($mods, 'name');
             $this->appendNewElement($name, 'namePart', (string) $contributor);
@@ -73,23 +76,27 @@ class Mods extends AbstractMetadata
         }
 
         $subjects = $item->value('dcterms:subject', ['all' => true, 'default' => []]);
+        $subjects = $this->filterValues($item, 'dcterms:subject', $subjects);
         foreach ($subjects as $subject) {
             $subjectTag = $this->appendNewElement($mods, 'subject');
             $this->appendNewElement($subjectTag, 'topic', (string) $subject);
         }
 
         $descriptions = $item->value('dcterms:description', ['all' => true, 'default' => []]);
+        $descriptions = $this->filterValues($item, 'dcterms:description', $descriptions);
         foreach ($descriptions as $description) {
             $this->appendNewElement($mods, 'note', (string) $description);
         }
 
         $formats = $item->value('dcterms:format', ['all' => true, 'default' => []]);
+        $formats = $this->filterValues($item, 'dcterms:format', $formats);
         foreach ($formats as $format) {
             $physicalDescription = $this->appendNewElement($mods, 'physicalDescription');
             $this->appendNewElement($physicalDescription, 'form', (string) $format);
         }
 
         $languages = $item->value('dcterms:language', ['all' => true, 'default' => []]);
+        $languages = $this->filterValues($item, 'dcterms:language', $languages);
         foreach ($languages as $language) {
             $languageElement = $this->appendNewElement($mods, 'language');
             $languageTerm = $this->appendNewElement($languageElement, 'languageTerm', (string) $language);
@@ -97,16 +104,19 @@ class Mods extends AbstractMetadata
         }
 
         $rights = $item->value('dcterms:rights', ['all' => true, 'default' => []]);
+        $rights = $this->filterValues($item, 'dcterms:rights', $rights);
         foreach ($rights as $right) {
             $this->appendNewElement($mods, 'accessCondition', (string) $right);
         }
 
         $types = $item->value('dcterms:type', ['all' => true, 'default' => []]);
+        $types = $this->filterValues($item, 'dcterms:type', $types);
         foreach ($types as $type) {
             $this->appendNewElement($mods, 'genre', (string) $type);
         }
 
         $identifiers = $item->value('dcterms:identifier', ['all' => true, 'default' => []]);
+        $identifiers = $this->filterValues($item, 'dcterms:identifier', $identifiers);
         foreach ($identifiers as $identifier) {
             $text = (string) $identifier;
             $idElement = $this->appendNewElement($mods, 'identifier', $text);
@@ -118,11 +128,13 @@ class Mods extends AbstractMetadata
         }
 
         $sources = $item->value('dcterms:source', ['all' => true, 'default' => []]);
+        $sources = $this->filterValues($item, 'dcterms:source', $sources);
         foreach ($sources as $source) {
             $this->_addRelatedItem($mods, (string) $source, true);
         }
 
         $relations = $item->value('dcterms:relation', ['all' => true, 'default' => []]);
+        $relations = $this->filterValues($item, 'dcterms:relation', $relations);
         foreach ($relations as $relation) {
             $this->_addRelatedItem($mods, (string) $relation);
         }
@@ -146,7 +158,9 @@ class Mods extends AbstractMetadata
         $url->setAttribute('usage', 'primary display');
 
         $publishers = $item->value('dcterms:publisher', ['all' => true, 'default' => []]);
+        $publishers = $this->filterValues($item, 'dcterms:publishers', $publishers);
         $dates = $item->value('dcterms:date', ['all' => true, 'default' => []]);
+        $dates = $this->filterValues($item, 'dcterms:date', $dates);
 
         // Empty originInfo sections are illegal
         if (count($publishers) + count($dates) > 0) {

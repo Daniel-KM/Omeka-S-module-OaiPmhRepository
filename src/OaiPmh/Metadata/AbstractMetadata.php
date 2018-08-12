@@ -16,7 +16,6 @@ use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\ItemRepresentation;
 use Omeka\Api\Representation\ValueRepresentation;
 use Omeka\Settings\SettingsInterface;
-use Zend\EventManager\Event;
 use Zend\EventManager\EventManagerAwareInterface;
 use Zend\EventManager\EventManagerAwareTrait;
 
@@ -159,18 +158,16 @@ abstract class AbstractMetadata
         $term,
         $values
     ) {
-        /** @var \Zend\EventManager\EventManager $eventManager */
-        $eventManager = $this->getEventManager();
-        /** @var \ArrayObject $args */
-        $args = $eventManager->prepareArgs([]);
-        $args['repository'] = self::class;
-        $args['resource'] = $resource;
+        $args = [];
+        $args['prefix'] = $this->getMetadataPrefix();
         $args['term'] = $term;
+        $args['resource'] = $resource;
         $args['values'] = $values;
 
-        $event = new Event('oaipmhrepository.values', $this, $args);
-        $eventManager->triggerEvent($event);
-
+        /** @var \ArrayObject $args */
+        $eventManager = $this->getEventManager();
+        $args = $eventManager->prepareArgs($args);
+        $eventManager->trigger('oaipmhrepository.values', $this, $args);
         return $args['values'];
     }
 

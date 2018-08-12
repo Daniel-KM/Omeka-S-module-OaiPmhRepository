@@ -66,7 +66,9 @@ class Mets extends AbstractMetadata
         ];
 
         foreach ($dcElementNames as $elementName) {
-            $values = $item->value("dcterms:$elementName", ['all' => true, 'default' => []]);
+            $term = 'dcterms:' . $elementName;
+            $values = $item->value($term, ['all' => true, 'default' => []]);
+            $values = $this->filterValues($item, $term, $values);
             foreach ($values as $value) {
                 $this->appendNewElement($dcXml, "dc:$elementName", (string) $value);
             }
@@ -111,9 +113,11 @@ class Mets extends AbstractMetadata
                     $fileIds[] = $fileId;
 
                     foreach ($dcElementNames as $elementName) {
-                        $dcElements = $media->value("dcterms:$elementName", ['all' => true, 'default' => []]);
-                        foreach ($dcElements as $value) {
-                            $this->appendNewElement($fileDcXml, "dc:$elementName", (string) $value);
+                        $term = 'dcterms:' . $elementName;
+                        $values = $media->value($term, ['all' => true, 'default' => []]);
+                        $values = $this->filterValues($media, $term, $values);
+                        foreach ($values as $value) {
+                            $this->appendNewElement($fileDcXml, 'dc:' . $elementName, (string) $value);
                         }
                     }
                 }

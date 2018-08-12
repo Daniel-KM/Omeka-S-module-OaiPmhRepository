@@ -162,12 +162,19 @@ by harvesters or other tools and because the RRCHNM itself removed the [schema]
 from the last site.
 
 **NOTE**: Because of its limited support by harvesters, the format is not
-implemented.
+implemented in Omeka S.
 
 ### Other formats
 
 Other formats can be added or replace an existing one via a key in the config
 `['oaipmhrepository']['metadata_formats']`.
+
+### Customization
+
+The output can be customized via the filter `oaipmhrepository.values`, that is
+triggered for each term. So it is possible to remove, to update or to append
+some values, or to convert some properties from other vocabularies into the
+standard formats.
 
 
 Warning

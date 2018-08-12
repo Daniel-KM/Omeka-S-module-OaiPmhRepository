@@ -19,6 +19,7 @@ class MetsFactory implements FactoryInterface
         $oaiSetManager = $services->get('OaiPmhRepository\OaiPmh\OaiSetManager');
         $oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'base'));
         $metadataFormat = new Mets();
+        $metadataFormat->setEventManager($services->get('EventManager'));
         $metadataFormat->setSettings($settings);
         $metadataFormat->setOaiSet($oaiSet);
         $isGlobalRepository = !$services->get('ControllerPluginManager')
