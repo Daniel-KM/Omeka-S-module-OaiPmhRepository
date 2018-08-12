@@ -14,7 +14,11 @@ use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\ItemRepresentation;
+use Omeka\Api\Representation\ValueRepresentation;
 use Omeka\Settings\SettingsInterface;
+use Zend\EventManager\Event;
+use Zend\EventManager\EventManagerAwareInterface;
+use Zend\EventManager\EventManagerAwareTrait;
 
 /**
  * Abstract class on which all other metadata format handlers are based.
@@ -23,8 +27,12 @@ use Omeka\Settings\SettingsInterface;
  * @todo Migration to PHP 5.3 will allow the abstract getter functions to be
  *       static, as they should be
  */
-abstract class AbstractMetadata extends AbstractXmlGenerator implements MetadataInterface
+abstract class AbstractMetadata
+    extends AbstractXmlGenerator
+    implements MetadataInterface, EventManagerAwareInterface
 {
+    use EventManagerAwareTrait;
+
     /**
      * @var SettingsInterface
      */
@@ -136,6 +144,34 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                     return $resource->siteUrl(null, true);
             }
         }
+    }
+
+    /**
+     * Filter values (remove, update or append) of a resource via an event.
+     *
+     * @param AbstractResourceEntityRepresentation $resource
+     * @param string $term
+     * @param ValueRepresentation|ValueRepresentation[]|null $values
+     * @return ValueRepresentation|ValueRepresentation[]|null
+     */
+    protected function filterValues(
+        AbstractResourceEntityRepresentation $resource,
+        $term,
+        $values
+    ) {
+        /** @var \Zend\EventManager\EventManager $eventManager */
+        $eventManager = $this->getEventManager();
+        /** @var \ArrayObject $args */
+        $args = $eventManager->prepareArgs([]);
+        $args['repository'] = self::class;
+        $args['resource'] = $resource;
+        $args['term'] = $term;
+        $args['values'] = $values;
+
+        $event = new Event('oaipmhrepository.values', $this, $args);
+        $eventManager->triggerEvent($event);
+
+        return $args['values'];
     }
 
     /**
