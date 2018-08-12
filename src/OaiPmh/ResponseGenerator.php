@@ -367,8 +367,15 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $metadataPrefix = $this->_getParam('metadataPrefix');
 
+
         $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
-        if ($metadataPrefix && !$metadataFormatManager->has($metadataPrefix)) {
+        $metadataFormats = $this->serviceLocator->get('Omeka\Settings')->get('oaipmhrepository_metadata_formats');
+        if ($metadataPrefix
+            && (
+                !$metadataFormatManager->has($metadataPrefix)
+                || !in_array($metadataPrefix, $metadataFormats)
+            )
+        ) {
             $this->throwError(self::OAI_ERR_CANNOT_DISSEMINATE_FORMAT);
         }
     }
@@ -764,11 +771,15 @@ class ResponseGenerator extends AbstractXmlGenerator
     private function getFormats()
     {
         $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
+        $metadataFormatUsed = $this->serviceLocator->get('Omeka\Settings')->get('oaipmhrepository_metadata_formats');
 
         $metadataFormats = [];
         foreach ($metadataFormatManager->getRegisteredNames() as $name) {
             $metadataFormat = $metadataFormatManager->get($name);
             $metadataPrefix = $metadataFormat->getMetadataPrefix();
+            if (!in_array($metadataPrefix, $metadataFormatUsed)) {
+                continue;
+            }
             $metadataFormats[$metadataPrefix] = $metadataFormat;
         }
 

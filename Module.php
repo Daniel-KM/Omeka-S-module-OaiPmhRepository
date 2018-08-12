@@ -259,6 +259,9 @@ SQL;
             if (array_key_exists($name, $defaultSettings)) {
                 if ($name === 'oaipmhrepository_namespace_id' && $value === 'localhost') {
                     $value = 'default.must.change';
+                } elseif ($name === 'oaipmhrepository_metadata_formats') {
+                    $value[] = 'oai_dc';
+                    $value = array_unique($value);
                 }
                 $settings->set($name, $value);
             }

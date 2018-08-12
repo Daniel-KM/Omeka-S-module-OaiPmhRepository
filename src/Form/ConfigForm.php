@@ -13,6 +13,11 @@ class ConfigForm extends Form implements TranslatorAwareInterface
     /**
      * @var array
      */
+    protected $metadataFormats;
+
+    /**
+     * @var array
+     */
     protected $oaiSetFormats;
 
     public function init()
@@ -40,6 +45,24 @@ class ConfigForm extends Form implements TranslatorAwareInterface
             ],
             'attributes' => [
                 'required' => true,
+            ],
+        ]);
+
+        $valueOptions = $this->getMetadataFormats();
+        $valueOptions = array_combine($valueOptions, $valueOptions);
+        $this->add([
+            'name' => 'oaipmhrepository_metadata_formats',
+            'type' => Element\Select::class,
+            'options' => [
+                'label' => 'Metadata formats', // @translate
+                'info' => 'The format that will be made available. oai_dc is required.', // @translate
+                'value_options' => $valueOptions,
+            ],
+            'attributes' => [
+                'required' => 'true',
+                'class' => 'chosen-select',
+                'multiple' => true,
+                'data-placeholder' => 'Select formats', // @translate
             ],
         ]);
 
@@ -203,6 +226,22 @@ class ConfigForm extends Form implements TranslatorAwareInterface
     {
         $translator = $this->getTranslator();
         return $translator->translate($args);
+    }
+
+    /**
+     * @param array
+     */
+    public function setMetadataFormats(array $metadataFormats)
+    {
+        $this->metadataFormats = $metadataFormats;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMetadataFormats()
+    {
+        return $this->metadataFormats;
     }
 
     /**

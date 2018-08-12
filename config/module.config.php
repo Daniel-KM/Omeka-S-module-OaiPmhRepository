@@ -96,6 +96,13 @@ return [
         'config' => [
             'oaipmhrepository_name' => '',
             'oaipmhrepository_namespace_id' => '',
+            'oaipmhrepository_metadata_formats' => [
+                'oai_dc',
+                'cdwalite',
+                'mets',
+                'mods',
+                'oai_dcterms',
+            ],
             'oaipmhrepository_expose_media' => true,
             'oaipmhrepository_hide_empty_sets' => true,
             'oaipmhrepository_global_repository' => 'item_set',
