@@ -1,9 +1,10 @@
 OAI-PMH Repository (module for Omeka S)
 =======================================
 
-[OAI-PMH Repository] is a module for [Omeka S] that implements an Open Archives Initiative Protocol for Metadata Harvesting ([OAI-PMH]) repository for Omeka S, allowing
-Omeka S items, item sets, and media to be harvested by OAI-PMH harvesters. The
-module implements version 2.0 of the protocol.
+[OAI-PMH Repository] is a module for [Omeka S] that implements an Open Archives
+Initiative Protocol for Metadata Harvesting ([OAI-PMH]) repository for Omeka S,
+allowing Omeka S items, item sets, and media to be harvested by OAI-PMH
+harvesters. The module implements version 2.0 of the protocol.
 
 This [Omeka S] module is a rewrite of the [OAI-PMH Repository plugin] for [Omeka]
 by [BibLibre] and intends to provide the same features as the original plugin.
@@ -51,6 +52,10 @@ breaks the assumption that each identifier is globally unique. Best practice is
 to set this value to the domain name the Omeka server is published at, possibly
 with a prefix like "oai."
 
+### Metadata formats
+
+Select the formats that will be available. Only `oai_dc` is required.
+
 ### Expose media
 
 Whether the repository should expose direct URLs to all the files associated
@@ -93,6 +98,11 @@ terms for Dublin Core elements, for example "dcterms:abstract" will be merged
 with "dc:description". For other merges, the event `oaipmhrepository.values` can
 be used. For a quick hack, the file `data/mapping/generic_dcterms.php` can be
 used.
+
+### Metadata for mets (item and media)
+
+Mets can use any format to describe the item and the files. The formats that are
+commonly used are `dc` and `mods` (currently unavailable).
 
 ### Human interface
 
