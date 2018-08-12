@@ -30,6 +30,9 @@ class Mets extends AbstractMetadata
     /** XML namespace for unqualified Dublin Core */
     const DC_NAMESPACE_URI = 'http://purl.org/dc/elements/1.1/';
 
+    /** XML namespace for Dublin Core */
+    const DCTERMS_NAMESPACE_URI = 'http://purl.org/dc/terms/';
+
     /**
      * Appends METS metadata.
      *
@@ -53,43 +56,27 @@ class Mets extends AbstractMetadata
         $metadataSection = $this->appendNewElement($mets, 'dmdSec');
         $itemDmdId = 'dmd-' . $item->id();
         $metadataSection->setAttribute('ID', $itemDmdId);
-        $dcWrap = $this->appendNewElement($metadataSection, 'mdWrap');
-        $dcWrap->setAttribute('MDTYPE', 'DC');
+        $dataWrap = $this->appendNewElement($metadataSection, 'mdWrap');
 
-        $dcXml = $this->appendNewElement($dcWrap, 'xmlData');
-        $dcXml->setAttribute('xmlns:dc', self::DC_NAMESPACE_URI);
-
-        $localNames = [
-            'title',
-            'creator',
-            'subject',
-            'description',
-            'publisher',
-            'contributor',
-            'date',
-            'type',
-            'format',
-            'identifier',
-            'source',
-            'language',
-            'relation',
-            'coverage',
-            'rights',
-        ];
-
-        foreach ($localNames as $localName) {
-            $term = 'dcterms:' . $localName;
-            $values = $item->value($term, ['all' => true, 'default' => []]);
-            $values = $this->filterValues($item, $term, $values);
-            foreach ($values as $value) {
-                $this->appendNewElement($dcXml, 'dc:' . $localName, (string) $value);
-            }
+        $itemDataFormat = $this->settings->get('oaipmhrepository_mets_data_item');
+        switch ($itemDataFormat) {
+            case 'dc':
+            default:
+                $this->mdtypeDc($dataWrap, $item);
+                break;
+            case 'dcterms':
+                $this->mdtypeDcterms($dataWrap, $item);
+                break;
+            // case 'mods':
+            //    break;
         }
 
         $fileIds = [];
         if ($this->settings->get('oaipmhrepository_expose_media', false)) {
             $mediaList = $item->media();
             if (count($mediaList)) {
+                $mediaDataFormat = $this->settings->get('oaipmhrepository_mets_data_media');
+
                 $fileSection = $this->appendNewElement($mets, 'fileSec');
                 $fileGroup = $this->appendNewElement($fileSection, 'fileGrp');
                 $fileGroup->setAttribute('USE', 'ORIGINAL');
@@ -97,6 +84,7 @@ class Mets extends AbstractMetadata
                 foreach ($mediaList as $media) {
                     $fileDmdId = 'dmd-file-' . $media->id();
                     $fileId = 'file-' . $media->id();
+                    $fileIds[] = $fileId;
 
                     $fileElement = $this->appendNewElement($fileGroup, 'file');
                     $fileElement->setAttribute('xmlns:dc', self::DC_NAMESPACE_URI);
@@ -116,21 +104,17 @@ class Mets extends AbstractMetadata
                     $fileContentMetadata = $this->appendNewElement($mets, 'dmdSec');
                     $fileContentMetadata->setAttribute('ID', $fileDmdId);
 
-                    $fileDcWrap = $this->appendNewElement($fileContentMetadata, 'mdWrap');
-                    $fileDcWrap->setAttribute('MDTYPE', 'DC');
-
-                    $fileDcXml = $this->appendNewElement($fileDcWrap, 'xmlData');
-                    $fileDcXml->setAttribute('xmlns:dc', self::DC_NAMESPACE_URI);
-
-                    $fileIds[] = $fileId;
-
-                    foreach ($localNames as $localName) {
-                        $term = 'dcterms:' . $localName;
-                        $values = $media->value($term, ['all' => true, 'default' => []]);
-                        $values = $this->filterValues($media, $term, $values);
-                        foreach ($values as $value) {
-                            $this->appendNewElement($fileDcXml, 'dc:' . $localName, (string) $value);
-                        }
+                    $fileDataWrap = $this->appendNewElement($fileContentMetadata, 'mdWrap');
+                    switch ($mediaDataFormat) {
+                        case 'dc':
+                        default:
+                            $this->mdtypeDc($fileDataWrap, $media);
+                            break;
+                        case 'dcterms':
+                            $this->mdtypeDcterms($fileDataWrap, $media);
+                            break;
+                            // case 'mods':
+                            //    break;
                     }
                 }
             }
@@ -158,5 +142,117 @@ class Mets extends AbstractMetadata
     public function getMetadataNamespace()
     {
         return self::METADATA_NAMESPACE;
+    }
+
+    protected function mdtypeDc($dataWrap, $resource)
+    {
+        $dataWrap->setAttribute('MDTYPE', 'DC');
+        $dataXml = $this->appendNewElement($dataWrap, 'xmlData');
+        $dataXml->setAttribute('xmlns:dc', self::DC_NAMESPACE_URI);
+
+        $localNames = [
+            'title',
+            'creator',
+            'subject',
+            'description',
+            'publisher',
+            'contributor',
+            'date',
+            'type',
+            'format',
+            'identifier',
+            'source',
+            'language',
+            'relation',
+            'coverage',
+            'rights',
+        ];
+
+        foreach ($localNames as $localName) {
+            $term = 'dcterms:' . $localName;
+            $values = $resource->value($term, ['all' => true, 'default' => []]);
+            $values = $this->filterValues($resource, $term, $values);
+            foreach ($values as $value) {
+                $this->appendNewElement($dataXml, 'dc:' . $localName, (string) $value);
+            }
+        }
+    }
+
+    protected function mdtypeDcterms($dataWrap, $resource)
+    {
+        $dataWrap->setAttribute('MDTYPE', 'DC');
+        $dataWrap->setAttribute('MDTYPEVERSION', 'DCMI Metadata Terms');
+        $dataXml = $this->appendNewElement($dataWrap, 'xmlData');
+        $dataXml->setAttribute('xmlns:dcterms', self::DCTERMS_NAMESPACE_URI);
+
+        // Each of the 55 Dublin Core terms, in the Omeka order.
+        $localNames = [
+            // Dublin Core Elements.
+            'title',
+            'creator',
+            'subject',
+            'description',
+            'publisher',
+            'contributor',
+            'date',
+            'type',
+            'format',
+            'identifier',
+            'source',
+            'language',
+            'relation',
+            'coverage',
+            'rights',
+            // Dublin Core terms.
+            'audience',
+            'alternative',
+            'tableOfContents',
+            'abstract',
+            'created',
+            'valid',
+            'available',
+            'issued',
+            'modified',
+            'extent',
+            'medium',
+            'isVersionOf',
+            'hasVersion',
+            'isReplacedBy',
+            'replaces',
+            'isRequiredBy',
+            'requires',
+            'isPartOf',
+            'hasPart',
+            'isReferencedBy',
+            'references',
+            'isFormatOf',
+            'hasFormat',
+            'conformsTo',
+            'spatial',
+            'temporal',
+            'mediator',
+            'dateAccepted',
+            'dateCopyrighted',
+            'dateSubmitted',
+            'educationLevel',
+            'accessRights',
+            'bibliographicCitation',
+            'license',
+            'rightsHolder',
+            'provenance',
+            'instructionalMethod',
+            'accrualMethod',
+            'accrualPeriodicity',
+            'accrualPolicy',
+        ];
+
+        foreach ($localNames as $localName) {
+            $term = 'dcterms:' . $localName;
+            $values = $resource->value($term, ['all' => true, 'default' => []]);
+            $values = $this->filterValues($resource, $term, $values);
+            foreach ($values as $value) {
+                $this->appendNewElement($dataXml, $term, (string) $value);
+            }
+        }
     }
 }

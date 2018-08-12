@@ -176,6 +176,36 @@ class ConfigForm extends Form implements TranslatorAwareInterface
         ]);
 
         $this->add([
+            'name' => 'oaipmhrepository_mets_data_item',
+            'type' => Element\Select::class,
+            'options' => [
+                'label' => 'Mets: data format for item', // @translate
+                'info' => 'The format of the metadata of item.', // @translate
+                'value_options' => [
+                    'dc' => 'Dublin Core',
+                    'dcterms' => 'Dublin Core terms',
+                    // TODO Use mods inside mets.
+                    // 'mods' => 'Mods',
+                ],
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'oaipmhrepository_mets_data_media',
+            'type' => Element\Select::class,
+            'options' => [
+                'label' => 'Mets: data format for media', // @translate
+                'info' => 'The format of the metadata of media.', // @translate
+                'value_options' => [
+                    'dc' => 'Dublin Core',
+                    'dcterms' => 'Dublin Core terms',
+                    // TODO Use mods inside mets.
+                    // 'mods' => 'Mods',
+                ],
+            ],
+        ]);
+
+        $this->add([
             'name' => 'oaipmhrepository_human_interface',
             'type' => Element\Checkbox::class,
             'options' => [

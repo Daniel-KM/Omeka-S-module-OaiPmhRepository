@@ -111,6 +111,8 @@ return [
             'oaipmhrepository_append_identifier_site' => 'absolute_site_url',
             'oaipmhrepository_oai_set_format' => 'basic',
             'oaipmhrepository_generic_dcterms' => true,
+            'oaipmhrepository_mets_data_item' => 'dcterms',
+            'oaipmhrepository_mets_data_media' => 'dcterms',
             'oaipmhrepository_human_interface' => true,
             'oaipmhrepository_redirect_route' => '',
             'oaipmhrepository_list_limit' => 50,

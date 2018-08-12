@@ -300,9 +300,29 @@ SQL;
             return;
         }
 
+        $resource = $event->getParam('resource');
+
+        // Manage exception for mets and dcterms.
         $prefix = $event->getParam('prefix');
         if ($prefix === 'oai_dcterms') {
             return;
+        }
+
+        if ($prefix === 'mets') {
+            $services = $this->getServiceLocator();
+            $settings = $services->get('Omeka\Settings');
+            switch (get_class($resource)) {
+                case \Omeka\Api\Representation\ItemRepresentation::class:
+                default:
+                    $dataFormat = $settings->get('oaipmhrepository_mets_data_item');
+                    break;
+                case \Omeka\Api\Representation\MediaRepresentation::class:
+                    $dataFormat = $settings->get('oaipmhrepository_mets_data_media');
+                    break;
+            }
+            if ($dataFormat === 'dcterms') {
+                return;
+            }
         }
 
         $map = include __DIR__ . '/data/mappings/dc_generic.php';
@@ -311,7 +331,6 @@ SQL;
             return;
         }
 
-        $resource = $event->getParam('resource');
         $values = $event->getParam('values');
 
         $single = !is_array($values);
