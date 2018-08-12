@@ -72,7 +72,7 @@ class Mods extends AbstractMetadata
             $roleTerm->setAttribute('type', 'text');
         }
 
-        $subjects = $item->value('dcterms:contributor', ['all' => true, 'default' => []]);
+        $subjects = $item->value('dcterms:subject', ['all' => true, 'default' => []]);
         foreach ($subjects as $subject) {
             $subjectTag = $this->appendNewElement($mods, 'subject');
             $this->appendNewElement($subjectTag, 'topic', (string) $subject);
