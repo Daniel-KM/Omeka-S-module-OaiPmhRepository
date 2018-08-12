@@ -503,7 +503,6 @@ class ResponseGenerator extends AbstractXmlGenerator
         if (!$this->error) {
             $listMetadataFormats = $this->document->createElement('ListMetadataFormats');
             $this->document->documentElement->appendChild($listMetadataFormats);
-            $settings = $this->serviceLocator->get('Omeka\Settings');
             foreach ($this->getFormats() as $format) {
                 $format->declareMetadataFormat($listMetadataFormats);
             }
@@ -613,7 +612,6 @@ class ResponseGenerator extends AbstractXmlGenerator
     {
         $apiAdapterManager = $this->serviceLocator->get('Omeka\ApiAdapterManager');
         $entityManager = $this->serviceLocator->get('Omeka\EntityManager');
-        $controllerPluginManager = $this->serviceLocator->get('ControllerPluginManager');
 
         $itemRepository = $entityManager->getRepository('Omeka\Entity\Item');
         $qb = $itemRepository->createQueryBuilder('Omeka\Entity\Item');
