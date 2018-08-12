@@ -12,25 +12,33 @@ use DOMElement;
 use Omeka\Api\Representation\ItemRepresentation;
 
 /**
- * Class implementing metadata output for the required oai_dc metadata format.
- * oai_dc is output of the 15 unqualified Dublin Core fields.
+ * Class implementing metadata output for the oai_dcterms metadata format.
+ * oai_dcterms is output of the 55 Dublin Core terms.
+ *
+ * This format is not standardized, but used by some repositories.
+ * Note: the namespace and the schema don’t exist. It is designed as an extended
+ * version of oai_dc.
+ *
+ * @link http://www.bl.uk/schemas/
+ * @link http://dublincore.org/documents/dc-xml-guidelines/
+ * @link http://dublincore.org/schemas/xmls/qdc/dcterms.xsd
  */
-class OaiDc extends AbstractMetadata
+class OaiDcterms extends AbstractMetadata
 {
     /** OAI-PMH metadata prefix */
-    const METADATA_PREFIX = 'oai_dc';
+    const METADATA_PREFIX = 'oai_dcterms';
 
     /** XML namespace for output format */
-    const METADATA_NAMESPACE = 'http://www.openarchives.org/OAI/2.0/oai_dc/';
+    const METADATA_NAMESPACE = 'http://www.openarchives.org/OAI/2.0/oai_dcterms/';
 
     /** XML schema for output format */
-    const METADATA_SCHEMA = 'http://www.openarchives.org/OAI/2.0/oai_dc.xsd';
+    const METADATA_SCHEMA = 'http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd';
 
-    /** XML namespace for unqualified Dublin Core */
-    const DC_NAMESPACE_URI = 'http://purl.org/dc/elements/1.1/';
+    /** XML namespace for Dublin Core */
+    const DCTERMS_NAMESPACE_URI = 'http://purl.org/dc/terms/';
 
     /**
-     * Appends Dublin Core metadata.
+     * Appends Dublin Core terms metadata.
      *
      * {@inheritDoc}
      */
@@ -38,21 +46,20 @@ class OaiDc extends AbstractMetadata
     {
         $document = $metadataElement->ownerDocument;
 
-        $oai = $document->createElementNS(self::METADATA_NAMESPACE, 'oai_dc:dc');
+        $oai = $document->createElementNS(self::METADATA_NAMESPACE, 'oai_dcterms:dcterms');
         $metadataElement->appendChild($oai);
 
         /* Must manually specify XML schema uri per spec, but DOM won't include
          * a redundant xmlns:xsi attribute, so we just set the attribute
          */
-        $oai->setAttribute('xmlns:dc', self::DC_NAMESPACE_URI);
+        $oai->setAttribute('xmlns:dcterms', self::DCTERMS_NAMESPACE_URI);
         $oai->setAttribute('xmlns:xsi', parent::XML_SCHEMA_NAMESPACE_URI);
         $oai->setAttribute('xsi:schemaLocation', self::METADATA_NAMESPACE . ' ' .
             self::METADATA_SCHEMA);
 
-        /* Each of the 15 unqualified Dublin Core elements, in the order
-         * specified by the oai_dc XML schema
-         */
+        // Each of the 55 Dublin Core terms, in the Omeka order.
         $localNames = [
+            // Dublin Core Elements.
             'title',
             'creator',
             'subject',
@@ -68,6 +75,47 @@ class OaiDc extends AbstractMetadata
             'relation',
             'coverage',
             'rights',
+            // Dublin Core terms.
+            'audience',
+            'alternative',
+            'tableOfContents',
+            'abstract',
+            'created',
+            'valid',
+            'available',
+            'issued',
+            'modified',
+            'extent',
+            'medium',
+            'isVersionOf',
+            'hasVersion',
+            'isReplacedBy',
+            'replaces',
+            'isRequiredBy',
+            'requires',
+            'isPartOf',
+            'hasPart',
+            'isReferencedBy',
+            'references',
+            'isFormatOf',
+            'hasFormat',
+            'conformsTo',
+            'spatial',
+            'temporal',
+            'mediator',
+            'dateAccepted',
+            'dateCopyrighted',
+            'dateSubmitted',
+            'educationLevel',
+            'accessRights',
+            'bibliographicCitation',
+            'license',
+            'rightsHolder',
+            'provenance',
+            'instructionalMethod',
+            'accrualMethod',
+            'accrualPeriodicity',
+            'accrualPolicy',
         ];
 
         /* Must create elements using createElement to make DOM allow a
@@ -79,19 +127,19 @@ class OaiDc extends AbstractMetadata
             $values = $item->value($term, ['all' => true, 'default' => []]);
             $values = $this->filterValues($item, $term, $values);
             foreach ($values as $value) {
-                $this->appendNewElement($oai, 'dc:' . $localName, (string) $value);
+                $this->appendNewElement($oai, $term, (string) $value);
             }
         }
 
         $appendIdentifier = $this->singleIdentifier($item);
         if ($appendIdentifier) {
-            $this->appendNewElement($oai, 'dc:identifier', $appendIdentifier);
+            $this->appendNewElement($oai, 'dcterms:identifier', $appendIdentifier);
         }
 
         // Also append an identifier for each file
         if ($this->settings->get('oaipmhrepository_expose_media', false)) {
             foreach ($item->media() as $media) {
-                $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl());
+                $this->appendNewElement($oai, 'dcterms:identifier', $media->originalUrl());
             }
         }
     }

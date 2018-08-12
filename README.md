@@ -127,6 +127,13 @@ The Dublin Core is required by the OAI-PMH specification for all repositories.
 Omeka S metadata fields are mapped one-to-one with fields for this output
 format.
 
+### [Dublin Core Terms] (prefix `oai_dcterms`)
+
+The OAI-PMH standard does not manage the complete set of Dublin Core, but it is
+largely used. So this format is similar to `oai_dc`, but with all 55 terms.
+
+**NOTE**: The namespace and the schema don’t exist.
+
 ### [CDWA Lite] (prefix `cdwalite`)
 
 The mapping between Omeka’s metadata and CDWA Lite metadata is more complicated,

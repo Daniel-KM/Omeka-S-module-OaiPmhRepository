@@ -85,6 +85,7 @@ return [
                 'mets' => Service\OaiPmh\Metadata\MetsFactory::class,
                 'mods' => Service\OaiPmh\Metadata\ModsFactory::class,
                 'oai_dc' => Service\OaiPmh\Metadata\OaiDcFactory::class,
+                'oai_dcterms' => Service\OaiPmh\Metadata\OaiDctermsFactory::class,
             ],
         ],
         'oai_set_formats' => [

@@ -59,18 +59,30 @@ class Mets extends AbstractMetadata
         $dcXml = $this->appendNewElement($dcWrap, 'xmlData');
         $dcXml->setAttribute('xmlns:dc', self::DC_NAMESPACE_URI);
 
-        $dcElementNames = [
-            'title', 'creator', 'subject', 'description', 'publisher',
-            'contributor', 'date', 'type', 'format', 'identifier', 'source',
-            'language', 'relation', 'coverage', 'rights',
+        $localNames = [
+            'title',
+            'creator',
+            'subject',
+            'description',
+            'publisher',
+            'contributor',
+            'date',
+            'type',
+            'format',
+            'identifier',
+            'source',
+            'language',
+            'relation',
+            'coverage',
+            'rights',
         ];
 
-        foreach ($dcElementNames as $elementName) {
-            $term = 'dcterms:' . $elementName;
+        foreach ($localNames as $localName) {
+            $term = 'dcterms:' . $localName;
             $values = $item->value($term, ['all' => true, 'default' => []]);
             $values = $this->filterValues($item, $term, $values);
             foreach ($values as $value) {
-                $this->appendNewElement($dcXml, "dc:$elementName", (string) $value);
+                $this->appendNewElement($dcXml, 'dc:' . $localName, (string) $value);
             }
         }
 
@@ -112,12 +124,12 @@ class Mets extends AbstractMetadata
 
                     $fileIds[] = $fileId;
 
-                    foreach ($dcElementNames as $elementName) {
-                        $term = 'dcterms:' . $elementName;
+                    foreach ($localNames as $localName) {
+                        $term = 'dcterms:' . $localName;
                         $values = $media->value($term, ['all' => true, 'default' => []]);
                         $values = $this->filterValues($media, $term, $values);
                         foreach ($values as $value) {
-                            $this->appendNewElement($fileDcXml, 'dc:' . $elementName, (string) $value);
+                            $this->appendNewElement($fileDcXml, 'dc:' . $localName, (string) $value);
                         }
                     }
                 }
