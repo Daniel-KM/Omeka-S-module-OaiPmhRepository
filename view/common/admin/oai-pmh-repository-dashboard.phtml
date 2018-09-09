@@ -1,11 +1,11 @@
 <?php
-$escape = $this->plugin('escapeHtml');
+/** @var \Zend\View\Renderer\PhpRenderer $this */
 $translate = $this->plugin('translate');
 $options = ['query' => ['verb' => 'Identify']];
 ?>
 <div id="oai-pmh-repository" class="panel">
-    <h2><?php echo $escape($translate('OAI-PMH Repository')); ?></h2>
-    <h4><?php echo $escape($translate('Global repository')); ?></h4>
+    <h2><?php echo $translate('OAI-PMH Repository'); ?></h2>
+    <h4><?php echo $translate('Global repository'); ?></h4>
     <p><?php
     switch ($globalRepository):
     case 'none':
@@ -18,22 +18,25 @@ $options = ['query' => ['verb' => 'Identify']];
         echo $this->hyperlink($translate('With sites as oai sets'), $this->url('oai-pmh', [], $options));
         break;
     default:
-        echo $escape($translate('Disabled.'));
+        echo $translate('Disabled.');
         break;
     endswitch;
     ?>
     </p>
-    <h4><?php echo $escape($translate('Site repositories')); ?></h4>
-    <p><?php
+    <h4><?php echo $translate('Site repositories'); ?></h4>
+    <?php
     switch ($bySiteRepository):
-    case 'none':
-        echo $escape($translate('Without oai sets.')) . ' ';
+    case 'none': ?>
+        <p>
+        <?php echo $translate('Without oai sets.'); ?>
+        </p>
+        <?php
         // No break.
     case 'item_set':
-        if (empty($sites)):
-            echo $escape($translate('No site.'));
-        else:
-        ?>
+        if (empty($sites)): ?>
+        <p><?php echo $translate('No site.'); ?></p>
+        <?php
+        else: ?>
         <ul>
         <?php foreach ($sites as $site): ?>
             <?php $oaiUrl = $this->url('site/oai-pmh', ['site-slug' => $site->slug()], $options); ?>
@@ -43,10 +46,10 @@ $options = ['query' => ['verb' => 'Identify']];
         <?php
         endif;
         break;
-    default:
-        echo $escape($translate('Disabled.'));
+    default: ?>
+        <p><?php echo $translate('Disabled.'); ?></p>
+        <?php
         break;
     endswitch;
     ?>
-    </p>
 </div>
