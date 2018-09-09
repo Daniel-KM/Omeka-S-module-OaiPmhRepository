@@ -77,9 +77,10 @@ Default: true
 
 The global repository contains all the resources of Omeka S, in one place. If
 enabled, it can exposes different types of oai sets: the sites, or the item
-sets.
+sets. The url is simply `/oai`.
 
-**TODO**: Expose the resource classes as oai sets or subsets.
+**TODO**: Expose the resource classes as oai sets or subsets. Expose sets via
+created via queries.
 
 ### Site repositories
 
@@ -265,12 +266,13 @@ See commits for full list of contributors.
 [OAI-PMH Repository]: https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository
 [Omeka S]: https://omeka.org/s
 [OAI-PMH]: https://www.openarchives.org/OAI/openarchivesprotocol.html
-[OaiPmhRepository plugin]: https://github.com/omeka/plugin-OaiPmhRepository
+[OAI-PMH Repository plugin]: https://github.com/omeka/plugin-OaiPmhRepository
 [Omeka]: https://omeka.org/classic
 [BibLibre]: https://github.com/biblibre
 [Installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
 [Bootstrap]: https://getbootstrap.com
 [Dublin Core]: http://dublincore.org
+[Dublin Core Terms]: http://www.dublincore.org/documents/dcmi-terms/
 [CDWA Lite]: https://www.getty.edu/research/publications/electronic_publications/cdwa/cdwalite.html
 [MODS]: http://www.loc.gov/standards/mods/
 [METS]: http://www.loc.gov/standards/mets/
