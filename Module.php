@@ -171,7 +171,7 @@ SQL;
         $data = [];
         $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
         foreach ($defaultSettings as $name => $value) {
-            $data[$name] = $settings->get($name);
+            $data[$name] = $settings->get($name, $value);
         }
 
         $form->init();
@@ -185,10 +185,10 @@ SQL;
         $services = $this->getServiceLocator();
         $config = $services->get('Config');
         $settings = $services->get('Omeka\Settings');
+        $form = $services->get('FormElementManager')->get(ConfigForm::class);
 
         $params = $controller->getRequest()->getPost();
 
-        $form = $services->get('FormElementManager')->get(ConfigForm::class);
         $form->init();
         $form->setData($params);
         if (!$form->isValid()) {
@@ -196,19 +196,17 @@ SQL;
             return false;
         }
 
-        $data = $form->getData();
-
+        $params = $form->getData();
         $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
-        foreach ($data as $name => $value) {
-            if (array_key_exists($name, $defaultSettings)) {
-                if ($name === 'oaipmhrepository_namespace_id' && $value === 'localhost') {
-                    $value = 'default.must.change';
-                } elseif ($name === 'oaipmhrepository_metadata_formats') {
-                    $value[] = 'oai_dc';
-                    $value = array_unique($value);
-                }
-                $settings->set($name, $value);
+        $params = array_intersect_key($params, $defaultSettings);
+        foreach ($params as $name => $value) {
+            if ($name === 'oaipmhrepository_namespace_id' && $value === 'localhost') {
+                $value = 'default.must.change';
+            } elseif ($name === 'oaipmhrepository_metadata_formats') {
+                $value[] = 'oai_dc';
+                $value = array_unique($value);
             }
+            $settings->set($name, $value);
         }
     }
 
