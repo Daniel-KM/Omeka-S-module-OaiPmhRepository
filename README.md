@@ -108,7 +108,9 @@ commonly used are `dc` and `mods` (currently unavailable).
 ### Human interface
 
 The OAI-PMH pages can be displayed and browsed with a themable responsive human
-interface based on [Bootstrap].
+interface based on [Bootstrap]. To theme it, create a folder `asset/xsl` in your
+theme and copy the file [`oai-pmh-repository.xsl`] inside it, then edit it. The
+css file can be copied and updated as well.
 
 ### Global repository redirect route
 
@@ -195,6 +197,11 @@ implemented in Omeka S.
 Other formats can be added or replace an existing one via a key in the config
 `['oaipmhrepository']['metadata_formats']`.
 
+#### [EAD]
+
+The format EAD, designed to discrive archives, is available through the module
+[`EAD`].
+
 ### Customization
 
 The output can be customized via the filter `oaipmhrepository.values`, that is
@@ -243,24 +250,15 @@ The human interface is published under the [CeCILL-B] BSD-like licence. See its
 header for other licenses notes.
 
 
-Contact
--------
-
-Current maintainers of the module:
-
-* BibLibre
-* Daniel Berthereau (see [Daniel-KM])
-
-
 Copyright
 ---------
 
 See commits for full list of contributors.
 
-* Copyright Daniel Berthereau, 2014-2018
-* Copyright Julian Maurice for BibLibre, 2016-2017
-* Copyright John Flatness, 2009-2016
 * Copyright Yu-Hsun Lin, 2009
+* Copyright John Flatness, 2009-2016
+* Copyright Julian Maurice for BibLibre, 2016-2017
+* Copyright Daniel Berthereau, 2014-2019 (see [Daniel-KM])
 
 
 [OAI-PMH Repository]: https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository
@@ -271,6 +269,7 @@ See commits for full list of contributors.
 [BibLibre]: https://github.com/biblibre
 [Installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
 [Bootstrap]: https://getbootstrap.com
+[`oai-pmh-repository.xsl`]: https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/blob/master/asset/xsl/oai-pmh-repository.xsl
 [Dublin Core]: http://dublincore.org
 [Dublin Core Terms]: http://www.dublincore.org/documents/dcmi-terms/
 [CDWA Lite]: https://www.getty.edu/research/publications/electronic_publications/cdwa/cdwalite.html
@@ -279,6 +278,8 @@ See commits for full list of contributors.
 [RDF]: https://www.w3.org/TR/rdf-syntax-grammar/
 [Omeka XML]: http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd
 [schema]: http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd
+[EAD]: http://www.loc.gov/ead/
+[`EAD`]: https://github.com/Daniel-KM/Omeka-S-module-Ead
 [module issues]: https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/issues
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [CeCILL-B]: https://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html

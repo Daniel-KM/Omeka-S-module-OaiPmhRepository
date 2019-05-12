@@ -19,7 +19,7 @@ and see http://www2.informatik.hu-berlin.de/~obecker/XSLT/#xmlverbatim),
 Initialy adapted from the stylesheet built by Lyncode for DSpace (http://www.lyncode.com/dspace/addons/xoai/),
 published under the DSpace BSD Licence (see http://dspace.org/licence).
 
-Copyright (c) 2015-2017 Daniel Berthereau (see https://github.com/Daniel-KM)
+Copyright (c) 2015-2019 Daniel Berthereau (see https://github.com/Daniel-KM)
 Copyright (c) 2002 Oliver Becker (XML Verbatim)
 Copyright (c) 2002-2015, DuraSpace.  All rights reserved.
 
@@ -222,6 +222,9 @@ No support (may depend on server):
                         }
                         .oaipmh-records table table {
                             table-layout:fixed;
+                        }
+                        .oaipmh-records table tr.collapse.in {
+                            display: table-row;
                         }
                         .oaipmh-records table tr.collapse td {
                             word-wrap: break-word;
