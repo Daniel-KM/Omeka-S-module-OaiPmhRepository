@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-18 00:00+0100\n"
+"POT-Creation-Date: 2019-07-15 00:00+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,118 +17,305 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: view/common/admin/oai-pmh-repository-dashboard.phtml:2
-msgid "OAI-PMH Repository"
-msgstr ""
-
-#: view/common/admin/oai-pmh-repository-dashboard.phtml:3
-msgid "Harvester can access metadata from these URLs:"
-msgstr ""
-
-#: src/Form/ConfigForm.php:19
-msgid "Repository name"
-msgstr ""
-
-#: src/Form/ConfigForm.php:20
-msgid "Name for this OAI-PMH repository."
-msgstr ""
-
-#: src/Form/ConfigForm.php:31
-msgid "Namespace identifier"
-msgstr ""
-
-#: src/Form/ConfigForm.php:32
+#: src/Form/ConfigForm.php:42
 msgid ""
 "This will be used to form globally unique IDs for the exposed metadata items."
 msgstr ""
 
-#: src/Form/ConfigForm.php:33
+#: src/Form/ConfigForm.php:43
 msgid "This value is required to be a domain name you have registered."
 msgstr ""
 
-#: src/Form/ConfigForm.php:34
+#: src/Form/ConfigForm.php:44
 msgid "Using other values will generate invalid identifiers."
 msgstr ""
 
-#: src/Form/ConfigForm.php:45
-msgid "Expose media"
-msgstr ""
-
-#: src/Form/ConfigForm.php:46
+#: src/Form/ConfigForm.php:74
 msgid ""
 "Whether the plugin should include identifiers for the files associated with "
 "items."
 msgstr ""
 
-#: src/Form/ConfigForm.php:47
+#: src/Form/ConfigForm.php:75
 msgid "This provides harvesters with direct access to files."
 msgstr ""
 
-#: src/Form/ConfigForm.php:55
-msgid "List limit"
+#: src/Form/ConfigForm.php:93
+msgid ""
+"The global repository contains all the resources of Omeka S, in one place."
 msgstr ""
 
-#: src/Form/ConfigForm.php:56
+#: src/Form/ConfigForm.php:94
+msgid ""
+"Note that the oai set identifiers are different (item set id or site id)."
+msgstr ""
+
+#: src/Form/ConfigForm.php:123 src/Form/ConfigForm.php:140
+msgid ""
+"An identifier may be added to simplify harvests, in particular when there is "
+"no unique identifier (ark, noid, call number, etc.)."
+msgstr ""
+
+#: src/Form/ConfigForm.php:124 src/Form/ConfigForm.php:141
+msgid ""
+"Only one identifier may be added and it can be the api url or a site "
+"specific url."
+msgstr ""
+
+#: src/Form/ConfigForm.php:125 src/Form/ConfigForm.php:142
+msgid "Some formats add their own identifier and other ones skip this option."
+msgstr ""
+
+#: src/Form/ConfigForm.php:172
+msgid ""
+"Use refined terms for Dublin Core elements, for example dcterms:abstract "
+"will be merged with dc:description."
+msgstr ""
+
+#: src/Form/ConfigForm.php:173
+msgid "It allows to expose all metadata in the standard oai_dc."
+msgstr ""
+
+#: src/Form/ConfigForm.php:174
+msgid "For other merges, the event \"oaipmhrepository.values\" can be used."
+msgstr ""
+
+#: src/Form/ConfigForm.php:213
+msgid ""
+"The OAI-PMH pages can be displayed with a themable responsive human "
+"interface based on Bootstrap (https://getbootstrap.com)."
+msgstr ""
+
+#: src/Form/ConfigForm.php:231
 msgid ""
 "Number of individual records that can be returned in a response at once."
 msgstr ""
 
-#: src/Form/ConfigForm.php:57
+#: src/Form/ConfigForm.php:232
 msgid ""
 "Larger values will increase memory usage but reduce the number of database "
 "queries and HTTP requests."
 msgstr ""
 
-#: src/Form/ConfigForm.php:58
+#: src/Form/ConfigForm.php:233
 msgid ""
 "Smaller values will reduce memory usage but increase the number of DB "
 "queries and requests."
 msgstr ""
 
-#: src/Form/ConfigForm.php:69
-msgid "Token expiration time"
-msgstr ""
-
-#: src/Form/ConfigForm.php:70
+#: src/Form/ConfigForm.php:245
 msgid "In minutes, the length of time a resumption token is valid for."
 msgstr ""
 
-#: src/Form/ConfigForm.php:71
+#: src/Form/ConfigForm.php:246
 msgid ""
 "This means harvesters can re-try old partial list requests for this amount "
 "of time."
 msgstr ""
 
-#: src/Form/ConfigForm.php:72
+#: src/Form/ConfigForm.php:247
 msgid "Larger values will make the tokens table grow somewhat larger."
 msgstr ""
 
-#: src/ResponseGenerator.php:164
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:7
+msgid "OAI-PMH Repository"
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:8
+msgid "Global repository"
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:12
+msgid "Without oai sets"
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:15
+msgid "With item sets as oai sets"
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:18
+msgid "With sites as oai sets"
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:21
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:50
+msgid "Disabled."
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:26
+msgid "Site repositories"
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:31
+msgid "Without oai sets."
+msgstr ""
+
+#: view/common/admin/oai-pmh-repository-dashboard.phtml:37
+msgid "No site."
+msgstr ""
+
+#: src/Form/ConfigForm.php:29
+msgid "Repository name"
+msgstr ""
+
+#: src/Form/ConfigForm.php:30
+msgid "Name for this OAI-PMH repository."
+msgstr ""
+
+#: src/Form/ConfigForm.php:41
+msgid "Namespace identifier"
+msgstr ""
+
+#: src/Form/ConfigForm.php:57
+msgid "Metadata formats"
+msgstr ""
+
+#: src/Form/ConfigForm.php:58
+msgid "The format that will be made available. oai_dc is required."
+msgstr ""
+
+#: src/Form/ConfigForm.php:65
+msgid "Select formats"
+msgstr ""
+
+#: src/Form/ConfigForm.php:73
+msgid "Expose media"
+msgstr ""
+
+#: src/Form/ConfigForm.php:83
+msgid "Hide empty oai sets"
+msgstr ""
+
+#: src/Form/ConfigForm.php:84
+msgid "Whether the module should hide empty oai sets."
+msgstr ""
+
+#: src/Form/ConfigForm.php:96 src/Form/ConfigForm.php:111
+msgid "Disabled"
+msgstr ""
+
+#: src/Form/ConfigForm.php:109
+msgid ""
+"The site repositories simulate multiple oai servers, with the site pools of "
+"items and the attached item sets as oai sets."
+msgstr ""
+
+#: src/Form/ConfigForm.php:122
+msgid "Add identifier for global repository"
+msgstr ""
+
+#: src/Form/ConfigForm.php:128 src/Form/ConfigForm.php:145
+msgid "Api url"
+msgstr ""
+
+#: src/Form/ConfigForm.php:129 src/Form/ConfigForm.php:146
+msgid "Relative site url"
+msgstr ""
+
+#: src/Form/ConfigForm.php:130 src/Form/ConfigForm.php:147
+msgid "Absolute site url"
+msgstr ""
+
+#: src/Form/ConfigForm.php:139
+msgid "Add identifier for site repositories"
+msgstr ""
+
+#: src/Form/ConfigForm.php:158
+msgid "Oai set format"
+msgstr ""
+
+#: src/Form/ConfigForm.php:159
+msgid "The format of the oai set identifiers."
+msgstr ""
+
+#: src/Form/ConfigForm.php:171
+msgid "Genericize dcterms"
+msgstr ""
+
+#: src/Form/ConfigForm.php:182
+msgid "Mets: data format for item"
+msgstr ""
+
+#: src/Form/ConfigForm.php:183
+msgid "The format of the metadata of item."
+msgstr ""
+
+#: src/Form/ConfigForm.php:197
+msgid "Mets: data format for media"
+msgstr ""
+
+#: src/Form/ConfigForm.php:198
+msgid "The format of the metadata of media."
+msgstr ""
+
+#: src/Form/ConfigForm.php:212
+msgid "Human interface"
+msgstr ""
+
+#: src/Form/ConfigForm.php:221
+msgid "Global repository redirect route"
+msgstr ""
+
+#: src/Form/ConfigForm.php:222
+msgid ""
+"An alias (redirect 301) for backward compatibility with Omeka Classic, that "
+"used \"/oai-pmh-repository/request\", or any other old OAI-PMH repository."
+msgstr ""
+
+#: src/Form/ConfigForm.php:230
+msgid "List limit"
+msgstr ""
+
+#: src/Form/ConfigForm.php:244
+msgid "Token expiration time"
+msgstr ""
+
+#: src/OaiPmh/ResponseGenerator.php:249
 msgid "No verb specified."
 msgstr ""
 
-#: src/ResponseGenerator.php:236
+#: src/OaiPmh/ResponseGenerator.php:311
+#, php-format
+msgid ""
+"The OAI-PMH protocol version 2.0 supports only \"GET\" and \"POST\" "
+"requests, not \"%s\"."
+msgstr ""
+
+#: src/OaiPmh/ResponseGenerator.php:341
 msgid "Duplicate arguments in request."
 msgstr ""
 
-#: src/ResponseGenerator.php:242
+#: src/OaiPmh/ResponseGenerator.php:347
 #, php-format
 msgid "Missing required argument %s."
 msgstr ""
 
-#: src/ResponseGenerator.php:245
+#: src/OaiPmh/ResponseGenerator.php:350
 #, php-format
 msgid "Unknown argument %s."
 msgstr ""
 
-#: src/ResponseGenerator.php:255 src/ResponseGenerator.php:258
+#: src/OaiPmh/ResponseGenerator.php:360 src/OaiPmh/ResponseGenerator.php:363
 msgid "Invalid date/time argument."
 msgstr ""
 
-#: src/ResponseGenerator.php:261
+#: src/OaiPmh/ResponseGenerator.php:366
 msgid "Date/time arguments of differing granularity."
 msgstr ""
 
-#: src/ResponseGenerator.php:576
+#: src/OaiPmh/ResponseGenerator.php:640
+#, php-format
+msgid "The set \"%s\" doesn’t exist."
+msgstr ""
+
+#: src/OaiPmh/ResponseGenerator.php:706
 msgid "No records match the given criteria."
+msgstr ""
+
+#: src/Service/OaiPmh/MetadataFormatManagerFactory.php:20
+msgid "Missing metadata format configuration"
+msgstr ""
+
+#: src/Service/OaiPmh/OaiSetManagerFactory.php:20
+msgid "Missing set format configuration"
 msgstr ""
