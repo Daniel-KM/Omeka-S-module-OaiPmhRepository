@@ -199,7 +199,7 @@ Other formats can be added or replace an existing one via a key in the config
 
 #### [EAD]
 
-The format EAD, designed to discrive archives, is available through the module
+The format EAD, designed to discribe archives, is available through the module
 [`EAD`].
 
 ### Customization

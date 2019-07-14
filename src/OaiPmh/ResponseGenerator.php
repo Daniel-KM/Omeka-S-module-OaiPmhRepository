@@ -194,7 +194,7 @@ class ResponseGenerator extends AbstractXmlGenerator
             }
         }
 
-        $oaiSetManager = $serviceLocator->get('OaiPmhRepository\OaiPmh\OaiSetManager');
+        $oaiSetManager = $serviceLocator->get(\OaiPmhRepository\OaiPmh\OaiSetManager::class);
         $this->oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'base'));
         $this->oaiSet->setSetSpecType($this->setSpecType);
         $this->oaiSet->setSite($this->site);
@@ -368,7 +368,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $metadataPrefix = $this->_getParam('metadataPrefix');
 
 
-        $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
+        $metadataFormatManager = $this->serviceLocator->get(\OaiPmhRepository\OaiPmh\MetadataFormatManager::class);
         $metadataFormats = $this->serviceLocator->get('Omeka\Settings')->get('oaipmhrepository_metadata_formats');
         if ($metadataPrefix
             && (
@@ -479,7 +479,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         if (!$this->error) {
             $getRecord = $this->document->createElement('GetRecord');
             $this->document->documentElement->appendChild($getRecord);
-            $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
+            $metadataFormatManager = $this->serviceLocator->get(\OaiPmhRepository\OaiPmh\MetadataFormatManager::class);
             $metadataFormat = $metadataFormatManager->get($metadataPrefix);
             $metadataFormat->setOaiSet($this->oaiSet);
             $metadataFormat->appendRecord($getRecord, $item);
@@ -703,7 +703,7 @@ class ResponseGenerator extends AbstractXmlGenerator
                 $method = 'appendRecord';
             }
 
-            $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
+            $metadataFormatManager = $this->serviceLocator->get(\OaiPmhRepository\OaiPmh\MetadataFormatManager::class);
 
             $verbElement = $this->document->createElement($verb);
             $this->document->documentElement->appendChild($verbElement);
@@ -770,7 +770,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      */
     private function getFormats()
     {
-        $metadataFormatManager = $this->serviceLocator->get('OaiPmhRepository\OaiPmh\MetadataFormatManager');
+        $metadataFormatManager = $this->serviceLocator->get(\OaiPmhRepository\OaiPmh\MetadataFormatManager::class);
         $metadataFormatUsed = $this->serviceLocator->get('Omeka\Settings')->get('oaipmhrepository_metadata_formats');
 
         $metadataFormats = [];

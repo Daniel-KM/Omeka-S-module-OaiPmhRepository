@@ -3,7 +3,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  * @copyright John Flatness, Center for History and New Media, 2013-2014
  * @copyright BibLibre, 2016
- * @copyright Daniel Berthereau, 2014-2018
+ * @copyright Daniel Berthereau, 2014-2019
  */
 namespace OaiPmhRepository;
 
@@ -109,10 +109,17 @@ SQL;
      */
     protected function addAclRules()
     {
+        /** @var \Omeka\Permissions\Acl $acl */
         $acl = $this->getServiceLocator()->get('Omeka\Acl');
-        $acl->allow(null, Entity\OaiPmhRepositoryToken::class);
-        $acl->allow(null, Api\Adapter\OaiPmhRepositoryTokenAdapter::class);
-        $acl->allow(null, Controller\RequestController::class);
+        $acl
+            ->allow(
+                null,
+                [
+                    \OaiPmhRepository\Entity\OaiPmhRepositoryToken::class,
+                    \OaiPmhRepository\Api\Adapter\OaiPmhRepositoryTokenAdapter::class,
+                    \OaiPmhRepository\Controller\RequestController::class,
+                ]
+            );
     }
 
     protected function addRoutes()
@@ -131,7 +138,7 @@ SQL;
         }
 
         $router->addRoute('oai-pmh-repository-request', [
-            'type' => 'Literal',
+            'type' => \Zend\Router\Http\Literal::class,
             'options' => [
                 'route' => $redirect,
                 'defaults' => [
