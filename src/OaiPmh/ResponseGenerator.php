@@ -8,6 +8,7 @@
  */
 namespace OaiPmhRepository\OaiPmh;
 
+use ArrayObject;
 use DateTime;
 use DomDocument;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -622,8 +623,9 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $itemRepository = $entityManager->getRepository('Omeka\Entity\Item');
         $qb = $itemRepository->createQueryBuilder('Omeka\Entity\Item');
+        $qb->select('Omeka\Entity\Item');
 
-        $query = [];
+        $query = new ArrayObject;
 
         // Public/private is automatically managed for anonymous requests.
 
@@ -652,8 +654,15 @@ class ResponseGenerator extends AbstractXmlGenerator
             }
         }
 
+        $metadataFormatManager = $this->serviceLocator->get(\OaiPmhRepository\OaiPmh\MetadataFormatManager::class);
+        $metadataFormat = $metadataFormatManager->get($metadataPrefix);
+        $metadataFormat->setOaiSet($this->oaiSet);
+
+        $metadataFormat->filterList($query);
+
+        /** @var \Omeka\Api\Adapter\ItemAdapter $itemAdapter */
         $itemAdapter = $apiAdapterManager->get('items');
-        $itemAdapter->buildQuery($qb, $query);
+        $itemAdapter->buildQuery($qb, $query->getArrayCopy());
 
         if ($from) {
             $qb->andWhere($qb->expr()->orX(
@@ -683,9 +692,8 @@ class ResponseGenerator extends AbstractXmlGenerator
             $qb->setParameter('until_1', $until);
             $qb->setParameter('until_2', $until);
         }
-        $qb->groupBy('Omeka\Entity\Item.id');
 
-        $qb->select('Omeka\Entity\Item');
+        $qb->groupBy('Omeka\Entity\Item.id');
 
         // This limit call will form the basis of the flow control
         $qb->setMaxResults($this->_listLimit);
@@ -703,14 +711,10 @@ class ResponseGenerator extends AbstractXmlGenerator
                 $method = 'appendRecord';
             }
 
-            $metadataFormatManager = $this->serviceLocator->get(\OaiPmhRepository\OaiPmh\MetadataFormatManager::class);
-
             $verbElement = $this->document->createElement($verb);
             $this->document->documentElement->appendChild($verbElement);
             foreach ($paginator as $itemEntity) {
                 $item = $itemAdapter->getRepresentation($itemEntity);
-                $metadataFormat = $metadataFormatManager->get($metadataPrefix);
-                $metadataFormat->setOaiSet($this->oaiSet);
                 $metadataFormat->$method($verbElement, $item);
             }
             if ($rows > ($cursor + $this->_listLimit)) {

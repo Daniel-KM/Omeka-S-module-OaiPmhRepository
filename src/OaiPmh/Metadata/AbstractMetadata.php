@@ -8,6 +8,7 @@
  */
 namespace OaiPmhRepository\OaiPmh\Metadata;
 
+use ArrayObject;
 use DOMElement;
 use OaiPmhRepository\OaiPmh\AbstractXmlGenerator;
 use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
@@ -77,6 +78,17 @@ abstract class AbstractMetadata
             'metadataNamespace' => $this->getMetadataNamespace(),
         ];
         $this->createElementWithChildren($parent, 'metadataFormat', $elements);
+    }
+
+    /**
+     * Filter the query for the two main List verbs.
+     *
+     * @see \OaiPmhRepository\OaiPmh\ResponseGenerator::listResponse()
+     *
+     * @param ArrayObject $query
+     */
+    public function filterList(ArrayObject $query)
+    {
     }
 
     public function appendRecord(DOMElement $parent, ItemRepresentation $item)
