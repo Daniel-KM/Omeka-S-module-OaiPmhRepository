@@ -622,8 +622,8 @@ class ResponseGenerator extends AbstractXmlGenerator
         $entityManager = $this->serviceLocator->get('Omeka\EntityManager');
 
         $itemRepository = $entityManager->getRepository('Omeka\Entity\Item');
-        $qb = $itemRepository->createQueryBuilder('Omeka\Entity\Item');
-        $qb->select('Omeka\Entity\Item');
+        $qb = $itemRepository->createQueryBuilder('Item');
+        $qb->select('Item');
 
         $query = new ArrayObject;
 
@@ -667,12 +667,12 @@ class ResponseGenerator extends AbstractXmlGenerator
         if ($from) {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->andX(
-                    $qb->expr()->isNotNull('Omeka\Entity\Item.modified'),
-                    $qb->expr()->gte('Omeka\Entity\Item.modified', ':from_1')
+                    $qb->expr()->isNotNull('Item.modified'),
+                    $qb->expr()->gte('Item.modified', ':from_1')
                 ),
                 $qb->expr()->andX(
-                    $qb->expr()->isNull('Omeka\Entity\Item.modified'),
-                    $qb->expr()->gte('Omeka\Entity\Item.created', ':from_2')
+                    $qb->expr()->isNull('Item.modified'),
+                    $qb->expr()->gte('Item.created', ':from_2')
                 )
             ));
             $qb->setParameter('from_1', $from);
@@ -682,18 +682,18 @@ class ResponseGenerator extends AbstractXmlGenerator
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->andX(
                     $qb->expr()->isNotNull('Omeka\Entity\Item.modified'),
-                    $qb->expr()->lte('Omeka\Entity\Item.modified', ':until_1')
+                    $qb->expr()->lte('Item.modified', ':until_1')
                 ),
                 $qb->expr()->andX(
                     $qb->expr()->isNull('Omeka\Entity\Item.modified'),
-                    $qb->expr()->lte('Omeka\Entity\Item.created', ':until_2')
+                    $qb->expr()->lte('Item.created', ':until_2')
                 )
             ));
             $qb->setParameter('until_1', $until);
             $qb->setParameter('until_2', $until);
         }
 
-        $qb->groupBy('Omeka\Entity\Item.id');
+        $qb->groupBy('Item.id');
 
         // This limit call will form the basis of the flow control
         $qb->setMaxResults($this->_listLimit);
