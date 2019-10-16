@@ -77,19 +77,19 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
     {
         if (isset($query['id'])) {
             $qb->andWhere($qb->expr()->eq(
-                $this->getEntityClass() . '.id',
+                'omeka_root.id',
                 $this->createNamedParameter($qb, $query['id']))
             );
         }
         if (isset($query['verb'])) {
             $qb->andWhere($qb->expr()->eq(
-                $this->getEntityClass() . '.verb',
+                'omeka_root.verb',
                 $this->createNamedParameter($qb, $query['verb']))
             );
         }
         if (isset($query['expired']) && $query['expired']) {
             $qb->andWhere($qb->expr()->lte(
-                $this->getEntityClass() . '.expiration',
+                'omeka_root.expiration',
                 $this->createNamedParameter($qb, (new DateTime)->format(DateTime::ATOM))
             ));
         }
