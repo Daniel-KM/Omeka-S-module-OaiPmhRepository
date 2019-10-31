@@ -622,8 +622,8 @@ class ResponseGenerator extends AbstractXmlGenerator
         $entityManager = $this->serviceLocator->get('Omeka\EntityManager');
 
         $itemRepository = $entityManager->getRepository('Omeka\Entity\Item');
-        $qb = $itemRepository->createQueryBuilder('Item');
-        $qb->select('Item');
+        $qb = $itemRepository->createQueryBuilder('omeka_root');
+        $qb->select('omeka_root');
 
         $query = new ArrayObject;
 
@@ -693,7 +693,7 @@ class ResponseGenerator extends AbstractXmlGenerator
             $qb->setParameter('until_2', $until);
         }
 
-        $qb->groupBy('Item.id');
+        $qb->groupBy('omeka_root.id');
 
         // This limit call will form the basis of the flow control
         $qb->setMaxResults($this->_listLimit);
