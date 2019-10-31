@@ -667,12 +667,12 @@ class ResponseGenerator extends AbstractXmlGenerator
         if ($from) {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->andX(
-                    $qb->expr()->isNotNull('Item.modified'),
-                    $qb->expr()->gte('Item.modified', ':from_1')
+                    $qb->expr()->isNotNull('omeka_root.modified'),
+                    $qb->expr()->gte('omeka_root.modified', ':from_1')
                 ),
                 $qb->expr()->andX(
-                    $qb->expr()->isNull('Item.modified'),
-                    $qb->expr()->gte('Item.created', ':from_2')
+                    $qb->expr()->isNull('omeka_root.modified'),
+                    $qb->expr()->gte('omeka_root.created', ':from_2')
                 )
             ));
             $qb->setParameter('from_1', $from);
@@ -681,12 +681,12 @@ class ResponseGenerator extends AbstractXmlGenerator
         if ($until) {
             $qb->andWhere($qb->expr()->orX(
                 $qb->expr()->andX(
-                    $qb->expr()->isNotNull('Omeka\Entity\Item.modified'),
-                    $qb->expr()->lte('Item.modified', ':until_1')
+                    $qb->expr()->isNotNull('omeka_root.modified'),
+                    $qb->expr()->lte('omeka_root.modified', ':until_1')
                 ),
                 $qb->expr()->andX(
-                    $qb->expr()->isNull('Omeka\Entity\Item.modified'),
-                    $qb->expr()->lte('Item.created', ':until_2')
+                    $qb->expr()->isNull('omeka_root.modified'),
+                    $qb->expr()->lte('omeka_root.created', ':until_2')
                 )
             ));
             $qb->setParameter('until_1', $until);
