@@ -7,24 +7,24 @@
  */
 namespace OaiPmhRepository;
 
-use OaiPmhRepository\Form\ConfigForm;
-use Omeka\Module\AbstractModule;
+if (!class_exists(\Generic\AbstractModule::class)) {
+    require file_exists(dirname(__DIR__) . '/Generic/AbstractModule.php')
+        ? dirname(__DIR__) . '/Generic/AbstractModule.php'
+        : __DIR__ . '/src/Generic/AbstractModule.php';
+}
+
+use Generic\AbstractModule;
 use Zend\EventManager\Event;
 use Zend\EventManager\SharedEventManagerInterface;
 use Zend\Mvc\Controller\AbstractController;
 use Zend\Mvc\MvcEvent;
-use Zend\ServiceManager\ServiceLocatorInterface;
-use Zend\View\Renderer\PhpRenderer;
 
 /**
  * OaiPmhRepository module class.
  */
 class Module extends AbstractModule
 {
-    public function getConfig()
-    {
-        return include __DIR__ . '/config/module.config.php';
-    }
+    const NAMESPACE = __NAMESPACE__;
 
     public function onBootstrap(MvcEvent $event)
     {
@@ -33,75 +33,12 @@ class Module extends AbstractModule
         $this->addRoutes();
     }
 
-    public function install(ServiceLocatorInterface $serviceLocator)
+    protected function postInstall()
     {
-        $connection = $serviceLocator->get('Omeka\Connection');
-
-        /* Table: Stores currently active resumptionTokens
-
-           id: primary key (also the value of the token)
-           verb: Verb of original request
-           metadata_prefix: metadataPrefix of original request
-           cursor: Position of cursor within result set
-           from: Optional from argument of original request
-           until: Optional until argument of original request
-           set: Optional set argument of original request
-           expiration: Datestamp after which token is expired
-        */
-        $sql = <<<'SQL'
-CREATE TABLE oai_pmh_repository_token (
-    `id` INT AUTO_INCREMENT NOT NULL,
-    `verb` VARCHAR(190) NOT NULL,
-    `metadata_prefix` VARCHAR(190) NOT NULL,
-    `cursor` INT NOT NULL,
-    `from` DATETIME DEFAULT NULL,
-    `until` DATETIME DEFAULT NULL,
-    `set` VARCHAR(190) DEFAULT NULL,
-    `expiration` DATETIME NOT NULL,
-    INDEX IDX_E9AC4F9524CD504D (`expiration`),
-    PRIMARY KEY(`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB;
-SQL;
-        $connection->exec($sql);
-
-        $settings = $serviceLocator->get('Omeka\Settings');
-        $this->manageSettings($settings, 'install');
+        $services = $this->getServiceLocator();
+        $settings = $services->get('Omeka\Settings');
         $settings->set('oaipmhrepository_name', $settings->get('installation_title'));
-        $settings->set('oaipmhrepository_namespace_id', $this->getServerNameWithoutProtocol($serviceLocator));
-    }
-
-    public function uninstall(ServiceLocatorInterface $serviceLocator)
-    {
-        $sql = <<<'SQL'
-SET foreign_key_checks = 0;
-DROP TABLE IF EXISTS oai_pmh_repository_token;
-SET foreign_key_checks = 1;
-SQL;
-        $conn = $serviceLocator->get('Omeka\Connection');
-        $conn->exec($sql);
-
-        $this->manageSettings($serviceLocator->get('Omeka\Settings'), 'uninstall');
-    }
-
-    public function upgrade($oldVersion, $newVersion, ServiceLocatorInterface $serviceLocator)
-    {
-        require_once 'data/scripts/upgrade.php';
-    }
-
-    protected function manageSettings($settings, $process, $key = 'config')
-    {
-        $config = require __DIR__ . '/config/module.config.php';
-        $defaultSettings = $config[strtolower(__NAMESPACE__)][$key];
-        foreach ($defaultSettings as $name => $value) {
-            switch ($process) {
-                case 'install':
-                    $settings->set($name, $value);
-                    break;
-                case 'uninstall':
-                    $settings->delete($name);
-                    break;
-            }
-        }
+        $settings->set('oaipmhrepository_namespace_id', $this->getServerNameWithoutProtocol($services));
     }
 
     /**
@@ -168,53 +105,25 @@ SQL;
         );
     }
 
-    public function getConfigForm(PhpRenderer $renderer)
-    {
-        $services = $this->getServiceLocator();
-        $config = $services->get('Config');
-        $settings = $services->get('Omeka\Settings');
-        $form = $services->get('FormElementManager')->get(ConfigForm::class);
-
-        $data = [];
-        $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
-        foreach ($defaultSettings as $name => $value) {
-            $data[$name] = $settings->get($name, $value);
-        }
-
-        $form->init();
-        $form->setData($data);
-        $html = $renderer->formCollection($form);
-        return $html;
-    }
-
     public function handleConfigForm(AbstractController $controller)
     {
-        $services = $this->getServiceLocator();
-        $config = $services->get('Config');
-        $settings = $services->get('Omeka\Settings');
-        $form = $services->get('FormElementManager')->get(ConfigForm::class);
-
-        $params = $controller->getRequest()->getPost();
-
-        $form->init();
-        $form->setData($params);
-        if (!$form->isValid()) {
-            $controller->messenger()->addErrors($form->getMessages());
+        $result = parent::handleConfigForm($controller);
+        if (!$result) {
             return false;
         }
 
-        $params = $form->getData();
-        $defaultSettings = $config[strtolower(__NAMESPACE__)]['config'];
-        $params = array_intersect_key($params, $defaultSettings);
-        foreach ($params as $name => $value) {
-            if ($name === 'oaipmhrepository_namespace_id' && $value === 'localhost') {
-                $value = 'default.must.change';
-            } elseif ($name === 'oaipmhrepository_metadata_formats') {
-                $value[] = 'oai_dc';
-                $value = array_unique($value);
-            }
-            $settings->set($name, $value);
+        $services = $this->getServiceLocator();
+        $settings = $services->get('Omeka\Settings');
+
+        $value = $settings->get('oaipmhrepository_namespace_id');
+        if (empty($value) || $value === 'localhost') {
+            $settings->set('oaipmhrepository_namespace_id', 'default.must.change');
         }
+
+        $value = $settings->get('oaipmhrepository_metadata_formats', []);
+        array_unshift($value, 'oai_dc');
+        $value = array_unique($value);
+        $settings->set('oaipmhrepository_metadata_formats', $value);
     }
 
     public function filterAdminDashboardPanels(Event $event)
