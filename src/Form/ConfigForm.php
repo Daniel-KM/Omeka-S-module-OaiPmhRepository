@@ -264,6 +264,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
     public function setMetadataFormats(array $metadataFormats)
     {
         $this->metadataFormats = $metadataFormats;
+        return $this;
     }
 
     /**
@@ -280,6 +281,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
     public function setOaiSetFormats(array $oaiSetFormats)
     {
         $this->oaiSetFormats = $oaiSetFormats;
+        return $this;
     }
 
     /**

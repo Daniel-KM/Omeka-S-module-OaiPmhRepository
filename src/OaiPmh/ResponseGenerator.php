@@ -633,6 +633,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $qb->select($alias);
 
         $query = new ArrayObject;
+        $expr = $qb->expr();
 
         // Public/private is automatically managed for anonymous requests.
 
@@ -672,28 +673,28 @@ class ResponseGenerator extends AbstractXmlGenerator
         $itemAdapter->buildQuery($qb, $query->getArrayCopy());
 
         if ($from) {
-            $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->andX(
-                    $qb->expr()->isNotNull($alias . '.modified'),
-                    $qb->expr()->gte($alias . '.modified', ':from_1')
+            $qb->andWhere($expr->orX(
+                $expr->andX(
+                    $expr->isNotNull($alias . '.modified'),
+                    $expr->gte($alias . '.modified', ':from_1')
                 ),
-                $qb->expr()->andX(
-                    $qb->expr()->isNull($alias . '.modified'),
-                    $qb->expr()->gte($alias . '.created', ':from_2')
+                $expr->andX(
+                    $expr->isNull($alias . '.modified'),
+                    $expr->gte($alias . '.created', ':from_2')
                 )
             ));
             $qb->setParameter('from_1', $from);
             $qb->setParameter('from_2', $from);
         }
         if ($until) {
-            $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->andX(
-                    $qb->expr()->isNotNull($alias . '.modified'),
-                    $qb->expr()->lte($alias . '.modified', ':until_1')
+            $qb->andWhere($expr->orX(
+                $expr->andX(
+                    $expr->isNotNull($alias . '.modified'),
+                    $expr->lte($alias . '.modified', ':until_1')
                 ),
-                $qb->expr()->andX(
-                    $qb->expr()->isNull($alias . '.modified'),
-                    $qb->expr()->lte($alias . '.created', ':until_2')
+                $expr->andX(
+                    $expr->isNull($alias . '.modified'),
+                    $expr->lte($alias . '.created', ':until_2')
                 )
             ));
             $qb->setParameter('until_1', $until);

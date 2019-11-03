@@ -77,21 +77,22 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
     {
         $isOldOmeka = \Omeka\Module::VERSION < 2;
         $alias = $isOldOmeka ? \Omeka\Entity\Item::class : 'omeka_root';
+        $expr = $qb->expr();
 
         if (isset($query['id'])) {
-            $qb->andWhere($qb->expr()->eq(
+            $qb->andWhere($expr->eq(
                 $alias . '.id',
                 $this->createNamedParameter($qb, $query['id']))
             );
         }
         if (isset($query['verb'])) {
-            $qb->andWhere($qb->expr()->eq(
+            $qb->andWhere($expr->eq(
                 $alias . '.verb',
                 $this->createNamedParameter($qb, $query['verb']))
             );
         }
         if (isset($query['expired']) && $query['expired']) {
-            $qb->andWhere($qb->expr()->lte(
+            $qb->andWhere($expr->lte(
                 $alias . '.expiration',
                 $this->createNamedParameter($qb, (new DateTime)->format(DateTime::ATOM))
             ));

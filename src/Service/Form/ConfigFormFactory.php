@@ -15,9 +15,10 @@ class ConfigFormFactory implements FactoryInterface
         $metadataFormatManager = $services->get(MetadataFormatManager::class);
         $oaiSetManager = $services->get(OaiSetManager::class);
         $form = new ConfigForm(null, $options);
-        $form->setTranslator($translator);
-        $form->setMetadataFormats($metadataFormatManager->getRegisteredNames());
-        $form->setOaiSetFormats($oaiSetManager->getRegisteredNames());
+        $form
+            ->setTranslator($translator)
+            ->setMetadataFormats($metadataFormatManager->getRegisteredNames())
+            ->setOaiSetFormats($oaiSetManager->getRegisteredNames());
         return $form;
     }
 }
