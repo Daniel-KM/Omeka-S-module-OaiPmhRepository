@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-15 00:00+0200\n"
+"POT-Creation-Date: 2019-12-30 00:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,6 +115,23 @@ msgstr ""
 
 #: src/Form/ConfigForm.php:247
 msgid "Larger values will make the tokens table grow somewhat larger."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:518
+#, php-format
+msgid "This module requires the module \"%s\"."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:538
+#, php-format
+msgid "This module requires modules \"%s\"."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:606
+#, php-format
+msgid ""
+"The module \"%s\" was automatically deactivated because the dependencies are "
+"unavailable."
 msgstr ""
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:7
@@ -303,12 +320,12 @@ msgstr ""
 msgid "Date/time arguments of differing granularity."
 msgstr ""
 
-#: src/OaiPmh/ResponseGenerator.php:640
+#: src/OaiPmh/ResponseGenerator.php:648
 #, php-format
 msgid "The set \"%s\" doesn’t exist."
 msgstr ""
 
-#: src/OaiPmh/ResponseGenerator.php:706
+#: src/OaiPmh/ResponseGenerator.php:714
 msgid "No records match the given criteria."
 msgstr ""
 
