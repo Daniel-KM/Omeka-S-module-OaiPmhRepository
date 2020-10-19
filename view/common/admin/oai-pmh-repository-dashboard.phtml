@@ -1,8 +1,14 @@
 <?php
-/** @var \Zend\View\Renderer\PhpRenderer $this */
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ * @var string $globalRepository
+ * @var string $bySiteRepository
+ * @var \Omeka\Api\Representation\SiteRepresentation[] $sites
+ */
 $translate = $this->plugin('translate');
 $options = ['query' => ['verb' => 'Identify']];
 ?>
+
 <div id="oai-pmh-repository" class="panel">
     <h2><?php echo $translate('OAI-PMH Repository'); ?></h2>
     <h4><?php echo $translate('Global repository'); ?></h4>
@@ -23,6 +29,8 @@ $options = ['query' => ['verb' => 'Identify']];
     endswitch;
     ?>
     </p>
+
+    <?php if (in_array($bySiteRepository, ['none', 'item_set'])): ?>
     <h4><?php echo $translate('Site repositories'); ?></h4>
     <?php
     switch ($bySiteRepository):
@@ -46,10 +54,7 @@ $options = ['query' => ['verb' => 'Identify']];
         <?php
         endif;
         break;
-    default: ?>
-        <p><?php echo $translate('Disabled.'); ?></p>
-        <?php
-        break;
     endswitch;
+    endif;
     ?>
 </div>
