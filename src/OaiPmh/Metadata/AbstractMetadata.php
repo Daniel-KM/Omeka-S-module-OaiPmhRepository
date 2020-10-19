@@ -27,9 +27,7 @@ use Zend\EventManager\EventManagerAwareTrait;
  * @todo Migration to PHP 5.3 will allow the abstract getter functions to be
  *       static, as they should be
  */
-abstract class AbstractMetadata
-    extends AbstractXmlGenerator
-    implements MetadataInterface, EventManagerAwareInterface
+abstract class AbstractMetadata extends AbstractXmlGenerator implements MetadataInterface, EventManagerAwareInterface
 {
     use EventManagerAwareTrait;
 

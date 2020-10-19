@@ -368,7 +368,6 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $metadataPrefix = $this->_getParam('metadataPrefix');
 
-
         $metadataFormatManager = $this->serviceLocator->get(\OaiPmhRepository\OaiPmh\MetadataFormatManager::class);
         $metadataFormats = $this->serviceLocator->get('Omeka\Settings')->get('oaipmhrepository_metadata_formats');
         if ($metadataPrefix
