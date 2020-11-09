@@ -4,7 +4,7 @@ namespace OaiPmhRepository\Service\OaiPmh\OaiSet;
 
 use Interop\Container\ContainerInterface;
 use OaiPmhRepository\OaiPmh\OaiSet\Basic;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class BasicFactory implements FactoryInterface
 {

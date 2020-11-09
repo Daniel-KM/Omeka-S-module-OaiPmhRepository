@@ -9,7 +9,7 @@ namespace OaiPmhRepository\Service\Controller;
 
 use Interop\Container\ContainerInterface;
 use OaiPmhRepository\Controller\RequestController;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class RequestControllerFactory implements FactoryInterface
 {

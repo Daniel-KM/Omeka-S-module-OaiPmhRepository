@@ -17,8 +17,8 @@ use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\SiteRepresentation;
 use Omeka\Stdlib\Message;
-use Zend\Http\Request;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\Http\Request;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * OaiPmhXmlGenerator generates the XML responses to OAI-PMH

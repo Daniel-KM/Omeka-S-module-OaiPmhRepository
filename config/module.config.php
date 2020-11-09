@@ -41,7 +41,7 @@ return [
             'site' => [
                 'child_routes' => [
                     'oai-pmh' => [
-                        'type' => \Zend\Router\Http\Segment::class,
+                        'type' => \Laminas\Router\Http\Segment::class,
                         'options' => [
                             'route' => '/oai',
                             'defaults' => [
@@ -55,7 +55,7 @@ return [
                 ],
             ],
             'oai-pmh' => [
-                'type' => \Zend\Router\Http\Literal::class,
+                'type' => \Laminas\Router\Http\Literal::class,
                 'options' => [
                     'route' => '/oai',
                     'defaults' => [

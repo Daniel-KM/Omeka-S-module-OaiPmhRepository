@@ -17,8 +17,8 @@ use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\ItemRepresentation;
 use Omeka\Api\Representation\ValueRepresentation;
 use Omeka\Settings\SettingsInterface;
-use Zend\EventManager\EventManagerAwareInterface;
-use Zend\EventManager\EventManagerAwareTrait;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
 
 /**
  * Abstract class on which all other metadata format handlers are based.

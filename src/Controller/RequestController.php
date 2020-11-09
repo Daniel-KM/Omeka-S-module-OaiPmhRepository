@@ -9,7 +9,7 @@
 namespace OaiPmhRepository\Controller;
 
 use OaiPmhRepository\OaiPmh\ResponseGenerator;
-use Zend\Mvc\Controller\AbstractActionController;
+use Laminas\Mvc\Controller\AbstractActionController;
 
 /**
  * Request page controller.

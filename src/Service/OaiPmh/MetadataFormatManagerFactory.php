@@ -4,7 +4,7 @@ namespace OaiPmhRepository\Service\OaiPmh;
 use Interop\Container\ContainerInterface;
 use OaiPmhRepository\OaiPmh\MetadataFormatManager;
 use Omeka\Service\Exception\ConfigException;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class MetadataFormatManagerFactory implements FactoryInterface
 {

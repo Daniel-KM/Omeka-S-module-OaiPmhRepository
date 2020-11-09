@@ -14,10 +14,10 @@ if (!class_exists(\Generic\AbstractModule::class)) {
 }
 
 use Generic\AbstractModule;
-use Zend\EventManager\Event;
-use Zend\EventManager\SharedEventManagerInterface;
-use Zend\Mvc\Controller\AbstractController;
-use Zend\Mvc\MvcEvent;
+use Laminas\EventManager\Event;
+use Laminas\EventManager\SharedEventManagerInterface;
+use Laminas\Mvc\Controller\AbstractController;
+use Laminas\Mvc\MvcEvent;
 
 /**
  * OaiPmhRepository module class.
@@ -70,12 +70,12 @@ class Module extends AbstractModule
         }
 
         $router = $serviceLocator->get('Router');
-        if (!$router instanceof \Zend\Router\Http\TreeRouteStack) {
+        if (!$router instanceof \Laminas\Router\Http\TreeRouteStack) {
             return;
         }
 
         $router->addRoute('oai-pmh-repository-request', [
-            'type' => \Zend\Router\Http\Literal::class,
+            'type' => \Laminas\Router\Http\Literal::class,
             'options' => [
                 'route' => $redirect,
                 'defaults' => [

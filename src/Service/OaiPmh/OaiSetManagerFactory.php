@@ -4,7 +4,7 @@ namespace OaiPmhRepository\Service\OaiPmh;
 use Interop\Container\ContainerInterface;
 use OaiPmhRepository\OaiPmh\OaiSetManager;
 use Omeka\Service\Exception\ConfigException;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class OaiSetManagerFactory implements FactoryInterface
 {

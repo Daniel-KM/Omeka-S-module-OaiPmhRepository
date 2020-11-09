@@ -4,7 +4,7 @@ namespace OaiPmhRepository\Service\OaiPmh\Metadata;
 
 use Interop\Container\ContainerInterface;
 use OaiPmhRepository\OaiPmh\Metadata\OaiDcterms;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class OaiDctermsFactory implements FactoryInterface
 {

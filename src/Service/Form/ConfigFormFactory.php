@@ -5,7 +5,7 @@ use Interop\Container\ContainerInterface;
 use OaiPmhRepository\Form\ConfigForm;
 use OaiPmhRepository\OaiPmh\MetadataFormatManager;
 use OaiPmhRepository\OaiPmh\OaiSetManager;
-use Zend\ServiceManager\Factory\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ConfigFormFactory implements FactoryInterface
 {
