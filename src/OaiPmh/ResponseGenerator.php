@@ -617,9 +617,6 @@ class ResponseGenerator extends AbstractXmlGenerator
      */
     private function listResponse($verb, $metadataPrefix, $cursor, $set, $from, $until)
     {
-        $isOldOmeka = \Omeka\Module::VERSION < 2;
-        $alias = $isOldOmeka ? \Omeka\Entity\Item::class : 'omeka_root';
-
         /**
          * @var \Omeka\Api\Adapter\Manager $apiAdapterManager
          * @var \Doctrine\ORM\EntityManager $entityManager
@@ -628,8 +625,8 @@ class ResponseGenerator extends AbstractXmlGenerator
         $entityManager = $this->serviceLocator->get('Omeka\EntityManager');
 
         $itemRepository = $entityManager->getRepository(\Omeka\Entity\Item::class);
-        $qb = $itemRepository->createQueryBuilder($alias);
-        $qb->select($alias);
+        $qb = $itemRepository->createQueryBuilder('omeka_root');
+        $qb->select('omeka_root');
 
         $query = new ArrayObject;
         $expr = $qb->expr();
@@ -674,12 +671,12 @@ class ResponseGenerator extends AbstractXmlGenerator
         if ($from) {
             $qb->andWhere($expr->orX(
                 $expr->andX(
-                    $expr->isNotNull($alias . '.modified'),
-                    $expr->gte($alias . '.modified', ':from_1')
+                    $expr->isNotNull('omeka_root.modified'),
+                    $expr->gte('omeka_root.modified', ':from_1')
                 ),
                 $expr->andX(
-                    $expr->isNull($alias . '.modified'),
-                    $expr->gte($alias . '.created', ':from_2')
+                    $expr->isNull('omeka_root.modified'),
+                    $expr->gte('omeka_root.created', ':from_2')
                 )
             ));
             $qb->setParameter('from_1', $from);
@@ -688,19 +685,19 @@ class ResponseGenerator extends AbstractXmlGenerator
         if ($until) {
             $qb->andWhere($expr->orX(
                 $expr->andX(
-                    $expr->isNotNull($alias . '.modified'),
-                    $expr->lte($alias . '.modified', ':until_1')
+                    $expr->isNotNull('omeka_root.modified'),
+                    $expr->lte('omeka_root.modified', ':until_1')
                 ),
                 $expr->andX(
-                    $expr->isNull($alias . '.modified'),
-                    $expr->lte($alias . '.created', ':until_2')
+                    $expr->isNull('omeka_root.modified'),
+                    $expr->lte('omeka_root.created', ':until_2')
                 )
             ));
             $qb->setParameter('until_1', $until);
             $qb->setParameter('until_2', $until);
         }
 
-        $qb->groupBy($alias . '.id');
+        $qb->groupBy('omeka_root.id');
 
         // This limit call will form the basis of the flow control
         $qb->setMaxResults($this->_listLimit);

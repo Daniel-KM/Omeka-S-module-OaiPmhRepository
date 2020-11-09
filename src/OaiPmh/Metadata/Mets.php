@@ -170,7 +170,7 @@ class Mets extends AbstractMetadata
 
         foreach ($localNames as $localName) {
             $term = 'dcterms:' . $localName;
-            $values = $resource->value($term, ['all' => true, 'default' => []]);
+            $values = $resource->value($term, ['all' => true]);
             $values = $this->filterValues($resource, $term, $values);
             foreach ($values as $value) {
                 $this->appendNewElement($dataXml, 'dc:' . $localName, (string) $value);
@@ -248,7 +248,7 @@ class Mets extends AbstractMetadata
 
         foreach ($localNames as $localName) {
             $term = 'dcterms:' . $localName;
-            $values = $resource->value($term, ['all' => true, 'default' => []]);
+            $values = $resource->value($term, ['all' => true]);
             $values = $this->filterValues($resource, $term, $values);
             foreach ($values as $value) {
                 $this->appendNewElement($dataXml, $term, (string) $value);

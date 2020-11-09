@@ -209,7 +209,7 @@ class Module extends AbstractModule
         }
 
         foreach ($map[$term] as $refinedTerm) {
-            $refinedValues = $resource->value($refinedTerm, ['all' => true, 'default' => []]);
+            $refinedValues = $resource->value($refinedTerm, ['all' => true]);
             $values = array_merge($values, $refinedValues);
         }
         $event->setParam('values', $values);
