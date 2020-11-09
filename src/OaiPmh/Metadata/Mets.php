@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness
  * @copyright Copyright 2012 John Flatness
@@ -38,7 +38,7 @@ class Mets extends AbstractMetadata
      *
      * {@inheritDoc}
      */
-    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
+    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item): void
     {
         $document = $metadataElement->ownerDocument;
         $mets = $document->createElementNS(self::METADATA_NAMESPACE, 'mets');
@@ -144,7 +144,7 @@ class Mets extends AbstractMetadata
         return self::METADATA_NAMESPACE;
     }
 
-    protected function mdtypeDc($dataWrap, $resource)
+    protected function mdtypeDc($dataWrap, $resource): void
     {
         $dataWrap->setAttribute('MDTYPE', 'DC');
         $dataXml = $this->appendNewElement($dataWrap, 'xmlData');
@@ -178,7 +178,7 @@ class Mets extends AbstractMetadata
         }
     }
 
-    protected function mdtypeDcterms($dataWrap, $resource)
+    protected function mdtypeDcterms($dataWrap, $resource): void
     {
         $dataWrap->setAttribute('MDTYPE', 'DC');
         $dataWrap->setAttribute('MDTYPEVERSION', 'DCMI Metadata Terms');

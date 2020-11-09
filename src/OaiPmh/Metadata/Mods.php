@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness
  * @copyright Copyright 2009 John Flatness
@@ -34,7 +34,7 @@ class Mods extends AbstractMetadata
      *
      * {@inheritDoc}
      */
-    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
+    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item): void
     {
         $document = $metadataElement->ownerDocument;
 
@@ -189,7 +189,7 @@ class Mods extends AbstractMetadata
      * @param string $text
      * @param bool $original
      */
-    private function _addRelatedItem($mods, $text, $original = false)
+    private function _addRelatedItem($mods, $text, $original = false): void
     {
         $relatedItem = $this->appendNewElement($mods, 'relatedItem');
         if ($this->_isUrl($text)) {

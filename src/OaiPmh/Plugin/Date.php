@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness
  * @copyright Copyright 2012 John Flatness

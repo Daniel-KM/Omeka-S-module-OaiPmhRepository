@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
@@ -25,7 +25,7 @@ class OaiIdentifier
 
     private static $namespaceId;
 
-    public static function initializeNamespace($namespaceId)
+    public static function initializeNamespace($namespaceId): void
     {
         self::$namespaceId = $namespaceId;
     }
@@ -67,7 +67,7 @@ class OaiIdentifier
      *
      * @param DOMElement $parentElement Parent DOM element for XML output
      */
-    public static function describeIdentifier($parentElement)
+    public static function describeIdentifier($parentElement): void
     {
         $elements = [
             'scheme' => 'oai',

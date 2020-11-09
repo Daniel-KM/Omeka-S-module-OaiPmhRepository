@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
@@ -8,8 +8,8 @@
 namespace OaiPmhRepository\Service\Controller;
 
 use Interop\Container\ContainerInterface;
-use OaiPmhRepository\Controller\RequestController;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use OaiPmhRepository\Controller\RequestController;
 
 class RequestControllerFactory implements FactoryInterface
 {

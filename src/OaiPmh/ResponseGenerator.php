@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
@@ -10,15 +10,15 @@ namespace OaiPmhRepository\OaiPmh;
 
 use ArrayObject;
 use DateTime;
-use DomDocument;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use DomDocument;
+use Laminas\Http\Request;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use OaiPmhRepository\Api\Representation\OaiPmhRepositoryTokenRepresentation;
 use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\SiteRepresentation;
 use Omeka\Stdlib\Message;
-use Laminas\Http\Request;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * OaiPmhXmlGenerator generates the XML responses to OAI-PMH
@@ -236,7 +236,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      *
      * @uses checkArguments()
      */
-    private function dispatchRequest()
+    private function dispatchRequest(): void
     {
         $request = $this->document->createElement('request', $this->baseUrl);
         $this->document->documentElement->appendChild($request);
@@ -303,7 +303,7 @@ class ResponseGenerator extends AbstractXmlGenerator
     /**
      * Check the method of the request.
      */
-    private function checkRequestMethod()
+    private function checkRequestMethod(): void
     {
         $method = $this->request->getMethod();
         if (!in_array($method, ['GET', 'POST'])) {
@@ -322,7 +322,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      * @param array requiredArgs Array of required argument names
      * @param array optionalArgs Array of optional, but valid argument names
      */
-    private function checkArguments($requiredArgs = [], $optionalArgs = [])
+    private function checkArguments($requiredArgs = [], $optionalArgs = []): void
     {
         $requiredArgs[] = 'verb';
 
@@ -385,7 +385,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      *
      * Appends the Identify element for the repository to the response.
      */
-    public function identify()
+    public function identify(): void
     {
         if ($this->error) {
             return;
@@ -425,7 +425,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->describeToolkit($toolkitDescription);
     }
 
-    private function describeToolkit($parentElement)
+    private function describeToolkit($parentElement): void
     {
         $toolkitNamespace = 'http://oai.dlib.vt.edu/OAI/metadata/toolkit';
         $toolkitSchema = 'http://oai.dlib.vt.edu/OAI/metadata/toolkit.xsd';
@@ -447,7 +447,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      * Outputs the header and metadata in the specified format for the specified
      * identifier.
      */
-    private function getRecord()
+    private function getRecord(): void
     {
         $identifier = $this->_getParam('identifier');
         $metadataPrefix = $this->_getParam('metadataPrefix');
@@ -494,7 +494,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      *
      * @todo extend for additional metadata formats
      */
-    private function listMetadataFormats()
+    private function listMetadataFormats(): void
     {
         $identifier = $this->_getParam('identifier');
         /* Items are not used for lookup, simply checks for an invalid id */
@@ -523,7 +523,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      *
      * @todo replace with Zend_Db_Select to allow use of limit or pageLimit
      */
-    private function listSets()
+    private function listSets(): void
     {
         $oaiSets = $this->oaiSet->listSets();
         if (empty($oaiSets)) {
@@ -547,7 +547,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      *
      * @uses listResponse()
      */
-    private function initListResponse()
+    private function initListResponse(): void
     {
         $fromDate = null;
         $untilDate = null;
@@ -575,7 +575,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      *
      * @uses listResponse()
      */
-    private function resumeListResponse($token)
+    private function resumeListResponse($token): void
     {
         $api = $this->serviceLocator->get('ControllerPluginManager')->get('api');
         $expiredTokens = $api->search('oaipmh_repository_tokens', [
@@ -615,7 +615,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      *
      * @uses createResumptionToken()
      */
-    private function listResponse($verb, $metadataPrefix, $cursor, $set, $from, $until)
+    private function listResponse($verb, $metadataPrefix, $cursor, $set, $from, $until): void
     {
         /**
          * @var \Omeka\Api\Adapter\Manager $apiAdapterManager
@@ -809,7 +809,7 @@ class ResponseGenerator extends AbstractXmlGenerator
      * @param string $error   OAI-PMH error code
      * @param string $message Optional human-readable error message
      */
-    protected function throwError($error, $message = null)
+    protected function throwError($error, $message = null): void
     {
         $this->error = true;
         $errorElement = $this->document->createElement('error', $message);

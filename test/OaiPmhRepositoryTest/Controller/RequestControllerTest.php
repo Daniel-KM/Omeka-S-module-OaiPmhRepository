@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace OaiPmhRepositoryTest\Controller;
 
@@ -10,7 +10,7 @@ class RequestControllerTest extends OmekaControllerTestCase
     protected $itemSet;
     protected $item;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -56,14 +56,14 @@ class RequestControllerTest extends OmekaControllerTestCase
         $_SERVER['REQUEST_URI'] = '/';
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->api()->delete('sites', $this->site->id());
         $this->api()->delete('item_sets', $this->itemSet->id());
         $this->api()->delete('items', $this->item->id());
     }
 
-    public function testIndexAction()
+    public function testIndexAction(): void
     {
         $this->dispatch('/s/test/oai');
         $this->assertResponseStatusCode(200);
@@ -75,7 +75,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->assertEquals((string) $xml->error['code'], 'badVerb');
     }
 
-    public function testIdentifyVerb()
+    public function testIdentifyVerb(): void
     {
         $this->dispatch('/s/test/oai?verb=Identify');
         $this->assertResponseStatusCode(200);
@@ -87,7 +87,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->assertObjectHasAttribute('Identify', $xml);
     }
 
-    public function testListMetadataFormatsVerb()
+    public function testListMetadataFormatsVerb(): void
     {
         $this->dispatch('/s/test/oai?verb=ListMetadataFormats');
         $this->assertResponseStatusCode(200);
@@ -108,7 +108,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->assertArrayHasKey('oai_dc', $formats);
     }
 
-    public function testListSetsVerb()
+    public function testListSetsVerb(): void
     {
         $this->dispatch('/s/test/oai?verb=ListSets');
         $this->assertResponseStatusCode(200);
@@ -121,7 +121,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->assertEquals((string) $xml->ListSets->set->setSpec, $this->itemSet->id());
     }
 
-    public function testListIdentifiersVerbBadArgument()
+    public function testListIdentifiersVerbBadArgument(): void
     {
         $this->dispatch('/s/test/oai?verb=ListIdentifiers');
         $this->assertResponseStatusCode(200);
@@ -133,7 +133,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->assertEquals((string) $xml->error['code'], 'badArgument');
     }
 
-    public function testListIdentifiersVerbOaiDc()
+    public function testListIdentifiersVerbOaiDc(): void
     {
         $this->dispatch('/s/test/oai?verb=ListIdentifiers&metadataPrefix=oai_dc');
         $this->assertResponseStatusCode(200);
@@ -147,7 +147,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->assertEquals((string) $xml->ListIdentifiers->header->identifier, $expectedIdentifier);
     }
 
-    public function testGetRecordVerbOaiDc()
+    public function testGetRecordVerbOaiDc(): void
     {
         $itemIdentifier = 'oai:test:' . $this->item->id();
         $this->dispatch("/s/test/oai?verb=GetRecord&metadataPrefix=oai_dc&identifier=$itemIdentifier");
@@ -165,7 +165,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->assertEquals($expectedTitle, $title);
     }
 
-    public function testListRecordsVerbOaiDc()
+    public function testListRecordsVerbOaiDc(): void
     {
         $this->dispatch('/s/test/oai?verb=ListRecords&metadataPrefix=oai_dc');
         $this->assertResponseStatusCode(200);

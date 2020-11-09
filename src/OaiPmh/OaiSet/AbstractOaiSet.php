@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author Daniel Berthereau
  * @copyright Daniel Berthereau, 2014-2018
@@ -61,17 +61,17 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
     /**
      * @param string $setSpecType
      */
-    public function setSetSpecType($setSpecType)
+    public function setSetSpecType($setSpecType): void
     {
         $this->setSpecType = $setSpecType;
     }
 
-    public function setSite(SiteRepresentation $site = null)
+    public function setSite(SiteRepresentation $site = null): void
     {
         $this->site = $site;
     }
 
-    public function setOptions(array $options)
+    public function setOptions(array $options): void
     {
         $this->options = $options;
     }
@@ -246,7 +246,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         return $itemSet->displayDescription() ?: null;
     }
 
-    protected function getSetDescriptionSite(SiteRepresentation $site)
+    protected function getSetDescriptionSite(SiteRepresentation $site): void
     {
     }
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
@@ -73,7 +73,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
         return $this->id;
     }
 
-    public function setVerb($verb)
+    public function setVerb($verb): void
     {
         if (!in_array($verb, [
             self::VERB_LIST_IDENTIFIERS,
@@ -90,7 +90,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
         return $this->verb;
     }
 
-    public function setMetadataPrefix($metadataPrefix)
+    public function setMetadataPrefix($metadataPrefix): void
     {
         $this->metadataPrefix = $metadataPrefix;
     }
@@ -100,7 +100,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
         return $this->metadataPrefix;
     }
 
-    public function setCursor($cursor)
+    public function setCursor($cursor): void
     {
         $this->cursor = $cursor;
     }
@@ -110,7 +110,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
         return $this->cursor;
     }
 
-    public function setFrom($from)
+    public function setFrom($from): void
     {
         $this->from = $from;
     }
@@ -120,7 +120,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
         return $this->from;
     }
 
-    public function setUntil($until)
+    public function setUntil($until): void
     {
         $this->until = $until;
     }
@@ -130,7 +130,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
         return $this->until;
     }
 
-    public function setSet($set)
+    public function setSet($set): void
     {
         $this->set = $set;
     }
@@ -140,7 +140,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
         return $this->set;
     }
 
-    public function setExpiration(DateTime $expiration)
+    public function setExpiration(DateTime $expiration): void
     {
         $this->expiration = $expiration;
     }

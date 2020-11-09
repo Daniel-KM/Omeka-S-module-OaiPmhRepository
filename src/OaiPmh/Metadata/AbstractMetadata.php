@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
@@ -10,6 +10,8 @@ namespace OaiPmhRepository\OaiPmh\Metadata;
 
 use ArrayObject;
 use DOMElement;
+use Laminas\EventManager\EventManagerAwareInterface;
+use Laminas\EventManager\EventManagerAwareTrait;
 use OaiPmhRepository\OaiPmh\AbstractXmlGenerator;
 use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
@@ -17,8 +19,6 @@ use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\ItemRepresentation;
 use Omeka\Api\Representation\ValueRepresentation;
 use Omeka\Settings\SettingsInterface;
-use Laminas\EventManager\EventManagerAwareInterface;
-use Laminas\EventManager\EventManagerAwareTrait;
 
 /**
  * Abstract class on which all other metadata format handlers are based.
@@ -48,12 +48,12 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     protected $isGlobalRepository;
 
-    public function setSettings(SettingsInterface $settings)
+    public function setSettings(SettingsInterface $settings): void
     {
         $this->settings = $settings;
     }
 
-    public function setOaiSet(OaiSetInterface $oaiSet)
+    public function setOaiSet(OaiSetInterface $oaiSet): void
     {
         $this->oaiSet = $oaiSet;
     }
@@ -63,12 +63,12 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         return $this->oaiSet;
     }
 
-    public function setIsGlobalRepository($isGlobalRepository)
+    public function setIsGlobalRepository($isGlobalRepository): void
     {
         $this->isGlobalRepository = $isGlobalRepository;
     }
 
-    public function declareMetadataFormat(DOMElement $parent)
+    public function declareMetadataFormat(DOMElement $parent): void
     {
         $elements = [
             'metadataPrefix' => $this->getMetadataPrefix(),
@@ -85,11 +85,11 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      *
      * @param ArrayObject $query
      */
-    public function filterList(ArrayObject $query)
+    public function filterList(ArrayObject $query): void
     {
     }
 
-    public function appendRecord(DOMElement $parent, ItemRepresentation $item)
+    public function appendRecord(DOMElement $parent, ItemRepresentation $item): void
     {
         $document = $parent->ownerDocument;
         $record = $document->createElement('record');
@@ -101,7 +101,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $this->appendMetadata($metadata, $item);
     }
 
-    public function appendHeader(DOMElement $parent, ItemRepresentation $item)
+    public function appendHeader(DOMElement $parent, ItemRepresentation $item): void
     {
         $headerData = [];
         $headerData['identifier'] = OaiIdentifier::itemToOaiId($item->id());

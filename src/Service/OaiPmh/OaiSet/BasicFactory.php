@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace OaiPmhRepository\Service\OaiPmh\OaiSet;
 
 use Interop\Container\ContainerInterface;
-use OaiPmhRepository\OaiPmh\OaiSet\Basic;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use OaiPmhRepository\OaiPmh\OaiSet\Basic;
 
 class BasicFactory implements FactoryInterface
 {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  * @copyright John Flatness, Center for History and New Media, 2013-2014
@@ -26,14 +26,14 @@ class Module extends AbstractModule
 {
     const NAMESPACE = __NAMESPACE__;
 
-    public function onBootstrap(MvcEvent $event)
+    public function onBootstrap(MvcEvent $event): void
     {
         parent::onBootstrap($event);
         $this->addAclRules();
         $this->addRoutes();
     }
 
-    protected function postInstall()
+    protected function postInstall(): void
     {
         $services = $this->getServiceLocator();
         $settings = $services->get('Omeka\Settings');
@@ -44,7 +44,7 @@ class Module extends AbstractModule
     /**
      * Add ACL rules for this module.
      */
-    protected function addAclRules()
+    protected function addAclRules(): void
     {
         /** @var \Omeka\Permissions\Acl $acl */
         $acl = $this->getServiceLocator()->get('Omeka\Acl');
@@ -59,7 +59,7 @@ class Module extends AbstractModule
             );
     }
 
-    protected function addRoutes()
+    protected function addRoutes(): void
     {
         $serviceLocator = $this->getServiceLocator();
 
@@ -88,7 +88,7 @@ class Module extends AbstractModule
         ]);
     }
 
-    public function attachListeners(SharedEventManagerInterface $sharedEventManager)
+    public function attachListeners(SharedEventManagerInterface $sharedEventManager): void
     {
         $sharedEventManager->attach(
             'Omeka\Controller\Admin\Index',
@@ -126,7 +126,7 @@ class Module extends AbstractModule
         $settings->set('oaipmhrepository_metadata_formats', $value);
     }
 
-    public function filterAdminDashboardPanels(Event $event)
+    public function filterAdminDashboardPanels(Event $event): void
     {
         $services = $this->getServiceLocator();
         $settings = $services->get('Omeka\Settings');
@@ -145,7 +145,7 @@ class Module extends AbstractModule
         ]);
     }
 
-    public function filterOaiPmhRepositoryValues(Event $event)
+    public function filterOaiPmhRepositoryValues(Event $event): void
     {
         static $genericDcterms;
 

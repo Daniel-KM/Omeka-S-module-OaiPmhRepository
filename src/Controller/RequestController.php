@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
@@ -8,8 +8,8 @@
  */
 namespace OaiPmhRepository\Controller;
 
-use OaiPmhRepository\OaiPmh\ResponseGenerator;
 use Laminas\Mvc\Controller\AbstractActionController;
+use OaiPmhRepository\OaiPmh\ResponseGenerator;
 
 /**
  * Request page controller.

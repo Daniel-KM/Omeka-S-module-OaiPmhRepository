@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
@@ -40,7 +40,7 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
 
     public function hydrate(Request $request, EntityInterface $entity,
         ErrorStore $errorStore
-    ) {
+    ): void {
         if ($this->shouldHydrate($request, 'o:verb')) {
             $entity->setVerb($request->getValue('o:verb'));
         }
@@ -73,7 +73,7 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
         }
     }
 
-    public function buildQuery(QueryBuilder $qb, array $query)
+    public function buildQuery(QueryBuilder $qb, array $query): void
     {
         $expr = $qb->expr();
 

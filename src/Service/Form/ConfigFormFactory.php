@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 namespace OaiPmhRepository\Service\Form;
 
 use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use OaiPmhRepository\Form\ConfigForm;
 use OaiPmhRepository\OaiPmh\MetadataFormatManager;
 use OaiPmhRepository\OaiPmh\OaiSetManager;
-use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ConfigFormFactory implements FactoryInterface
 {

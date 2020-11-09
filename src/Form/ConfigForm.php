@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace OaiPmhRepository\Form;
 
 use Laminas\Form\Element;
@@ -20,7 +20,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
      */
     protected $oaiSetFormats;
 
-    public function init()
+    public function init(): void
     {
         $this->add([
             'name' => 'oaipmhrepository_name',

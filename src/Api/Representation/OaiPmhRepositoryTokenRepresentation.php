@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016

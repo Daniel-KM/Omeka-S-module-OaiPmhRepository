@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace OaiPmhRepository\Service\OaiPmh\Metadata;
 
 use Interop\Container\ContainerInterface;
-use OaiPmhRepository\OaiPmh\Metadata\OaiDcterms;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use OaiPmhRepository\OaiPmh\Metadata\OaiDcterms;
 
 class OaiDctermsFactory implements FactoryInterface
 {

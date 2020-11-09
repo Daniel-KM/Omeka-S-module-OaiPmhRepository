@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * @author John Flatness
  * @copyright Copyright 2009 John Flatness
@@ -33,7 +33,7 @@ class CdwaLite extends AbstractMetadata
      *
      * {@inheritDoc}
      */
-    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item)
+    public function appendMetadata(DOMElement $metadataElement, ItemRepresentation $item): void
     {
         $document = $metadataElement->ownerDocument;
         $cdwaliteWrap = $document->createElementNS(self::METADATA_NAMESPACE,
