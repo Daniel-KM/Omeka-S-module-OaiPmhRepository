@@ -225,7 +225,7 @@ your archives regularly so you can roll back if needed.
 Troubleshooting
 ---------------
 
-See online issues on the [module issues] page on GitHub.
+See online issues on the [module issues] page on GitLab.
 
 
 License
@@ -261,10 +261,10 @@ See commits for full list of contributors.
 * Copyright Yu-Hsun Lin, 2009
 * Copyright John Flatness, 2009-2016
 * Copyright Julian Maurice for BibLibre, 2016-2017
-* Copyright Daniel Berthereau, 2014-2019 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2014-2020 (see [Daniel-KM])
 
 
-[OAI-PMH Repository]: https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository
+[OAI-PMH Repository]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository
 [Omeka S]: https://omeka.org/s
 [OAI-PMH]: https://www.openarchives.org/OAI/openarchivesprotocol.html
 [OAI-PMH Repository plugin]: https://github.com/omeka/plugin-OaiPmhRepository
@@ -272,7 +272,7 @@ See commits for full list of contributors.
 [BibLibre]: https://github.com/biblibre
 [Installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
 [Bootstrap]: https://getbootstrap.com
-[`oai-pmh-repository.xsl`]: https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/blob/master/asset/xsl/oai-pmh-repository.xsl
+[`oai-pmh-repository.xsl`]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/blob/master/asset/xsl/oai-pmh-repository.xsl
 [Dublin Core]: http://dublincore.org
 [Dublin Core Terms]: http://www.dublincore.org/documents/dcmi-terms/
 [CDWA Lite]: https://www.getty.edu/research/publications/electronic_publications/cdwa/cdwalite.html
@@ -282,9 +282,9 @@ See commits for full list of contributors.
 [Omeka XML]: http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd
 [schema]: http://omeka.org/schemas/omeka-xml/v5/omeka-xml-5-0.xsd
 [EAD]: http://www.loc.gov/ead/
-[`EAD`]: https://github.com/Daniel-KM/Omeka-S-module-Ead
-[module issues]: https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/issues
+[`EAD`]: https://gitlab.com/Daniel-KM/Omeka-S-module-Ead
+[module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/issues
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [CeCILL-B]: https://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
 [GitLab]: https://gitlab.com/Daniel-KM
-[Daniel-KM]: https://github.com/Daniel-KM "Daniel Berthereau"
+[Daniel-KM]: https://gitlab.com/Daniel-KM "Daniel Berthereau"

@@ -132,7 +132,7 @@ return [
                         ],
                         'version' => null,
                         'toolkitIcon' => 'https://omeka.org/favicon.ico',
-                        'URL' => 'https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository',
+                        'URL' => 'https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository',
                     ],
                 ],
             ],

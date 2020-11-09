@@ -45,9 +45,9 @@
             "email": "john@zerocrates.org"
         }
     ],
-    "homepage": "https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
+    "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
     "support": {
-        "issues": "https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
+        "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
         "forum": "https://forum.omeka.org/"
     },
     "keywords": [

@@ -5,8 +5,8 @@ Stylesheet to display responses to OAI-PMH requests with a Bootstrap theme.
 
 This stylesheet is primarily designed for Omeka Classic / Omeka S (https://omeka.org)
 and the plugins OAI-PMH Repository (https://omeka.org/classic/plugins/OaiPmhRepository /
-https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository)
-and OAI-PMH Gateway (https://github.com/Daniel-KM/Omeka-plugin-OaiPmhGateway), but can be used by
+https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository)
+and OAI-PMH Gateway (https://gitlab.com/Daniel-KM/Omeka-plugin-OaiPmhGateway), but can be used by
 any OAI-PMH Data Provider (https://www.openarchives.org/pmh/register_data_provider).
 To customize it, you may need to adapt the paths to the css and js for your application.
 CDN are used by default.
@@ -19,7 +19,7 @@ and see http://www2.informatik.hu-berlin.de/~obecker/XSLT/#xmlverbatim),
 Initialy adapted from the stylesheet built by Lyncode for DSpace (http://www.lyncode.com/dspace/addons/xoai/),
 published under the DSpace BSD Licence (see http://dspace.org/licence).
 
-Copyright (c) 2015-2019 Daniel Berthereau (see https://github.com/Daniel-KM)
+Copyright (c) 2015-2019 Daniel Berthereau (see https://gitlab.com/Daniel-KM)
 Copyright (c) 2002 Oliver Becker (XML Verbatim)
 Copyright (c) 2002-2015, DuraSpace.  All rights reserved.
 
@@ -67,7 +67,7 @@ No support (may depend on server):
     <xsl:param name="powered-by-text" select="'Powered by Omeka'" />
 
     <!-- Url for the xsl stylesheet link (#logo-stylesheet is set for css if wanted). -->
-    <xsl:param name="stylesheet-url" select="'https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository'" />
+    <xsl:param name="stylesheet-url" select="'https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository'" />
     <xsl:param name="stylesheet-text" select="'Stylesheet by Daniel Berthereau'" />
 
     <!-- Let empty if this a normal repository. -->
