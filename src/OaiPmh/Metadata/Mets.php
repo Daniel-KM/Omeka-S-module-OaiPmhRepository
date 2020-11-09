@@ -55,7 +55,7 @@ class Mets extends AbstractMetadata
 
         $metadataSection = $this->appendNewElement($mets, 'dmdSec');
         $itemDmdId = 'dmd-' . $item->id();
-        $metadataSection->setAttribute('ID', $itemDmdId);
+        $metadataSection->setAttribute('ID', (string) $itemDmdId);
         $dataWrap = $this->appendNewElement($metadataSection, 'mdWrap');
 
         $itemDataFormat = $this->settings->get('oaipmhrepository_mets_data_item');
@@ -88,18 +88,18 @@ class Mets extends AbstractMetadata
 
                     $fileElement = $this->appendNewElement($fileGroup, 'file');
                     $fileElement->setAttribute('xmlns:dc', self::DC_NAMESPACE_URI);
-                    $fileElement->setAttribute('ID', $fileId);
-                    //$fileElement->setAttribute('MIMETYPE', $file->mime_type);
-                    $fileElement->setAttribute('CHECKSUM', $media->sha256());
+                    $fileElement->setAttribute('ID', (string) $fileId);
+                    //$fileElement->setAttribute('MIMETYPE', (string) $file->mime_type);
+                    $fileElement->setAttribute('CHECKSUM', (string) $media->sha256());
                     $fileElement->setAttribute('CHECKSUMTYPE', 'SHA-256');
-                    $fileElement->setAttribute('DMDID', $fileDmdId);
+                    $fileElement->setAttribute('DMDID', (string) $fileDmdId);
 
                     $location = $this->appendNewElement($fileElement, 'FLocat');
 
                     $location->setAttribute('LOCTYPE', 'URL');
                     $location->setAttribute('xlink:type', 'simple');
-                    $location->setAttribute('xlink:title', $media->filename());
-                    $location->setAttribute('xlink:href', $media->originalUrl());
+                    $location->setAttribute('xlink:title', (string) $media->filename());
+                    $location->setAttribute('xlink:href', (string) $media->originalUrl());
 
                     $fileContentMetadata = $this->appendNewElement($mets, 'dmdSec');
                     $fileContentMetadata->setAttribute('ID', $fileDmdId);
@@ -122,10 +122,10 @@ class Mets extends AbstractMetadata
 
         $structMap = $this->appendNewElement($mets, 'structMap');
         $topDiv = $this->appendNewElement($structMap, 'div');
-        $topDiv->setAttribute('DMDID', $itemDmdId);
+        $topDiv->setAttribute('DMDID', (string) $itemDmdId);
         foreach ($fileIds as $id) {
             $fptr = $this->appendNewElement($topDiv, 'fptr');
-            $fptr->setAttribute('FILEID', $id);
+            $fptr->setAttribute('FILEID', (string) $id);
         }
     }
 

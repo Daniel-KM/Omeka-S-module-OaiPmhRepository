@@ -193,7 +193,7 @@ class Module extends AbstractModule
 
         $single = !is_array($values);
         if ($single) {
-            if (count($values)) {
+            if ($values) {
                 return;
             }
 

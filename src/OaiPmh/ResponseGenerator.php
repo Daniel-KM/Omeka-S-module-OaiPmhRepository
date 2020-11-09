@@ -139,13 +139,16 @@ class ResponseGenerator extends AbstractXmlGenerator
      */
     public static function getGranularity($dateTime)
     {
-        if (preg_match(self::OAI_DATE_PCRE, $dateTime)) {
-            return self::OAI_GRANULARITY_DATE;
-        } elseif (preg_match(self::OAI_DATETIME_PCRE, $dateTime)) {
-            return self::OAI_GRANULARITY_DATETIME;
-        } else {
+        if (empty($dateTime)) {
             return false;
         }
+        if (preg_match(self::OAI_DATE_PCRE, $dateTime)) {
+            return self::OAI_GRANULARITY_DATE;
+        }
+        if (preg_match(self::OAI_DATETIME_PCRE, $dateTime)) {
+            return self::OAI_GRANULARITY_DATETIME;
+        }
+        return false;
     }
 
     /**
@@ -283,7 +286,7 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         if (!$this->error) {
             foreach ($this->query as $key => $value) {
-                $request->setAttribute($key, $value);
+                $request->setAttribute($key, (string) $value);
             }
 
             if ($resumptionToken) {
@@ -725,11 +728,10 @@ class ResponseGenerator extends AbstractXmlGenerator
                 $token = $this->createResumptionToken($verb, $metadataPrefix,
                     $cursor + $this->_listLimit, $set, $from, $until);
 
-                $tokenElement = $this->document->createElement('resumptionToken', $token->id());
-                $tokenElement->setAttribute('expirationDate',
-                    $token->expiration()->format('Y-m-d\TH:i:s\Z'));
-                $tokenElement->setAttribute('completeListSize', $rows);
-                $tokenElement->setAttribute('cursor', $cursor);
+                $tokenElement = $this->document->createElement('resumptionToken', (string) $token->id());
+                $tokenElement->setAttribute('expirationDate', $token->expiration()->format('Y-m-d\TH:i:s\Z'));
+                $tokenElement->setAttribute('completeListSize', (string) $rows);
+                $tokenElement->setAttribute('cursor', (string) $cursor);
                 $verbElement->appendChild($tokenElement);
             } elseif ($cursor != 0) {
                 $tokenElement = $this->document->createElement('resumptionToken');
@@ -814,7 +816,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->error = true;
         $errorElement = $this->document->createElement('error', $message);
         $this->document->documentElement->appendChild($errorElement);
-        $errorElement->setAttribute('code', $error);
+        $errorElement->setAttribute('code', (string) $error);
     }
 
     /**

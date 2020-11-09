@@ -38,7 +38,7 @@ class AbstractXmlGenerator
                 $this->createElementWithChildren($newElement, $tag, $value);
             } else {
                 $element = $document->createElement($tag);
-                $element->appendChild($document->createTextNode($value));
+                $element->appendChild($document->createTextNode((string) $value));
                 $newElement->appendChild($element);
             }
         }
@@ -63,7 +63,7 @@ class AbstractXmlGenerator
         $newElement = $document->createElement($name);
         // Use a TextNode, causes escaping of input text
         if ($text) {
-            $text = $document->createTextNode($text);
+            $text = $document->createTextNode((string) $text);
             $newElement->appendChild($text);
         }
         $parent->appendChild($newElement);
