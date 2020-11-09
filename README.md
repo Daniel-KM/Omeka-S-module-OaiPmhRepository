@@ -1,6 +1,9 @@
 OAI-PMH Repository (module for Omeka S)
 =======================================
 
+> __New versions of this module and support for Omeka S version 3.0 and above
+> are available on [GitLab], which seems to respect users and privacy better.__
+
 [OAI-PMH Repository] is a module for [Omeka S] that implements an Open Archives
 Initiative Protocol for Metadata Harvesting ([OAI-PMH]) repository for Omeka S,
 allowing Omeka S items, item sets, and media to be harvested by OAI-PMH
@@ -283,4 +286,5 @@ See commits for full list of contributors.
 [module issues]: https://github.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/issues
 [GNU/GPL]: https://www.gnu.org/licenses/gpl-3.0.html
 [CeCILL-B]: https://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html
+[GitLab]: https://gitlab.com/Daniel-KM
 [Daniel-KM]: https://github.com/Daniel-KM "Daniel Berthereau"
