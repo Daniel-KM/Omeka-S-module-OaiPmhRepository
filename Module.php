@@ -18,6 +18,7 @@ use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\Mvc\Controller\AbstractController;
 use Laminas\Mvc\MvcEvent;
+use Omeka\Api\Representation\PropertyRepresentation;
 
 /**
  * OaiPmhRepository module class.
@@ -100,6 +101,11 @@ class Module extends AbstractModule
         // even if OaiDcTerms doesn't require it.
         $sharedEventManager->attach(
             \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::class,
+            'oaipmhrepository.values.pre',
+            [$this, 'filterOaiPmhRepositoryValuesPre']
+        );
+        $sharedEventManager->attach(
+            \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::class,
             'oaipmhrepository.values',
             [$this, 'filterOaiPmhRepositoryValues']
         );
@@ -143,6 +149,67 @@ class Module extends AbstractModule
             'globalRepository' => $settings->get('oaipmhrepository_global_repository'),
             'bySiteRepository' => $settings->get('oaipmhrepository_by_site_repository'),
         ]);
+    }
+
+    public function filterOaiPmhRepositoryValuesPre(Event $event): void
+    {
+        static $mapping;
+
+        if (is_null($mapping)) {
+            $services = $this->getServiceLocator();
+            $settings = $services->get('Omeka\Settings');
+            $mapping = $settings->get('oaipmhrepository_map_properties', []);
+        }
+        if (!count($mapping)) {
+            return;
+        }
+
+        /** @var \Omeka\Api\Representation\AbstractResourceEntityRepresentation $resource */
+        $resource = $event->getParam('resource');
+        $template = $resource->resourceTemplate();
+
+        $values = $event->getParam('values', []);
+
+        // Do a double loop for quicker process.
+
+        foreach ($mapping as $sourceTerm => $destinationTerm) {
+            if ($sourceTerm === $destinationTerm || empty($sourceTerm) || empty($destinationTerm)) {
+                continue;
+            }
+            if (isset($values[$destinationTerm]['values'])) {
+                continue;
+            }
+            $property = $this->getProperty($destinationTerm);
+            if (!$property) {
+                continue;
+            }
+            $rtp = $template ? $template->resourceTemplateProperty($property->id()) : null;
+            if ($rtp) {
+                $alternateLabel = $rtp->alternateLabel();
+                $alternateComment = $rtp->alternateComment();
+            } else {
+                $alternateLabel = null;
+                $alternateComment = null;
+            }
+            $values[$destinationTerm] = [
+                'property' => $property,
+                'alternate_label' => $alternateLabel,
+                'alternate_comment' => $alternateComment,
+                'values' => [],
+            ];
+        }
+
+        foreach ($mapping as $sourceTerm => $destinationTerm) {
+            if (empty($values[$sourceTerm]['values'])) {
+                continue;
+            }
+            $values[$destinationTerm]['values'] = array_merge(
+                array_values($values[$destinationTerm]['values']),
+                array_values($values[$sourceTerm]['values'])
+            );
+        }
+
+        $event->setParam('values', $values);
     }
 
     public function filterOaiPmhRepositoryValues(Event $event): void
@@ -232,5 +299,21 @@ class Module extends AbstractModule
         }
 
         return $name;
+    }
+
+    protected function getProperty(string $term): ?PropertyRepresentation
+    {
+        static $api;
+        static $properties = [];
+
+        if (!array_key_exists($term, $properties)) {
+            if (is_null($api)) {
+                $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+            }
+            $props = $api->search('properties', ['term' => $term, 'limit' => 1], ['initialize' => false])->getContent();
+            $properties[$term] = count($props) ? reset($props) : null;
+        }
+
+        return $properties[$term];
     }
 }

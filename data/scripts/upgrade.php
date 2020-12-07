@@ -96,6 +96,10 @@ if (version_compare($oldVersion, '3.3.5.2', '<')) {
         'The event "oaipmhrepository.values" that may be used by other modules was deprecated and replaced by event "oaipmhrepository.values.pre".' // @translate
     );
     $messenger->addWarning($message);
+    $message = new Message(
+        'Futhermore, a new option allows to map any term to any other term, so any values can be exposed if needed.' // @translate
+    );
+    $messenger->addWarning($message);
 
     $settings->set(
         'oaipmhrepository_generic_dcterms',

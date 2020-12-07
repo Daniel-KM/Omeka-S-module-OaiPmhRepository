@@ -5,6 +5,7 @@ use Laminas\Form\Element;
 use Laminas\Form\Form;
 use Laminas\I18n\Translator\TranslatorAwareInterface;
 use Laminas\I18n\Translator\TranslatorAwareTrait;
+use Omeka\Form\Element\ArrayTextarea;
 
 class ConfigForm extends Form implements TranslatorAwareInterface
 {
@@ -204,6 +205,21 @@ class ConfigForm extends Form implements TranslatorAwareInterface
             'attributes' => [
                 'id' => 'oaipmhrepository_generic_dcterms',
                 'required' => false,
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'oaipmhrepository_map_properties',
+            'type' => ArrayTextarea::class,
+            'options' => [
+                'label' => 'Map properties to Dublin Core ', // @translate
+                'info' => 'Map any property to Dublin Core terms, so they will be available in format "oai_dcterms" and "oai_dc" (if option "Genericize dcterms" is set).', // @translate
+                'as_key_value' => true,
+            ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_map_properties',
+                'placeholder' => 'bibo:shortTitle = dcterms:alternative',
+                'rows' => 5,
             ],
         ]);
 

@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace OaiPmhRepository;
 
 return [
@@ -116,6 +117,8 @@ return [
                 'mets',
                 'cdwalite',
                 'mods',
+            ],
+            'oaipmhrepository_map_properties' => [
             ],
             'oaipmhrepository_mets_data_item' => 'dcterms',
             'oaipmhrepository_mets_data_media' => 'dcterms',
