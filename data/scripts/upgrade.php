@@ -1,6 +1,9 @@
 <?php declare(strict_types=1);
 namespace OaiPmhRepository;
 
+use Omeka\Mvc\Controller\Plugin\Messenger;
+use Omeka\Stdlib\Message;
+
 /**
  * @var Module $this
  * @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
@@ -85,4 +88,17 @@ if (version_compare($oldVersion, '3.3.0', '<')) {
         $defaultSettings['oaipmhrepository_mets_data_item']);
     $settings->set('oaipmhrepository_mets_data_media',
         $defaultSettings['oaipmhrepository_mets_data_media']);
+}
+
+if (version_compare($oldVersion, '3.3.5.2', '<')) {
+    $messenger = new Messenger();
+    $message = new Message(
+        'The event "oaipmhrepository.values" that may be used by other modules was deprecated and replaced by event "oaipmhrepository.values.pre".' // @translate
+    );
+    $messenger->addWarning($message);
+
+    $settings->set(
+        'oaipmhrepository_generic_dcterms',
+        $settings->get('oaipmhrepository_generic_dcterms', true) ? ['oai_dc', 'cdwalite', 'mets', 'mods'] : []
+    );
 }

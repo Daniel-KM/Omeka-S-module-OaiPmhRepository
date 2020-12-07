@@ -148,34 +148,39 @@ class Module extends AbstractModule
     public function filterOaiPmhRepositoryValues(Event $event): void
     {
         static $genericDcterms;
+        static $map;
 
         if (is_null($genericDcterms)) {
             $services = $this->getServiceLocator();
             $settings = $services->get('Omeka\Settings');
-            $genericDcterms = $settings->get('oaipmhrepository_generic_dcterms', false);
+            $genericDcterms = array_diff(
+                $settings->get('oaipmhrepository_generic_dcterms', ['oai_dc', 'cdwalite', 'mets', 'mods']),
+                ['oai_dcterms']
+            );
+            $map = include __DIR__ . '/data/mappings/dc_generic.php';
         }
-        if (!$genericDcterms) {
+        if (!count($genericDcterms) || !count($map)) {
+            return;
+        }
+
+        $prefix = $event->getParam('prefix');
+        if (!in_array($prefix, $genericDcterms)) {
             return;
         }
 
         $resource = $event->getParam('resource');
 
-        // Manage exception for mets and dcterms.
-        $prefix = $event->getParam('prefix');
-        if ($prefix === 'oai_dcterms') {
-            return;
-        }
-
+        // Check if the filter is enable for the current format.
         if ($prefix === 'mets') {
             $services = $this->getServiceLocator();
             $settings = $services->get('Omeka\Settings');
             switch (get_class($resource)) {
+                case \Omeka\Api\Representation\MediaRepresentation::class:
+                    $dataFormat = $settings->get('oaipmhrepository_mets_data_media');
+                    break;
                 case \Omeka\Api\Representation\ItemRepresentation::class:
                 default:
                     $dataFormat = $settings->get('oaipmhrepository_mets_data_item');
-                    break;
-                case \Omeka\Api\Representation\MediaRepresentation::class:
-                    $dataFormat = $settings->get('oaipmhrepository_mets_data_media');
                     break;
             }
             if ($dataFormat === 'dcterms') {
@@ -183,7 +188,6 @@ class Module extends AbstractModule
             }
         }
 
-        $map = include __DIR__ . '/data/mappings/dc_generic.php';
         $term = $event->getParam('term');
         if (empty($map[$term])) {
             return;

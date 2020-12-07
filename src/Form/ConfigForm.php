@@ -188,15 +188,22 @@ class ConfigForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'oaipmhrepository_generic_dcterms',
-            'type' => Element\Checkbox::class,
+            'type' => Element\MultiCheckbox::class,
             'options' => [
-                'label' => 'Genericize dcterms', // @translate
+                'label' => 'Genericize dcterms for specific formats', // @translate
                 'info' => $this->translate('Use refined terms for Dublin Core elements, for example dcterms:abstract will be merged with dc:description.') // @translate
                     . $this->translate('It allows to expose all metadata in the standard oai_dc.') // @translate
                     . $this->translate('For other merges, the event "oaipmhrepository.values.pre" can be used.'), // @translate
+                'value_options' => [
+                    'oai_dc' => 'oai_dc',
+                    'mets' => 'mets',
+                    'cdwalite' => 'cdwalite',
+                    'mods' => 'mods',
+                ],
             ],
             'attributes' => [
                 'id' => 'oaipmhrepository_generic_dcterms',
+                'required' => false,
             ],
         ]);
 
@@ -287,6 +294,12 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'min' => '1',
             ],
         ]);
+
+        $this->getInputFilter()
+            ->add([
+                'name' => 'oaipmhrepository_generic_dcterms',
+                'required' => false,
+            ]);
     }
 
     protected function translate($args)

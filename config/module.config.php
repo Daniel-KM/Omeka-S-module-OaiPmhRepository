@@ -110,7 +110,13 @@ return [
             'oaipmhrepository_append_identifier_global' => 'api_url',
             'oaipmhrepository_append_identifier_site' => 'absolute_site_url',
             'oaipmhrepository_oai_set_format' => 'basic',
-            'oaipmhrepository_generic_dcterms' => true,
+            'oaipmhrepository_generic_dcterms' => [
+                // Of course dcterms is not included.
+                'oai_dc',
+                'mets',
+                'cdwalite',
+                'mods',
+            ],
             'oaipmhrepository_mets_data_item' => 'dcterms',
             'oaipmhrepository_mets_data_media' => 'dcterms',
             'oaipmhrepository_human_interface' => true,
