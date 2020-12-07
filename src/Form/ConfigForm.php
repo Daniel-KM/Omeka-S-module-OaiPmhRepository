@@ -30,6 +30,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'info' => 'Name for this OAI-PMH repository.', // @translate
             ],
             'attributes' => [
+                'id' => 'oaipmhrepository_name',
                 'required' => true,
             ],
         ]);
@@ -44,6 +45,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     . ' ' . $this->translate('Using other values will generate invalid identifiers.'), // @translate
             ],
             'attributes' => [
+                'id' => 'oaipmhrepository_namespace_id',
                 'required' => true,
             ],
         ]);
@@ -59,6 +61,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'value_options' => $valueOptions,
             ],
             'attributes' => [
+                'id' => 'oaipmhrepository_metadata_formats',
                 'required' => 'true',
                 'class' => 'chosen-select',
                 'multiple' => true,
@@ -74,6 +77,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'info' => $this->translate('Whether the plugin should include identifiers for the files associated with items.') // @translate
                     . ' ' . $this->translate('This provides harvesters with direct access to files.'), // @translate
             ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_expose_media',
+            ],
         ]);
 
         $this->add([
@@ -82,6 +88,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
             'options' => [
                 'label' => 'Hide empty oai sets', // @translate
                 'info' => 'Whether the module should hide empty oai sets.', // @translate
+            ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_hide_empty_sets',
             ],
         ]);
 
@@ -99,6 +108,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     'site_pool' => 'With sites as oai sets', // @translate
                 ],
             ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_global_repository',
+            ],
         ]);
 
         $this->add([
@@ -112,6 +124,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     'none' => 'Without oai sets', // @translate
                     'item_set' => 'With item sets as oai sets', // @translate
                 ],
+            ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_by_site_repository',
             ],
         ]);
 
@@ -130,6 +145,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     'absolute_site_url' => 'Absolute site url', // @translate
                 ],
             ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_append_identifier_global',
+            ],
         ]);
 
         $this->add([
@@ -147,6 +165,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     'absolute_site_url' => 'Absolute site url', // @translate
                 ],
             ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_append_identifier_site',
+            ],
         ]);
 
         $valueOptions = $this->getOaiSetFormats();
@@ -160,6 +181,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'value_options' => $valueOptions,
             ],
             'attributes' => [
+                'id' => 'oaipmhrepository_oai_set_format',
                 'required' => 'true',
             ],
         ]);
@@ -171,7 +193,10 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'label' => 'Genericize dcterms', // @translate
                 'info' => $this->translate('Use refined terms for Dublin Core elements, for example dcterms:abstract will be merged with dc:description.') // @translate
                     . $this->translate('It allows to expose all metadata in the standard oai_dc.') // @translate
-                    . $this->translate('For other merges, the event "oaipmhrepository.values" can be used.'), // @translate
+                    . $this->translate('For other merges, the event "oaipmhrepository.values.pre" can be used.'), // @translate
+            ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_generic_dcterms',
             ],
         ]);
 
@@ -188,6 +213,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     // 'mods' => 'Mods',
                 ],
             ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_mets_data_item',
+            ],
         ]);
 
         $this->add([
@@ -203,6 +231,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     // 'mods' => 'Mods',
                 ],
             ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_mets_data_media',
+            ],
         ]);
 
         $this->add([
@@ -212,6 +243,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'label' => 'Human interface', // @translate
                 'info' => $this->translate('The OAI-PMH pages can be displayed with a themable responsive human interface based on Bootstrap (https://getbootstrap.com).'), // @translate
             ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_human_interface',
+            ],
         ]);
 
         $this->add([
@@ -220,6 +254,9 @@ class ConfigForm extends Form implements TranslatorAwareInterface
             'options' => [
                 'label' => 'Global repository redirect route', // @translate
                 'info' => 'An alias (redirect 301) for backward compatibility with Omeka Classic, that used "/oai-pmh-repository/request", or any other old OAI-PMH repository.', // @translate
+            ],
+            'attributes' => [
+                'id' => 'oaipmhrepository_redirect_route',
             ],
         ]);
 
