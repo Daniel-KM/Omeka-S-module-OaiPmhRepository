@@ -2,15 +2,13 @@ OAI-PMH Repository (module for Omeka S)
 =======================================
 
 > __New versions of this module and support for Omeka S version 3.0 and above
-> are available on [GitLab], which seems to respect users and privacy better.__
+> are available on [GitLab], which seems to respect users and privacy better
+> than the previous repository.__
 
 [OAI-PMH Repository] is a module for [Omeka S] that implements an Open Archives
 Initiative Protocol for Metadata Harvesting ([OAI-PMH]) repository for Omeka S,
 allowing Omeka S items, item sets, and media to be harvested by OAI-PMH
 harvesters. The module implements version 2.0 of the protocol.
-
-This [Omeka S] module is a rewrite of the [OAI-PMH Repository plugin] for [Omeka]
-by [BibLibre] and intends to provide the same features as the original plugin.
 
 
 Installation
@@ -99,9 +97,15 @@ the resource have a unique standard identifier.
 
 This option allows to expose all metadata in the standard oai_dc and use refined
 terms for Dublin Core elements, for example "dcterms:abstract" will be merged
-with "dc:description". For other merges, the event `oaipmhrepository.values` can
-be used. For a quick hack, the file `data/mapping/generic_dcterms.php` can be
-used.
+with "dc:description". For other merges, the event `oaipmhrepository.values.pre`
+can be used. For a quick hack, the file `data/mapping/generic_dcterms.php` can
+be updated.
+
+### Map properties
+
+This option allows to expose any metadata as another one. The default mapping
+maps Bibliographic Ontology into Dublin Core. It can be improved or adapter if
+needed.
 
 ### Metadata for mets (item and media)
 
@@ -202,15 +206,18 @@ Other formats can be added or replace an existing one via a key in the config
 
 #### [EAD]
 
-The format EAD, designed to discribe archives, is available through the module
+The format EAD, designed to describe archives, is available through the module
 [`EAD`].
 
 ### Customization
 
-The output can be customized via the filter `oaipmhrepository.values`, that is
-triggered for each term. So it is possible to remove, to update or to append
-some values, or to convert some properties from other vocabularies into the
-standard formats.
+The output can be customized via the filter `oaipmhrepository.values.pre`, that
+is triggered before processing and that contains all the values of the current
+resource, so it is possible to remove, to update or to append some values, or to
+convert some properties from other vocabularies into the standard formats.
+
+The old event `oaipmhrepository.values` called for each value is deprecated
+since version 3.3.5.2 and will be removed in a future version.
 
 
 Warning
@@ -262,6 +269,10 @@ See commits for full list of contributors.
 * Copyright John Flatness, 2009-2016
 * Copyright Julian Maurice for BibLibre, 2016-2017
 * Copyright Daniel Berthereau, 2014-2020 (see [Daniel-KM])
+
+This [Omeka S] module is based on the rewrite of the [OAI-PMH Repository plugin]
+for [Omeka] by [BibLibre] and provide the same features as the original plugin
+and many more.
 
 
 [OAI-PMH Repository]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository
