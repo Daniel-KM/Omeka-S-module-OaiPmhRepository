@@ -814,7 +814,7 @@ class ResponseGenerator extends AbstractXmlGenerator
     protected function throwError($error, $message = null): void
     {
         $this->error = true;
-        $errorElement = $this->document->createElement('error', $message);
+        $errorElement = $this->document->createElement('error', (string) $message);
         $this->document->documentElement->appendChild($errorElement);
         $errorElement->setAttribute('code', (string) $error);
     }

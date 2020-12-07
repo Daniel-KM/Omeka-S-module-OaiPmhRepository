@@ -77,7 +77,7 @@ class OaiIdentifier
         $oaiIdentifier = $parentElement->ownerDocument->createElement('oai-identifier');
 
         foreach ($elements as $tag => $value) {
-            $oaiIdentifier->appendChild($parentElement->ownerDocument->createElement($tag, $value));
+            $oaiIdentifier->appendChild($parentElement->ownerDocument->createElement($tag, (string) $value));
         }
         $parentElement->appendChild($oaiIdentifier);
 
