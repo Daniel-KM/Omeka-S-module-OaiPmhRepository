@@ -50,6 +50,8 @@ class CdwaLite extends AbstractMetadata
 
         $cdwalite = $this->appendNewElement($cdwaliteWrap, 'cdwalite:cdwalite');
 
+        $values = $this->filterValuesPre($item);
+
         /* ====================
          * DESCRIPTIVE METADATA
          * ====================
@@ -60,7 +62,7 @@ class CdwaLite extends AbstractMetadata
         /* Type => objectWorkTypeWrap->objectWorkType
          * Required.  Fill with 'Unknown' if omitted.
          */
-        $types = $item->value('dcterms:type', ['all' => true]);
+        $types = $values['dcterms:type']['values'] ?? [];
         $types = $this->filterValues($item, 'dcterms:type', $types);
         $objectWorkTypeWrap = $this->appendNewElement($descriptive, 'cdwalite:objectWorkTypeWrap');
         if (empty($types)) {
@@ -74,7 +76,7 @@ class CdwaLite extends AbstractMetadata
         /* Title => titleWrap->titleSet->title
          * Required.  Fill with 'Unknown' if omitted.
          */
-        $titles = $item->value('dcterms:title', ['all' => true]);
+        $titles = $values['dcterms:title']['values'] ?? [];
         $titles = $this->filterValues($item, 'dcterms:title', $titles);
         $titleWrap = $this->appendNewElement($descriptive, 'cdwalite:titleWrap');
 
@@ -87,7 +89,7 @@ class CdwaLite extends AbstractMetadata
          * Required.  Fill with 'Unknown' if omitted.
          * Non-repeatable, implode for inclusion of many creators.
          */
-        $creators = $item->value('dcterms:creator', ['all' => true]);
+        $creators = $values['dcterms:creator']['values'] ?? [];
         $creators = $this->filterValues($item, 'dcterms:creator', $creators);
 
         $creatorTexts = [];
@@ -122,10 +124,11 @@ class CdwaLite extends AbstractMetadata
         /* Date => displayCreationDate
          * Required. Fill with 'Unknown' if omitted.
          * Non-repeatable, include only first date.
+         * FIXME Which date to use for cdwalite:displayCreationDate? dcterms:created? item created?
          */
-        $date = $item->value('dcterms:date');
-        $date = $this->filterValues($item, 'dcterms:date', $date);
-        $dateText = $date ? (string) $date : 'Unknown';
+        $dates = $values['dcterms:date']['values'] ?? [];
+        $date = count($dates) ? reset($dates) : null;
+        $dateText = (string) $this->filterValues($item, 'dcterms:date', $date) ?: 'Unknown'; // @translate
         $this->appendNewElement($descriptive, 'cdwalite:displayCreationDate', $dateText);
 
         /* Date => indexingDatesWrap->indexingDatesSet
@@ -133,7 +136,7 @@ class CdwaLite extends AbstractMetadata
          * Required.  Fill with 'Unknown' if omitted.
          */
         $indexingDatesWrap = $this->appendNewElement($descriptive, 'cdwalite:indexingDatesWrap');
-        $dates = $item->value('dcterms:date', ['all' => true]);
+        $dates = $values['dcterms:date']['values'] ?? [];
         $dates = $this->filterValues($item, 'dcterms:date', $dates);
         foreach ($dates as $date) {
             $indexingDatesSet = $this->appendNewElement($indexingDatesWrap, 'cdwalite:indexingDatesSet');
@@ -151,7 +154,7 @@ class CdwaLite extends AbstractMetadata
         /* Subject => classWrap->classification
          * Not required.
          */
-        $subjects = $item->value('dcterms:subject', ['all' => true]);
+        $subjects  = $values['dcterms:subject']['values'] ?? [];
         $subjects = $this->filterValues($item, 'dcterms:subject', $subjects);
         $classWrap = $this->appendNewElement($descriptive, 'cdwalite:classWrap');
         foreach ($subjects as $subject) {
@@ -161,7 +164,7 @@ class CdwaLite extends AbstractMetadata
         /* Description => descriptiveNoteWrap->descriptiveNoteSet->descriptiveNote
          * Not required.
          */
-        $descriptions = $item->value('dcterms:description', ['all' => true]);
+        $descriptions = $values['dcterms:description']['values'] ?? [];
         $descriptions = $this->filterValues($item, 'dcterms:description', $descriptions);
         if (!empty($descriptions)) {
             $descriptiveNoteWrap = $this->appendNewElement($descriptive, 'cdwalite:descriptiveNoteWrap');
@@ -181,7 +184,7 @@ class CdwaLite extends AbstractMetadata
         /* Rights => rightsWork
          * Not required.
          */
-        $rights = $item->value('dcterms:rights', ['all' => true]);
+        $rights = $values['dcterms:rights']['values'] ?? [];
         $rights = $this->filterValues($item, 'dcterms:rights', $rights);
         foreach ($rights as $right) {
             $this->appendNewElement($administrative, 'cdwalite:rightsWork', (string) $right);

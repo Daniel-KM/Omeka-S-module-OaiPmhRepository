@@ -168,11 +168,12 @@ class Mets extends AbstractMetadata
             'rights',
         ];
 
+        $values = $this->filterValuesPre($resource);
         foreach ($localNames as $localName) {
             $term = 'dcterms:' . $localName;
-            $values = $resource->value($term, ['all' => true]);
-            $values = $this->filterValues($resource, $term, $values);
-            foreach ($values as $value) {
+            $termValues = $values[$term]['values'] ?? [];
+            $termValues = $this->filterValues($resource, $term, $termValues);
+            foreach ($termValues as $value) {
                 $this->appendNewElement($dataXml, 'dc:' . $localName, (string) $value);
             }
         }
@@ -246,11 +247,12 @@ class Mets extends AbstractMetadata
             'accrualPolicy',
         ];
 
+        $values = $this->filterValuesPre($resource);
         foreach ($localNames as $localName) {
             $term = 'dcterms:' . $localName;
-            $values = $resource->value($term, ['all' => true]);
-            $values = $this->filterValues($resource, $term, $values);
-            foreach ($values as $value) {
+            $termValues = $values[$term]['values'] ?? [];
+            $termValues = $this->filterValues($resource, $term, $termValues);
+            foreach ($termValues as $value) {
                 $this->appendNewElement($dataXml, $term, (string) $value);
             }
         }

@@ -156,8 +156,30 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     }
 
     /**
+     * Filter values of a resource before processing (remove, update or append).
+     *
+     * @param AbstractResourceEntityRepresentation $resource
+     * @return array See \Omeka\Api\Representation\AbstractResourceEntityRepresentation::values()
+     */
+    protected function filterValuesPre(
+        AbstractResourceEntityRepresentation $resource
+    ) {
+        $args = [];
+        $args['prefix'] = $this->getMetadataPrefix();
+        $args['resource'] = $resource;
+        $args['values'] = $resource->values();
+
+        /** @var \ArrayObject $args */
+        $eventManager = $this->getEventManager();
+        $args = $eventManager->prepareArgs($args);
+        $eventManager->trigger('oaipmhrepository.values.pre', $this, $args);
+        return $args['values'];
+    }
+
+    /**
      * Filter values (remove, update or append) of a resource via an event.
      *
+     * @deprecated Since 3.3.5.2 Use filterValuesPre() instead, that filters them globally. Will be removed in a future version.
      * @param AbstractResourceEntityRepresentation $resource
      * @param string $term
      * @param ValueRepresentation|ValueRepresentation[]|null $values

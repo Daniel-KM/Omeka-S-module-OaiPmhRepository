@@ -122,11 +122,12 @@ class OaiDcterms extends AbstractMetadata
          * top-level xmlns declaration instead of wasteful and non-
          * compliant per-node declarations.
          */
+        $values = $this->filterValuesPre($item);
         foreach ($localNames as $localName) {
             $term = 'dcterms:' . $localName;
-            $values = $item->value($term, ['all' => true]);
-            $values = $this->filterValues($item, $term, $values);
-            foreach ($values as $value) {
+            $termValues = $values[$term]['values'] ?? [];
+            $termValues = $this->filterValues($item, $term, $termValues);
+            foreach ($termValues as $value) {
                 $this->appendNewElement($oai, $term, (string) $value);
             }
         }

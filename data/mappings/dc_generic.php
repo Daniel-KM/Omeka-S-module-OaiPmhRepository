@@ -6,7 +6,7 @@
  * http://dublincore.org/documents/dcmi-terms/
  * The order is the Omeka one.
  *
- * This mapping may be used by the filter `oaipmhrepository.values`.
+ * This mapping may be used by the filter `oaipmhrepository.values.pre`.
  * @todo Use the rdf relations directly.
  */
 return [
