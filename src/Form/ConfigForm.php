@@ -212,8 +212,8 @@ class ConfigForm extends Form implements TranslatorAwareInterface
             'name' => 'oaipmhrepository_map_properties',
             'type' => ArrayTextarea::class,
             'options' => [
-                'label' => 'Map properties to Dublin Core ', // @translate
-                'info' => 'Map any property to Dublin Core terms, so they will be available in format "oai_dcterms" and "oai_dc" (if option "Genericize dcterms" is set).', // @translate
+                'label' => 'Map properties', // @translate
+                'info' => 'Map any property to any other property, so they will be available in other formats, in particular "oai_dcterms" and "oai_dc".', // @translate
                 'as_key_value' => true,
             ],
             'attributes' => [

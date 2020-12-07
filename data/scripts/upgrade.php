@@ -105,4 +105,5 @@ if (version_compare($oldVersion, '3.3.5.2', '<')) {
         'oaipmhrepository_generic_dcterms',
         $settings->get('oaipmhrepository_generic_dcterms', true) ? ['oai_dc', 'cdwalite', 'mets', 'mods'] : []
     );
+    $settings->set('oaipmhrepository_map_properties', $defaultSettings['oaipmhrepository_map_properties']);
 }

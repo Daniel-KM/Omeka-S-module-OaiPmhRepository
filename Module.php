@@ -159,6 +159,29 @@ class Module extends AbstractModule
             $services = $this->getServiceLocator();
             $settings = $services->get('Omeka\Settings');
             $mapping = $settings->get('oaipmhrepository_map_properties', []);
+            foreach ($mapping as $sourceTerm => $destinationTerm) {
+                if ($sourceTerm === $destinationTerm
+                    || empty($sourceTerm)
+                    || empty($destinationTerm)
+                    || mb_substr($sourceTerm, 0, 1) === '#'
+                    || mb_substr($destinationTerm, 0, 1) === '#'
+                    || !strpos($sourceTerm, ':')
+                    || !strpos($destinationTerm, ':')
+                ) {
+                    unset($mapping[$sourceTerm]);
+                    continue;
+                }
+                $property = $this->getProperty($sourceTerm);
+                if (!$property) {
+                    unset($mapping[$sourceTerm]);
+                    continue;
+                }
+                $property = $this->getProperty($destinationTerm);
+                if (!$property) {
+                    unset($mapping[$sourceTerm]);
+                    continue;
+                }
+            }
         }
         if (!count($mapping)) {
             return;
@@ -170,12 +193,9 @@ class Module extends AbstractModule
 
         $values = $event->getParam('values', []);
 
-        // Do a double loop for quicker process.
+        // Do a double loop for quicker process. Mapping is already checked.
 
         foreach ($mapping as $sourceTerm => $destinationTerm) {
-            if ($sourceTerm === $destinationTerm || empty($sourceTerm) || empty($destinationTerm)) {
-                continue;
-            }
             if (isset($values[$destinationTerm]['values'])) {
                 continue;
             }
