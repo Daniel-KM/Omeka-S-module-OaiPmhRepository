@@ -211,7 +211,7 @@ msgid ""
 "The event \"oaipmhrepository.values\" that may be used by other modules was "
 "deprecated and replaced by event \"oaipmhrepository.values.pre\"."
 msgstr ""
-"L’événement \"oaipmhrepository.values\" qui pouvait être utiliser par "
+"L’événement \"oaipmhrepository.values\" qui pouvait être utilisé par "
 "d'autres modules est obsolète et a été remplacé par l’événement "
 "\"oaipmhrepository.values.pre\"."
 
