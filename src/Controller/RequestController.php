@@ -43,7 +43,8 @@ class RequestController extends AbstractActionController
 
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Content-Type', 'text/xml; charset=UTF-8');
-        $response->setContent((string) $oaiResponse);
+        // Sometime, there are space or a end of line on the beginning.
+        $response->setContent(trim((string) $oaiResponse));
 
         return $response;
     }
