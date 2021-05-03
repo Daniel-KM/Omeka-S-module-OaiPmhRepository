@@ -82,11 +82,18 @@ return [
     'oaipmhrepository' => [
         'metadata_formats' => [
             'factories' => [
-                'cdwalite' => Service\OaiPmh\Metadata\CdwaLiteFactory::class,
-                'mets' => Service\OaiPmh\Metadata\MetsFactory::class,
-                'mods' => Service\OaiPmh\Metadata\ModsFactory::class,
-                'oai_dc' => Service\OaiPmh\Metadata\OaiDcFactory::class,
-                'oai_dcterms' => Service\OaiPmh\Metadata\OaiDctermsFactory::class,
+                OaiPmh\Metadata\CdwaLite::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
+                OaiPmh\Metadata\Mets::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
+                OaiPmh\Metadata\Mods::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
+                OaiPmh\Metadata\OaiDc::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
+                OaiPmh\Metadata\OaiDcterms::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
+            ],
+            'aliases' => [
+                'cdwalite' => OaiPmh\Metadata\CdwaLite::class,
+                'mets' => OaiPmh\Metadata\Mets::class,
+                'mods' => OaiPmh\Metadata\Mods::class,
+                'oai_dc' => OaiPmh\Metadata\OaiDc::class,
+                'oai_dcterms' => OaiPmh\Metadata\OaiDcterms::class,
             ],
         ],
         'oai_set_formats' => [

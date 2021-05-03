@@ -58,7 +58,7 @@ class Mets extends AbstractMetadata
         $metadataSection->setAttribute('ID', (string) $itemDmdId);
         $dataWrap = $this->appendNewElement($metadataSection, 'mdWrap');
 
-        $itemDataFormat = $this->settings->get('oaipmhrepository_mets_data_item');
+        $itemDataFormat = $this->params['mets_data_item'];
         switch ($itemDataFormat) {
             case 'dc':
             default:
@@ -72,10 +72,10 @@ class Mets extends AbstractMetadata
         }
 
         $fileIds = [];
-        if ($this->settings->get('oaipmhrepository_expose_media', false)) {
+        if ($this->params['expose_media']) {
             $mediaList = $item->media();
             if (count($mediaList)) {
-                $mediaDataFormat = $this->settings->get('oaipmhrepository_mets_data_media');
+                $mediaDataFormat = $this->params['mets_data_media'];
 
                 $fileSection = $this->appendNewElement($mets, 'fileSec');
                 $fileGroup = $this->appendNewElement($fileSection, 'fileGrp');

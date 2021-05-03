@@ -139,23 +139,21 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     protected function singleIdentifier(AbstractResourceEntityRepresentation $resource)
     {
         if ($this->isGlobalRepository()) {
-            $append = $this->settings->get('oaipmhrepository_append_identifier_global');
+            $append = $this->params['append_identifier_global'];
             switch ($append) {
+                default:
                 case 'api_url':
                     return $resource->apiUrl();
                 case 'relative_site_url':
                 case 'absolute_site_url':
-                    $mainSite = $this->settings->get('default_site');
-                    if ($mainSite) {
-                        $mainSiteSlug = $resource->getServiceLocator()->get('ControllerPluginManager')
-                            ->get('api')->read('sites', $mainSite)->getContent()->slug();
-                        return $resource->siteUrl($mainSiteSlug, $append === 'absolute_site_url');
+                    if ($this->params['main_site_slug']) {
+                        return $resource->siteUrl($this->params['main_site_slug'], $append === 'absolute_site_url');
                     }
                     break;
             }
         } else {
-            $append = $this->settings->get('oaipmhrepository_append_identifier_site');
-            switch ($append) {
+            switch ($this->params['append_identifier_site']) {
+                default:
                 case 'api_url':
                     return $resource->apiUrl();
                 case 'relative_site_url':

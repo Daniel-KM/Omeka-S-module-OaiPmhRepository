@@ -143,18 +143,13 @@ class Mods extends AbstractMetadata
 
         $location = $this->appendNewElement($mods, 'location');
         if ($this->isGlobalRepository()) {
-            $mainSite = $this->settings->get('default_site');
-            if ($mainSite) {
-                $mainSiteSlug = $item->getServiceLocator()->get('ControllerPluginManager')
-                    ->get('api')->read('sites', $mainSite)->getContent()->slug();
-                $append = $this->settings->get('oaipmhrepository_append_identifier_global');
-                $url = $item->siteUrl($mainSiteSlug, $append === 'absolute_site_url');
+            if ($this->params['main_site_slug']) {
+                $url = $item->siteUrl($this->params['main_site_slug'], $this->params['append_identifier_global'] === 'absolute_site_url');
             } else {
                 $url = $item->apiUrl();
             }
         } else {
-            $append = $this->settings->get('oaipmhrepository_append_identifier_site');
-            $url = $item->siteUrl(null, $append === 'absolute_site_url');
+            $url = $item->siteUrl(null, $this->params['append_identifier_site'] === 'absolute_site_url');
         }
         $url = $this->appendNewElement($location, 'url', $url);
         $url->setAttribute('usage', 'primary display');

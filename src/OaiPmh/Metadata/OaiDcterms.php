@@ -139,7 +139,7 @@ class OaiDcterms extends AbstractMetadata
         }
 
         // Also append an identifier for each file
-        if ($this->settings->get('oaipmhrepository_expose_media', false)) {
+        if ($this->params['expose_media']) {
             foreach ($item->media() as $media) {
                 $this->appendNewElement($oai, 'dcterms:identifier', $media->originalUrl(), ['xsi:type' => 'dcterms:URI']);
             }
