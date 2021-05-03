@@ -6,6 +6,7 @@ use Laminas\Form\Form;
 use Laminas\I18n\Translator\TranslatorAwareInterface;
 use Laminas\I18n\Translator\TranslatorAwareTrait;
 use Omeka\Form\Element\ArrayTextarea;
+use Omeka\Form\Element\PropertySelect;
 
 class ConfigForm extends Form implements TranslatorAwareInterface
 {
@@ -216,6 +217,62 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     'rows' => 5,
                 ],
             ])
+
+            ->add([
+                'name' => 'oaipmhrepository_format_resource',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'label' => 'Format of linked resources', // @translate
+                    'value_options' => [
+                        'url_attr_title' => 'Omeka url as text and title as attribute', // @translate
+                        'title_attr_url' => 'Title as text and Omeka url as attribute', // @translate
+                        'url_title' => 'Omeka url and title', // @translate
+                        'title' => 'Title', // @translate
+                        'url' => 'Omeka url', // @translate
+                        'identifier' => 'Identifier (property below)', // @translate
+                        'id' => 'Id', // @translate
+                        'identifier_id' => 'Identifier or id', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'bulkexport_format_resource',
+                    'value' => 'url_attr_title',
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_format_resource_property',
+                'type' => PropertySelect::class,
+                'options' => [
+                    'label' => 'Property for linked resources', // @translate
+                    'term_as_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_format_resource_property',
+                    'multiple' => false,
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select property…', // @translate
+                    'value' => 'dcterms:identifier',
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_format_uri',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'label' => 'Format of uri', // @translate
+                    'value_options' => [
+                        'uri_attr_label' => 'Uri as text and label as attribute', // @translate
+                        'label_attr_uri' => 'Label as text and uri as attribute', // @translate
+                        'uri_label' => 'Uri and label separated by a space', // @translate
+                        'uri' => 'Uri only', // @translate
+                        'html' => 'Html', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_format_uri',
+                    'value' => 'uri_attr_label',
+                ],
+            ])
+
             ->add([
                 'name' => 'oaipmhrepository_mets_data_item',
                 'type' => Element\Select::class,

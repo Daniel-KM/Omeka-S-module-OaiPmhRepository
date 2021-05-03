@@ -55,9 +55,10 @@ class AbstractXmlGenerator
      * @param DomElement $parent Existing parent of all the new nodes
      * @param string     $name   Name of the new parent element
      * @param string     $text   Text of the new element
+     * @param array      $attributes List of attributes
      * @return DomElement The new element
      */
-    protected function appendNewElement(DOMElement $parent, $name, $text = null)
+    protected function appendNewElement(DOMElement $parent, $name, $text = null, array $attributes = [])
     {
         $document = $parent->ownerDocument;
         $newElement = $document->createElement($name);
@@ -65,6 +66,9 @@ class AbstractXmlGenerator
         if ($text) {
             $text = $document->createTextNode((string) $text);
             $newElement->appendChild($text);
+        }
+        foreach ($attributes as $name => $attribute) {
+            $newElement->setAttribute($name, $attribute);
         }
         $parent->appendChild($newElement);
 

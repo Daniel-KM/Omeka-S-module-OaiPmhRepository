@@ -80,19 +80,20 @@ class OaiDc extends AbstractMetadata
             $termValues = $values[$term]['values'] ?? [];
             $termValues = $this->filterValues($item, $term, $termValues);
             foreach ($termValues as $value) {
-                $this->appendNewElement($oai, 'dc:' . $localName, (string) $value);
+                list($text, $attributes) = $this->formatValue($value);
+                $this->appendNewElement($oai, 'dc:' . $localName, $text, $attributes);
             }
         }
 
         $appendIdentifier = $this->singleIdentifier($item);
         if ($appendIdentifier) {
-            $this->appendNewElement($oai, 'dc:identifier', $appendIdentifier);
+            $this->appendNewElement($oai, 'dc:identifier', $appendIdentifier, ['xsi:type' => 'dcterms:URI']);
         }
 
         // Also append an identifier for each file
         if ($this->settings->get('oaipmhrepository_expose_media', false)) {
             foreach ($item->media() as $media) {
-                $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl());
+                $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl(), ['xsi:type' => 'dcterms:URI']);
             }
         }
     }

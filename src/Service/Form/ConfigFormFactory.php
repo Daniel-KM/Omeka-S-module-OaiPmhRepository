@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace OaiPmhRepository\Service\Form;
 
 use Interop\Container\ContainerInterface;
@@ -11,14 +12,18 @@ class ConfigFormFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
-        $translator = $services->get('MvcTranslator');
+        $formats = [];
+        /** @var \OaiPmhRepository\OaiPmh\MetadataFormatManager $metadataFormatManager */
         $metadataFormatManager = $services->get(MetadataFormatManager::class);
-        $oaiSetManager = $services->get(OaiSetManager::class);
+        foreach ($metadataFormatManager->getRegisteredNames() as $name) {
+            $format = $metadataFormatManager->get($name);
+            $formats[] = $format::METADATA_PREFIX;
+        }
+
         $form = new ConfigForm(null, $options);
-        $form
-            ->setTranslator($translator)
-            ->setMetadataFormats($metadataFormatManager->getRegisteredNames())
-            ->setOaiSetFormats($oaiSetManager->getRegisteredNames());
-        return $form;
+        return $form
+            ->setTranslator($services->get('MvcTranslator'))
+            ->setMetadataFormats($formats)
+            ->setOaiSetFormats($services->get(OaiSetManager::class)->getRegisteredNames());
     }
 }

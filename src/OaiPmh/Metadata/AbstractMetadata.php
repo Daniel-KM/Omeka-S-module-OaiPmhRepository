@@ -48,6 +48,11 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     protected $isGlobalRepository;
 
+    /**
+     * @var array
+     */
+    protected $params = [];
+
     public function setSettings(SettingsInterface $settings): void
     {
         $this->settings = $settings;
@@ -66,6 +71,12 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     public function setIsGlobalRepository($isGlobalRepository): void
     {
         $this->isGlobalRepository = $isGlobalRepository;
+    }
+
+    public function setParams(array $params): MetadataInterface
+    {
+        $this->params = $params;
+        return $this;
     }
 
     public function declareMetadataFormat(DOMElement $parent): void
@@ -153,6 +164,180 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                     return $resource->siteUrl(null, true);
             }
         }
+    }
+
+    /**
+     * Format specific data types for a value.
+     *
+     * Code similar in module Bulk Export.
+     * @see \BulkExport\Traits\MetadataToStringTrait::stringMetadata()
+     *
+     * @param \Omeka\Api\Representation\ValueRepresentation $value
+     * @return array The xml text and attributes.
+     */
+    protected function formatValue(ValueRepresentation $value): array
+    {
+        $attributes = [];
+        $type = $value->type();
+        switch ($type) {
+            case 'resource':
+            case substr($type, 0, 9) === 'resource:':
+                return $this->formatValueResource($value->valueResource());
+            case 'uri':
+            case substr($type, 0, 13) === 'valuesuggest:':
+            case substr($type, 0, 16) === 'valuesuggestall:':
+                return $this->formatValueUri($value);
+            // Module Custom vocab.
+            case substr($type, 0, 12) === 'customvocab:':
+                $vvr = $value->valueResource();
+                if ($vvr) {
+                    return $this->formatValueResource($vvr);
+                }
+                $v = (string) $value->value();
+                break;
+            // Module module Numeric data type.
+            case substr($type, 0, 8) === 'numeric:':
+                $v = (string) $value;
+                break;
+            // Module DataTypeRdf.
+            case 'xml':
+            // Module RdfDatatype (deprecated).
+            case 'rdf:XMLLiteral':
+            case 'xsd:date':
+            case 'xsd:dateTime':
+            case 'xsd:decimal':
+            case 'xsd:gDay':
+            case 'xsd:gMonth':
+            case 'xsd:gMonthDay':
+            case 'xsd:gYear':
+            case 'xsd:gYearMonth':
+            case 'xsd:time':
+                $v = (string) $value;
+                break;
+            case 'integer':
+            case 'xsd:integer':
+                $v = (int) $value->value();
+                break;
+            case 'boolean':
+            case 'xsd:boolean':
+                $v = $value->value() ? 'true' : 'false';
+                break;
+            case 'html':
+            case 'rdf:HTML':
+                $v = $value->asHtml();
+                break;
+            case 'literal':
+            default:
+                // TODO Don't use $value->asHtml() here?
+                $v = (string) $value;
+                break;
+        }
+
+        $lang = $value->lang();
+        if ($lang) {
+            $attributes['xml:lang'] = $lang;
+        }
+
+        return [
+            $v,
+            $attributes,
+        ];
+    }
+
+    protected function formatValueUri(ValueRepresentation $value): array
+    {
+        $attributes = [];
+        switch ($this->params['format_uri']) {
+            case 'uri':
+                $v = (string) $value->uri();
+                $attributes['xsi:type'] = 'dcterms:URI';
+                break;
+            case 'html':
+                $v = $value->asHtml();
+                break;
+            case 'uri_label':
+                $v = trim($value->uri() . ' ' . $value->value());
+                break;
+            case 'label_attr_uri':
+                // For compatibility with many harvesters that don't manage
+                // attributes, the uri is kept when no label.
+                $vUri = (string) $value->uri();
+                $v = (string) $value->value();
+                $v = strlen($v) ? $v : $vUri;
+                $attributes['href'] = $vUri;
+                break;
+            case 'uri_attr_label':
+            default:
+                $v = (string) $value->uri();
+                $attributes['xsi:type'] = 'dcterms:URI';
+                $w = (string) $value->value();
+                if (strlen($w)) {
+                    $attributes['title'] = $w;
+                }
+                break;
+        }
+
+        $lang = $value->lang();
+        if ($lang) {
+            $attributes['xml:lang'] = $lang;
+        }
+
+        return [
+            $v,
+            $attributes,
+        ];
+    }
+
+    protected function formatValueResource(AbstractResourceEntityRepresentation $resource): array
+    {
+        $attributes = [];
+        switch ($this->params['format_resource']) {
+            case 'id':
+                $v = (string) $resource->id();
+                break;
+            case 'identifier':
+                $v = (string) $resource->value($this->params['format_resource_property']);
+                break;
+            case 'identifier_id':
+                $v = (string) $resource->value($this->params['format_resource_property'], ['default' => $resource->id()]);
+                break;
+            case 'title':
+                $v = $resource->displayTitle('[#' . $resource->id() . ']');
+                break;
+            case 'url':
+                $v = $this->singleIdentifier($resource);
+                $attributes['xsi:type'] = 'dcterms:URI';
+                break;
+            case 'url_title':
+                $vUrl = $this->singleIdentifier($resource);
+                $vTitle = $resource->displayTitle('');
+                $v = $vUrl . (strlen($vTitle) ? ' ' . $vTitle : '');
+                break;
+            case 'title_attr_url':
+                // For compatibility with many harvesters that don't manage
+                // attributes, the uri is kept when no label.
+                $vUrl = $this->singleIdentifier($resource);
+                $v = $resource->displayTitle('');
+                $v = strlen($v) ? $v : $vUrl;
+                $attributes['href'] = $vUrl;
+                break;
+            case 'url_attr_title':
+            default:
+                $v = $this->singleIdentifier($resource);
+                $attributes['xsi:type'] = 'dcterms:URI';
+                $vTitle = $resource->displayTitle('');
+                if (strlen($vTitle)) {
+                    $attributes['title'] = $vTitle;
+                }
+                break;
+        }
+
+        // A resource has no language.
+
+        return [
+            $v,
+            $attributes,
+        ];
     }
 
     /**
