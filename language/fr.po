@@ -7,32 +7,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-07 00:00+0000\n"
-"PO-Revision-Date: 2020-12-07 00:00+0000\n"
+"POT-Creation-Date: 2021-05-03 00:00+0000\n"
+"PO-Revision-Date: 2021-05-03 00:00+0000\n"
+"Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
+"Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
-"Language-Team: \n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: src/Form/ConfigForm.php:44
+#: src/Form/ConfigForm.php:45
 msgid ""
 "This will be used to form globally unique IDs for the exposed metadata items."
 msgstr ""
 "Elle sera utilisée pour former l’identifiant général unique pour les "
 "métadonnées des contenus exposés."
 
-#: src/Form/ConfigForm.php:45
+#: src/Form/ConfigForm.php:46
 msgid "This value is required to be a domain name you have registered."
 msgstr "Cette valeur doit être un nom de domaine que vous possédez."
 
-#: src/Form/ConfigForm.php:46
+#: src/Form/ConfigForm.php:47
 msgid "Using other values will generate invalid identifiers."
 msgstr "Utiliser les autres valeurs pour générer des identifiants invalides."
 
-#: src/Form/ConfigForm.php:78
+#: src/Form/ConfigForm.php:79
 msgid ""
 "Whether the plugin should include identifiers for the files associated with "
 "items."
@@ -40,25 +40,25 @@ msgstr ""
 "Indique si le module doit inclure les identifiants pour les fichiers "
 "associés aux contenus."
 
-#: src/Form/ConfigForm.php:79
+#: src/Form/ConfigForm.php:80
 msgid "This provides harvesters with direct access to files."
 msgstr "Cela donne un accès direct aux fichiers pour les moissonneurs."
 
-#: src/Form/ConfigForm.php:103
+#: src/Form/ConfigForm.php:102
 msgid ""
 "The global repository contains all the resources of Omeka S, in one place."
 msgstr ""
 "L’entrepôt général contient toutes les ressources d’Omeka S, dans une seule "
 "url."
 
-#: src/Form/ConfigForm.php:104
+#: src/Form/ConfigForm.php:103
 msgid ""
 "Note that the oai set identifiers are different (item set id or site id)."
 msgstr ""
-"Noter que les identifiants des ensembles oai sont différents (id de "
-"collection ou de site)."
+"Noter que les identifiants des lots oai sont différents (id de collection ou "
+"de site)."
 
-#: src/Form/ConfigForm.php:139 src/Form/ConfigForm.php:159
+#: src/Form/ConfigForm.php:136 src/Form/ConfigForm.php:155
 msgid ""
 "An identifier may be added to simplify harvests, in particular when there is "
 "no unique identifier (ark, noid, call number, etc.)."
@@ -66,7 +66,7 @@ msgstr ""
 "Un identifiant peut être ajouté pour simplier les moissonages, notamment "
 "quand il n’y a pas d’identifiant unique (ark, noid, cote, etc.)."
 
-#: src/Form/ConfigForm.php:140 src/Form/ConfigForm.php:160
+#: src/Form/ConfigForm.php:137 src/Form/ConfigForm.php:156
 msgid ""
 "Only one identifier may be added and it can be the api url or a site "
 "specific url."
@@ -74,13 +74,13 @@ msgstr ""
 "Un seul identifiant peut être ajouté, soit l’url de l’api, soit l’url d’un "
 "site spécifique."
 
-#: src/Form/ConfigForm.php:141 src/Form/ConfigForm.php:161
+#: src/Form/ConfigForm.php:138 src/Form/ConfigForm.php:157
 msgid "Some formats add their own identifier and other ones skip this option."
 msgstr ""
 "Certains formats ajoutent leurs propres identifiants et d’autres ignorent "
 "l’option."
 
-#: src/Form/ConfigForm.php:195
+#: src/Form/ConfigForm.php:191
 msgid ""
 "Use refined terms for Dublin Core elements, for example dcterms:abstract "
 "will be merged with dc:description."
@@ -88,18 +88,18 @@ msgstr ""
 "Utiliser les termes raffinés pour le Dublin Core Éléments, par exemple "
 "dcterms:abstract sera fusionné dans dc:description."
 
-#: src/Form/ConfigForm.php:196
+#: src/Form/ConfigForm.php:192
 msgid "It allows to expose all metadata in the standard oai_dc."
 msgstr "Cela permet d’exposer toutes les métadonnées dans le standard oai_dc."
 
-#: src/Form/ConfigForm.php:197
+#: src/Form/ConfigForm.php:193
 msgid ""
 "For other merges, the event \"oaipmhrepository.values.pre\" can be used."
 msgstr ""
 "Pour les autres correspondances, l’événement \"oaipmhrepository.values.pre\" "
 "can be used\" peut être utilisé."
 
-#: src/Form/ConfigForm.php:267
+#: src/Form/ConfigForm.php:315
 msgid ""
 "The OAI-PMH pages can be displayed with a themable responsive human "
 "interface based on Bootstrap (https://getbootstrap.com)."
@@ -107,14 +107,14 @@ msgstr ""
 "Les pages OAI-PMH peuvent être affichées avec un thème adaptatif lisible par "
 "les personnes, basé sur Bootstrap (https://getbootstrap.com)."
 
-#: src/Form/ConfigForm.php:291
+#: src/Form/ConfigForm.php:337
 msgid ""
 "Number of individual records that can be returned in a response at once."
 msgstr ""
 "Nombre de notices individuelles qui peuvent être renvoyées dans une page de "
 "réponse."
 
-#: src/Form/ConfigForm.php:292
+#: src/Form/ConfigForm.php:338
 msgid ""
 "Larger values will increase memory usage but reduce the number of database "
 "queries and HTTP requests."
@@ -122,7 +122,7 @@ msgstr ""
 "Les valeurs plus importantes utiliseront plus de mémoire mais réduiront les "
 "requêtes à la base et au réseau."
 
-#: src/Form/ConfigForm.php:293
+#: src/Form/ConfigForm.php:339
 msgid ""
 "Smaller values will reduce memory usage but increase the number of DB "
 "queries and requests."
@@ -130,11 +130,11 @@ msgstr ""
 "Les valeurs plus petites utiliseront moins de mémoire mais augmenteront les "
 "requêtes à la base et au réseau."
 
-#: src/Form/ConfigForm.php:305
+#: src/Form/ConfigForm.php:350
 msgid "In minutes, the length of time a resumption token is valid for."
 msgstr "En minutes, la durée de validité d’un jeton de continuation."
 
-#: src/Form/ConfigForm.php:306
+#: src/Form/ConfigForm.php:351
 msgid ""
 "This means harvesters can re-try old partial list requests for this amount "
 "of time."
@@ -142,7 +142,7 @@ msgstr ""
 "Cela signfie que les moissonneurs peuvent réessayer les requêtes de listes "
 "partielles pendant cette durée."
 
-#: src/Form/ConfigForm.php:307
+#: src/Form/ConfigForm.php:352
 msgid "Larger values will make the tokens table grow somewhat larger."
 msgstr ""
 "Les valeurs plus importantes augmenteront la taille de la table des jetons."
@@ -158,16 +158,16 @@ msgid "This module requires modules \"%s\"."
 msgstr "Ce module requiert les modules \"%s\"."
 
 #: src/Generic/AbstractModule.php:80
-msgid "This module has resources that connot be installed."
+msgid "This module has resources that cannot be installed."
 msgstr "Ce module a des ressources qui ne peuvent pas être installées."
 
-#: src/Generic/AbstractModule.php:710
+#: src/Generic/AbstractModule.php:707
 #, php-format
 msgid ""
 "The module \"%s\" was automatically deactivated because the dependencies are "
 "unavailable."
 msgstr ""
-"Le module %s\" a été automatiquement désactivé car ses dépendances ne sont "
+"Le module \"%s\" a été automatiquement désactivé car ses dépendances ne sont "
 "plus disponibles."
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:13
@@ -180,15 +180,15 @@ msgstr "Entrepôt général"
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:18
 msgid "Without oai sets"
-msgstr "Sans les ensembles oai"
+msgstr "Sans les lots oai"
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:21
 msgid "With item sets as oai sets"
-msgstr "Avec les collections en tant que ensembles oai"
+msgstr "Avec les collections en tant que lots oai"
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:24
 msgid "With sites as oai sets"
-msgstr "Avec les sites en tant que ensembles oai"
+msgstr "Avec les sites en tant que lots oai"
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:27
 msgid "Disabled."
@@ -200,7 +200,7 @@ msgstr "Entrepôts par site"
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:39
 msgid "Without oai sets."
-msgstr "Sans les ensembles oai."
+msgstr "Sans les lots oai."
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:45
 msgid "No site."
@@ -223,92 +223,92 @@ msgstr ""
 "De plus, une nouvelle option permet de faire correspondre n'importe quels "
 "termes afin d'exposer toutes les valeurs, si besoin."
 
-#: src/Form/ConfigForm.php:30
+#: src/Form/ConfigForm.php:32
 msgid "Repository name"
 msgstr "Nom de l’entrepôt"
 
-#: src/Form/ConfigForm.php:31
+#: src/Form/ConfigForm.php:33
 msgid "Name for this OAI-PMH repository."
 msgstr "Nom de cette entrepôt OAI-PMH."
 
-#: src/Form/ConfigForm.php:43
+#: src/Form/ConfigForm.php:44
 msgid "Namespace identifier"
 msgstr "Identifiant de l’espace de nom"
 
-#: src/Form/ConfigForm.php:60
+#: src/Form/ConfigForm.php:62
 msgid "Metadata formats"
 msgstr "Formats des métadonnées"
 
-#: src/Form/ConfigForm.php:61
+#: src/Form/ConfigForm.php:63
 msgid "The format that will be made available. oai_dc is required."
 msgstr "Format qui sera rendu disponible. oai_dc est obligatoire."
 
-#: src/Form/ConfigForm.php:69
+#: src/Form/ConfigForm.php:71
 msgid "Select formats"
 msgstr "Choisir les formats"
 
-#: src/Form/ConfigForm.php:77
+#: src/Form/ConfigForm.php:78
 msgid "Expose media"
 msgstr "Exposer les médias"
 
 #: src/Form/ConfigForm.php:90
 msgid "Hide empty oai sets"
-msgstr "Cacher les ensembles vides"
+msgstr "Cacher les lots vides"
 
 #: src/Form/ConfigForm.php:91
 msgid "Whether the module should hide empty oai sets."
-msgstr "Indique si le module doit cacher les ensembles oai vides."
+msgstr "Indique si le module doit cacher les lots oai vides."
 
-#: src/Form/ConfigForm.php:106 src/Form/ConfigForm.php:124
+#: src/Form/ConfigForm.php:105 src/Form/ConfigForm.php:122
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: src/Form/ConfigForm.php:122
+#: src/Form/ConfigForm.php:120
 msgid ""
 "The site repositories simulate multiple oai servers, with the site pools of "
 "items and the attached item sets as oai sets."
 msgstr ""
 "Les entrepôts des sites simulent plusieurs serveurs OAI, avec le réservoir "
-"de contenus du site et les collections attachées en tant qu’ensembles oai."
+"de contenus du site et les collections attachées en tant que lot oai."
 
-#: src/Form/ConfigForm.php:138
+#: src/Form/ConfigForm.php:135
 msgid "Add identifier for global repository"
 msgstr "Ajouter l’identifiant pour l’entrepôt général"
 
-#: src/Form/ConfigForm.php:144 src/Form/ConfigForm.php:164
+#: src/Form/ConfigForm.php:141 src/Form/ConfigForm.php:160
 msgid "Api url"
 msgstr "Url de l’api"
 
-#: src/Form/ConfigForm.php:145 src/Form/ConfigForm.php:165
+#: src/Form/ConfigForm.php:142 src/Form/ConfigForm.php:161
 msgid "Relative site url"
 msgstr "Url relative du site"
 
-#: src/Form/ConfigForm.php:146 src/Form/ConfigForm.php:166
+#: src/Form/ConfigForm.php:143 src/Form/ConfigForm.php:162
 msgid "Absolute site url"
 msgstr "Url absolue du site"
 
-#: src/Form/ConfigForm.php:158
+#: src/Form/ConfigForm.php:154
 msgid "Add identifier for site repositories"
 msgstr "Ajouter l’identifiant pour les entrepôts des sites"
 
-#: src/Form/ConfigForm.php:180
+#: src/Form/ConfigForm.php:177
 msgid "Oai set format"
-msgstr "Format des ensembles Oai"
+msgstr "Format des lots Oai"
 
-#: src/Form/ConfigForm.php:181
+#: src/Form/ConfigForm.php:178
 msgid "The format of the oai set identifiers."
-msgstr "Le format des identifiants des ensembles oai."
+msgstr "Le format des identifiants des lots oai."
 
-#: src/Form/ConfigForm.php:194
+#: src/Form/ConfigForm.php:190
 msgid "Genericize dcterms for specific formats"
 msgstr ""
 "Convertir le Dublin Core Terms en Dublin Core Elements pour certains formats"
 
-#: src/Form/ConfigForm.php:215
+#: src/Form/ConfigForm.php:210
 msgid "Map properties"
-msgstr "Propriétés de la carte"
+msgstr "Correspondance des propriétés"
 
-#: src/Form/ConfigForm.php:216
+#: src/Form/ConfigForm.php:211
 msgid ""
 "Map any property to any other property, so they will be available in other "
 "formats, in particular \"oai_dcterms\" and \"oai_dc\"."
@@ -316,31 +316,91 @@ msgstr ""
 "Correspondance entre toutes propriétés afin de les rendre disponibles dans "
 "tous les formats, notamment \"oai_dcterms\" et \"oa_dc\"."
 
-#: src/Form/ConfigForm.php:230
+#: src/Form/ConfigForm.php:225
+msgid "Format of linked resources"
+msgstr "Format des ressources liées"
+
+#: src/Form/ConfigForm.php:227
+msgid "Omeka url as text and title as attribute"
+msgstr "Url Omeka comme texte et titre comme attribut"
+
+#: src/Form/ConfigForm.php:228
+msgid "Title as text and Omeka url as attribute"
+msgstr "Titre comme texte et url Omeka comme attribut"
+
+#: src/Form/ConfigForm.php:229
+msgid "Omeka url and title"
+msgstr "Url Omeka et titre"
+
+#: src/Form/ConfigForm.php:231
+msgid "Omeka url"
+msgstr "Url Omeka"
+
+#: src/Form/ConfigForm.php:232
+msgid "Identifier (property below)"
+msgstr "Identifiant (propriété ci-dessous)"
+
+#: src/Form/ConfigForm.php:233
+msgid "Id"
+msgstr "Id"
+
+#: src/Form/ConfigForm.php:234
+msgid "Identifier or id"
+msgstr "Identifiant ou id"
+
+#: src/Form/ConfigForm.php:246
+msgid "Property for linked resources"
+msgstr "Propriété pour les ressources liées"
+
+#: src/Form/ConfigForm.php:261
+msgid "Format of uri"
+msgstr "Format de l’uri"
+
+#: src/Form/ConfigForm.php:263
+msgid "Uri as text and label as attribute"
+msgstr "Uri comme texte et libellé comme attribut"
+
+#: src/Form/ConfigForm.php:264
+msgid "Label as text and uri as attribute"
+msgstr "Libellé comme texte et uri comme attribut"
+
+#: src/Form/ConfigForm.php:265
+msgid "Uri and label separated by a space"
+msgstr "Uri et libellé séparés par une espace"
+
+#: src/Form/ConfigForm.php:266
+msgid "Uri only"
+msgstr "Uri seulement"
+
+#: src/Form/ConfigForm.php:267
+msgid "Html"
+msgstr "Html"
+
+#: src/Form/ConfigForm.php:280
 msgid "Mets: data format for item"
 msgstr "Mets : format des données des contenus"
 
-#: src/Form/ConfigForm.php:231
+#: src/Form/ConfigForm.php:281
 msgid "The format of the metadata of item."
 msgstr "Le format des métadonnées d’un contenu."
 
-#: src/Form/ConfigForm.php:248
+#: src/Form/ConfigForm.php:297
 msgid "Mets: data format for media"
 msgstr "Mets : format des données des médias"
 
-#: src/Form/ConfigForm.php:249
+#: src/Form/ConfigForm.php:298
 msgid "The format of the metadata of media."
 msgstr "Le format des métadonnées d’un média."
 
-#: src/Form/ConfigForm.php:266
+#: src/Form/ConfigForm.php:314
 msgid "Human interface"
 msgstr "Interface web"
 
-#: src/Form/ConfigForm.php:278
+#: src/Form/ConfigForm.php:325
 msgid "Global repository redirect route"
 msgstr "Route spécifique pour l’entrepôt général"
 
-#: src/Form/ConfigForm.php:279
+#: src/Form/ConfigForm.php:326
 msgid ""
 "An alias (redirect 301) for backward compatibility with Omeka Classic, that "
 "used \"/oai-pmh-repository/request\", or any other old OAI-PMH repository."
@@ -349,11 +409,11 @@ msgstr ""
 "qui utilisait \"/oai-pmh-repository/request\", ou tout autre entrepôt OAI-"
 "PMH."
 
-#: src/Form/ConfigForm.php:290
+#: src/Form/ConfigForm.php:336
 msgid "List limit"
 msgstr "Limite de la liste"
 
-#: src/Form/ConfigForm.php:304
+#: src/Form/ConfigForm.php:349
 msgid "Token expiration time"
 msgstr "Durée avant expiration du jeton"
 
@@ -395,7 +455,7 @@ msgstr "Arguments date / heure de granularité différente."
 #: src/OaiPmh/ResponseGenerator.php:647
 #, php-format
 msgid "The set \"%s\" doesn’t exist."
-msgstr "L’ensemble \"%s\" n’existe pas."
+msgstr "Le lot \"%s\" n’existe pas."
 
 #: src/OaiPmh/ResponseGenerator.php:713
 msgid "No records match the given criteria."
@@ -407,4 +467,4 @@ msgstr "Il manque la configuration du format des métadonnées"
 
 #: src/Service/OaiPmh/OaiSetManagerFactory.php:20
 msgid "Missing set format configuration"
-msgstr "Il manque la configuation du format de l’ensemble"
+msgstr "Il manque la configuation du format du lot"
