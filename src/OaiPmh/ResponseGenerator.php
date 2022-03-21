@@ -186,6 +186,8 @@ class ResponseGenerator extends AbstractXmlGenerator
         $currentSite = $serviceLocator->get('ControllerPluginManager')->get('currentSite');
         $this->site = $currentSite();
 
+        $listItemSets = [];
+
         if ($this->site) {
             $this->setSpecType = $settings->get('oaipmhrepository_by_site_repository', 'none');
             if (!in_array($this->setSpecType, ['item_set', 'none'])) {
@@ -193,8 +195,11 @@ class ResponseGenerator extends AbstractXmlGenerator
             }
         } else {
             $this->setSpecType = $settings->get('oaipmhrepository_global_repository', 'none');
-            if (!in_array($this->setSpecType, ['item_set', 'site_pool', 'none'])) {
+            if (!in_array($this->setSpecType, ['item_set', 'list_item_sets', 'site_pool', 'none'])) {
                 $this->setSpecType = 'none';
+            }
+            if ($this->setSpecType === 'list_item_sets') {
+                $listItemSets = array_filter(array_map('intval', $settings->get('oaipmhrepository_list_item_sets', []))) ?: [];
             }
         }
 
@@ -204,6 +209,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->oaiSet->setSite($this->site);
         $this->oaiSet->setOptions([
             'hide_empty_sets' => $settings->get('oaipmhrepository_hide_empty_sets', true),
+            'list_item_sets' => $listItemSets,
         ]);
 
         //formatOutput makes DOM output "pretty" XML.  Good for debugging, but
@@ -652,6 +658,7 @@ class ResponseGenerator extends AbstractXmlGenerator
                     $query['site_id'] = $resourceSet->id();
                     break;
                 case 'item_set':
+                case 'list_item_sets':
                     $query['item_set_id'] = $resourceSet->id();
                     break;
                 case 'none':

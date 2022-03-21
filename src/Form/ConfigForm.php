@@ -97,11 +97,27 @@ class ConfigForm extends Form
                         'disabled' => 'Disabled', // @translate
                         'none' => 'Without oai sets', // @translate
                         'item_set' => 'With item sets as oai sets', // @translate
+                        'list_item_sets' => 'With the list of item sets below', // @translate
                         'site_pool' => 'With sites as oai sets', // @translate
                     ],
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_global_repository',
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_list_item_sets',
+                'type' => OmekaElement\ItemSetSelect::class,
+                'options' => [
+                    'label' => 'List of item sets for the global repository', // @translate
+                    'empty_option' => '',
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_list_item_sets',
+                    'multiple' => true,
+                    'required' => false,
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select item sets…', // @translate
                 ],
             ])
             ->add([

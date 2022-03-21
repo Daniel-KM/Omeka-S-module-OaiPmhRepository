@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 /**
  * @author Daniel Berthereau
- * @copyright Daniel Berthereau, 2014-2018
+ * @copyright Daniel Berthereau, 2014-2022
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\OaiSet;
@@ -20,7 +20,7 @@ use Omeka\Api\Representation\SiteRepresentation;
 abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInterface
 {
     /**
-     * The type of oai sets: "item_set", "site_pool", or "none" (default).
+     * The type of oai sets: "item_set", "list_item_sets", "site_pool", or "none" (default).
      *
      * "site_pool" can be used only for global oai-pmh repository.
      *
@@ -40,6 +40,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
      *
      * Currently managed:
      * - hide_empty_sets (bool)
+     * - list_item_sets (array)
      *
      * @var array $options
      */
@@ -96,6 +97,11 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                 case 'item_set':
                     $oaiSets = $this->api->search('item_sets')->getContent();
                     break;
+                case 'list_item_sets':
+                    $oaiSets = $this->options['list_item_sets']
+                        ? $this->api->search('item_sets', ['id' => $this->options['list_item_sets']])->getContent()
+                        : [];
+                    break;
                 case 'none':
                 default:
                     // Nothing to do.
@@ -119,6 +125,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                     }
                     break;
                 case 'item_set':
+                case 'list_item_sets':
                     foreach ($oaiSets as $key => $oaiSet) {
                         $itemCount = $oaiSet->itemCount();
                         if (empty($itemCount)) {
@@ -148,6 +155,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         $setSpecs = [];
         switch ($this->setSpecType) {
             case 'item_set':
+            case 'list_item_sets':
                 // Currently, Omeka S doesn't filter item sets according to the
                 // item sets attached to a site, so they are filtered here.
                 if ($this->site) {
@@ -164,8 +172,16 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                 } else {
                     $itemSets = $item->itemSets();
                 }
-                foreach ($itemSets as $itemSet) {
-                    $setSpecs[] = $this->getSetSpecItemSet($itemSet);
+                if ($this->setSpecType === 'list_item_sets') {
+                    foreach ($itemSets as $itemSet) {
+                        if (in_array($itemSet->id(), $this->options['list_item_sets'])) {
+                            $setSpecs[] = $this->getSetSpecItemSet($itemSet);
+                        }
+                    }
+                } else {
+                    foreach ($itemSets as $itemSet) {
+                        $setSpecs[] = $this->getSetSpecItemSet($itemSet);
+                    }
                 }
                 break;
 

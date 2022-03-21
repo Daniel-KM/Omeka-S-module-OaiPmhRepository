@@ -20,6 +20,9 @@ $options = ['query' => ['verb' => 'Identify']];
     case 'item_set':
         echo $this->hyperlink($translate('With item sets as oai sets'), $this->url('oai-pmh', [], $options));
         break;
+    case 'list_item_sets':
+        echo $this->hyperlink($translate('With a specific list of item sets as oai sets'), $this->url('oai-pmh', [], $options));
+        break;
     case 'site_pool':
         echo $this->hyperlink($translate('With sites as oai sets'), $this->url('oai-pmh', [], $options));
         break;

@@ -114,6 +114,7 @@ return [
             'oaipmhrepository_expose_media' => true,
             'oaipmhrepository_hide_empty_sets' => true,
             'oaipmhrepository_global_repository' => 'item_set',
+            'oaipmhrepository_list_item_sets' => [],
             'oaipmhrepository_by_site_repository' => 'disabled',
             'oaipmhrepository_append_identifier_global' => 'api_url',
             'oaipmhrepository_append_identifier_site' => 'absolute_site_url',
