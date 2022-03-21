@@ -154,7 +154,7 @@ class CdwaLite extends AbstractMetadata
         /* Subject => classWrap->classification
          * Not required.
          */
-        $subjects  = $values['dcterms:subject']['values'] ?? [];
+        $subjects = $values['dcterms:subject']['values'] ?? [];
         $subjects = $this->filterValues($item, 'dcterms:subject', $subjects);
         $classWrap = $this->appendNewElement($descriptive, 'cdwalite:classWrap');
         foreach ($subjects as $subject) {

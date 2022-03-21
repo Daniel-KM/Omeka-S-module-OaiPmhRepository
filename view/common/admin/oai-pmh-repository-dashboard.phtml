@@ -10,8 +10,8 @@ $options = ['query' => ['verb' => 'Identify']];
 ?>
 
 <div id="oai-pmh-repository" class="panel">
-    <h2><?php echo $translate('OAI-PMH Repository'); ?></h2>
-    <h4><?php echo $translate('Global repository'); ?></h4>
+    <h2><?= $translate('OAI-PMH Repository') ?></h2>
+    <h4><?= $translate('Global repository') ?></h4>
     <p><?php
     switch ($globalRepository):
     case 'none':
@@ -31,24 +31,24 @@ $options = ['query' => ['verb' => 'Identify']];
     </p>
 
     <?php if (in_array($bySiteRepository, ['none', 'item_set'])): ?>
-    <h4><?php echo $translate('Site repositories'); ?></h4>
+    <h4><?= $translate('Site repositories') ?></h4>
     <?php
     switch ($bySiteRepository):
     case 'none': ?>
         <p>
-        <?php echo $translate('Without oai sets.'); ?>
+        <?= $translate('Without oai sets.') ?>
         </p>
         <?php
         // No break.
     case 'item_set':
         if (empty($sites)): ?>
-        <p><?php echo $translate('No site.'); ?></p>
+        <p><?= $translate('No site.') ?></p>
         <?php
         else: ?>
         <ul>
         <?php foreach ($sites as $site): ?>
             <?php $oaiUrl = $this->url('site/oai-pmh', ['site-slug' => $site->slug()], $options); ?>
-            <li><?php echo $this->hyperlink($site->title(), $oaiUrl); ?></li>
+            <li><?= $this->hyperlink($site->title(), $oaiUrl) ?></li>
             <?php endforeach; ?>
         </ul>
         <?php

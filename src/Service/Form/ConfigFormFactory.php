@@ -22,7 +22,6 @@ class ConfigFormFactory implements FactoryInterface
 
         $form = new ConfigForm(null, $options);
         return $form
-            ->setTranslator($services->get('MvcTranslator'))
             ->setMetadataFormats($formats)
             ->setOaiSetFormats($services->get(OaiSetManager::class)->getRegisteredNames());
     }

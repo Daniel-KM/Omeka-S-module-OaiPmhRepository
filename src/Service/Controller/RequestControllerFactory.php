@@ -13,7 +13,7 @@ use OaiPmhRepository\Controller\RequestController;
 
 class RequestControllerFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $services, $requestedNamed, array $options = null)
+    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
         return new RequestController($services);
     }

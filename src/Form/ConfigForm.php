@@ -1,17 +1,13 @@
 <?php declare(strict_types=1);
+
 namespace OaiPmhRepository\Form;
 
 use Laminas\Form\Element;
 use Laminas\Form\Form;
-use Laminas\I18n\Translator\TranslatorAwareInterface;
-use Laminas\I18n\Translator\TranslatorAwareTrait;
-use Omeka\Form\Element\ArrayTextarea;
-use Omeka\Form\Element\PropertySelect;
+use Omeka\Form\Element as OmekaElement;
 
-class ConfigForm extends Form implements TranslatorAwareInterface
+class ConfigForm extends Form
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var array
      */
@@ -42,9 +38,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\Text::class,
                 'options' => [
                     'label' => 'Namespace identifier', // @translate
-                    'info' => $this->translate('This will be used to form globally unique IDs for the exposed metadata items.') // @translate
-                        . ' ' . $this->translate('This value is required to be a domain name you have registered.') // @translate
-                        . ' ' . $this->translate('Using other values will generate invalid identifiers.'), // @translate
+                    'info' => 'This will be used to form globally unique IDs for the exposed metadata items. This value is required to be a domain name you have registered. Using other values will generate invalid identifiers.', // @translate
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_namespace_id',
@@ -76,8 +70,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\Checkbox::class,
                 'options' => [
                     'label' => 'Expose media', // @translate
-                    'info' => $this->translate('Whether the plugin should include identifiers for the files associated with items.') // @translate
-                        . ' ' . $this->translate('This provides harvesters with direct access to files.'), // @translate
+                    'info' => 'Whether the plugin should include identifiers for the files associated with items. This provides harvesters with direct access to files.', // @translate
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_expose_media',
@@ -99,8 +92,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\Radio::class,
                 'options' => [
                     'label' => 'Global repository', // @translate
-                    'info' => $this->translate('The global repository contains all the resources of Omeka S, in one place.') // @translate
-                        . ' ' . $this->translate('Note that the oai set identifiers are different (item set id or site id).'), // @translate
+                    'info' => 'The global repository contains all the resources of Omeka S, in one place. Note that the oai set identifiers are different (item set id or site id).', // @translate
                     'value_options' => [
                         'disabled' => 'Disabled', // @translate
                         'none' => 'Without oai sets', // @translate
@@ -133,9 +125,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\Radio::class,
                 'options' => [
                     'label' => 'Add identifier for global repository', // @translate
-                    'info' => $this->translate('An identifier may be added to simplify harvests, in particular when there is no unique identifier (ark, noid, call number, etc.).') // @translate
-                        . ' ' . $this->translate('Only one identifier may be added and it can be the api url or a site specific url.') // @translate
-                        . ' ' . $this->translate('Some formats add their own identifier and other ones skip this option.'), // @translate
+                    'info' => 'An identifier may be added to simplify harvests, in particular when there is no unique identifier (ark, noid, call number, etc.). Only one identifier may be added and it can be the api url or a site specific url. Some formats add their own identifier and other ones skip this option.', // @translate
                     'value_options' => [
                         'disabled' => 'None', // @translate
                         'api_url' => 'Api url', // @translate
@@ -152,9 +142,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\Radio::class,
                 'options' => [
                     'label' => 'Add identifier for site repositories', // @translate
-                    'info' => $this->translate('An identifier may be added to simplify harvests, in particular when there is no unique identifier (ark, noid, call number, etc.).') // @translate
-                        . ' ' . $this->translate('Only one identifier may be added and it can be the api url or a site specific url.') // @translate
-                        . ' ' . $this->translate('Some formats add their own identifier and other ones skip this option.'), // @translate
+                    'info' => 'An identifier may be added to simplify harvests, in particular when there is no unique identifier (ark, noid, call number, etc.). Only one identifier may be added and it can be the api url or a site specific url. Some formats add their own identifier and other ones skip this option.', // @translate
                     'value_options' => [
                         'disabled' => 'None', // @translate
                         'api_url' => 'Api url', // @translate
@@ -188,9 +176,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\MultiCheckbox::class,
                 'options' => [
                     'label' => 'Genericize dcterms for specific formats', // @translate
-                    'info' => $this->translate('Use refined terms for Dublin Core elements, for example dcterms:abstract will be merged with dc:description.') // @translate
-                        . $this->translate('It allows to expose all metadata in the standard oai_dc.') // @translate
-                        . $this->translate('For other merges, the event "oaipmhrepository.values.pre" can be used.'), // @translate
+                    'info' => 'Use refined terms for Dublin Core elements, for example dcterms:abstract will be merged with dc:description. It allows to expose all metadata in the standard oai_dc. For other merges, the event "oaipmhrepository.values.pre" can be used.', // @translate
                     'value_options' => [
                         'oai_dc' => 'oai_dc',
                         'mets' => 'mets',
@@ -205,7 +191,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
             ])
             ->add([
                 'name' => 'oaipmhrepository_map_properties',
-                'type' => ArrayTextarea::class,
+                'type' => OmekaElement\ArrayTextarea::class,
                 'options' => [
                     'label' => 'Map properties', // @translate
                     'info' => 'Map any property to any other property, so they will be available in other formats, in particular "oai_dcterms" and "oai_dc".', // @translate
@@ -235,13 +221,13 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                     ],
                 ],
                 'attributes' => [
-                    'id' => 'bulkexport_format_resource',
+                    'id' => 'oaipmhrepository_format_resource',
                     'value' => 'url_attr_title',
                 ],
             ])
             ->add([
                 'name' => 'oaipmhrepository_format_resource_property',
-                'type' => PropertySelect::class,
+                'type' => OmekaElement\PropertySelect::class,
                 'options' => [
                     'label' => 'Property for linked resources', // @translate
                     'term_as_value' => true,
@@ -312,7 +298,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\Checkbox::class,
                 'options' => [
                     'label' => 'Human interface', // @translate
-                    'info' => $this->translate('The OAI-PMH pages can be displayed with a themable responsive human interface based on Bootstrap (https://getbootstrap.com).'), // @translate
+                    'info' => 'The OAI-PMH pages can be displayed with a themable responsive human interface based on Bootstrap (https://getbootstrap.com).', // @translate
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_human_interface',
@@ -334,9 +320,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\Number::class,
                 'options' => [
                     'label' => 'List limit', // @translate
-                    'info' => $this->translate('Number of individual records that can be returned in a response at once.') // @translate
-                        . ' ' . $this->translate('Larger values will increase memory usage but reduce the number of database queries and HTTP requests.') // @translate
-                        . ' ' . $this->translate('Smaller values will reduce memory usage but increase the number of DB queries and requests.'), // @translate
+                    'info' => 'Number of individual records that can be returned in a response at once. Larger values will increase memory usage but reduce the number of database queries and HTTP requests. Smaller values will reduce memory usage but increase the number of DB queries and requests.', // @translate
                 ],
                 'attributes' => [
                     'min' => '1',
@@ -347,9 +331,7 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'type' => Element\Number::class,
                 'options' => [
                     'label' => 'Token expiration time', // @translate
-                    'info' => $this->translate('In minutes, the length of time a resumption token is valid for.') // @translate
-                        . ' ' . $this->translate('This means harvesters can re-try old partial list requests for this amount of time.') // @translate
-                        . ' ' . $this->translate('Larger values will make the tokens table grow somewhat larger.'), // @translate
+                    'info' => 'In minutes, the length of time a resumption token is valid for. This means harvesters can re-try old partial list requests for this amount of time. Larger values will make the tokens table grow somewhat larger.', // @translate
                 ],
                 'attributes' => [
                     'min' => '1',
@@ -361,12 +343,6 @@ class ConfigForm extends Form implements TranslatorAwareInterface
                 'name' => 'oaipmhrepository_generic_dcterms',
                 'required' => false,
             ]);
-    }
-
-    protected function translate($string): string
-    {
-        $translator = $this->getTranslator();
-        return $translator->translate($string);
     }
 
     public function setMetadataFormats(array $metadataFormats): self
