@@ -102,6 +102,21 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                         ? $this->api->search('item_sets', ['id' => $this->options['list_item_sets']])->getContent()
                         : [];
                     break;
+                case 'queries':
+                    $oaiSets = [];
+                    $aQuery = [];
+                    foreach ($this->options['queries'] ?? [] as $name => $sQuery) {
+                        $sQuery = trim((string) $sQuery, "? \n\t\r");
+                        parse_str($sQuery, $aQuery);
+                        $oaiSets[] = [
+                            'spec' => $this->slugify($name),
+                            'name' => $name,
+                            'description' => null,
+                            'sQuery' => $sQuery,
+                            'aQuery' => $aQuery,
+                        ];
+                    }
+                    break;
                 case 'none':
                 default:
                     // Nothing to do.
@@ -132,6 +147,21 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                             unset($oaiSets[$key]);
                         }
                     }
+                    break;
+                case 'queries':
+                    foreach ($oaiSets as $key => $queryData) {
+                        // TODO Check if this limit is useful.
+                        $q = $queryData['aQuery'];
+                        $q['limit'] = 0;
+                        $itemCount = $this->api
+                            ->search('items', $q)
+                            ->getTotalResults();
+                        if (empty($itemCount)) {
+                            unset($oaiSets[$key]);
+                        }
+                    }
+                    break;
+                default:
                     break;
             }
         }
@@ -185,6 +215,23 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                 }
                 break;
 
+            case 'queries':
+                // This is a slow process when sets are numerous.
+                // TODO Create a table to store oai sets as query? Or use item sets…
+                $aQuery = [];
+                $itemId = $item->id();
+                foreach ($this->options['queries'] ?? [] as $name => $sQuery) {
+                    $sQuery = trim((string) $sQuery, "? \n\t\r");
+                    parse_str($sQuery, $aQuery);
+                    $aQuery['id'] = $itemId;
+                    $aQuery['limit'] = 1;
+                    $isInSet = $this->api->search('items', $aQuery)->getTotalResults();
+                    if ($isInSet) {
+                        $setSpecs[] = $this->slugify($name);
+                    }
+                }
+                break;
+
             case 'site_pool':
                 // TODO Improve query to get all item sets of an item that are attached to sites.
                 $itemSets = [];
@@ -203,17 +250,23 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                     }
                 }
                 break;
+
+            default:
+                break;
         }
         return $setSpecs;
     }
 
-    public function getSetSpec(AbstractEntityRepresentation $representation)
+    public function getSetSpec($set)
     {
-        switch ($this->getJsonLdType($representation)) {
+        if (is_array($set)) {
+            return $set['spec'];
+        }
+        switch ($this->getJsonLdType($set)) {
             case 'o:ItemSet':
-                return $this->getSetSpecItemSet($representation);
+                return $this->getSetSpecItemSet($set);
             case 'o:Site':
-                return $this->getSetSpecSite($representation);
+                return $this->getSetSpecSite($set);
         }
     }
 
@@ -227,13 +280,16 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         return $site->slug();
     }
 
-    public function getSetName(AbstractEntityRepresentation $representation)
+    public function getSetName($set)
     {
-        switch ($this->getJsonLdType($representation)) {
+        if (is_array($set)) {
+            return $set['name'];
+        }
+        switch ($this->getJsonLdType($set)) {
             case 'o:ItemSet':
-                return $this->getSetNameItemSet($representation);
+                return $this->getSetNameItemSet($set);
             case 'o:Site':
-                return $this->getSetNameSite($representation);
+                return $this->getSetNameSite($set);
         }
     }
 
@@ -247,13 +303,16 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         return $site->title();
     }
 
-    public function getSetDescription(AbstractEntityRepresentation $representation)
+    public function getSetDescription($set)
     {
-        switch ($this->getJsonLdType($representation)) {
+        if (is_array($set)) {
+            return $set['description'];
+        }
+        switch ($this->getJsonLdType($set)) {
             case 'o:ItemSet':
-                return $this->getSetDescriptionItemSet($representation);
+                return $this->getSetDescriptionItemSet($set);
             case 'o:Site':
-                return $this->getSetDescriptionSite($representation);
+                return $this->getSetDescriptionSite($set);
         }
     }
 
@@ -264,6 +323,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
 
     protected function getSetDescriptionSite(SiteRepresentation $site): void
     {
+        return $site->displayDescription() ?: null;
     }
 
     public function findResource($setSpec)
@@ -283,6 +343,25 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
             } catch (\Omeka\Api\Exception\NotFoundException $e) {
             }
         }
+        // Check queries.
+        if (!$set && !empty($this->options['queries'])) {
+            foreach ($this->options['queries'] ?? [] as $name => $sQuery) {
+                $spec = $this->slugify($name);
+                if ($spec === $setSpec) {
+                    $aQuery = [];
+                    $sQuery = trim((string) $sQuery, "? \n\t\r");
+                    parse_str($sQuery, $aQuery);
+                    $set = [
+                        'spec' => $spec,
+                        'name' => $name,
+                        'description' => null,
+                        'sQuery' => $sQuery,
+                        'aQuery' => $aQuery,
+                    ];
+                    break;
+                }
+            }
+        }
         return $set;
     }
 
@@ -292,5 +371,25 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         return is_array($jsonLdType)
             ? reset($jsonLdType)
             : $jsonLdType;
+    }
+
+    /**
+     * Transform the given string into a valid filename
+     */
+    protected function slugify(string $input): string
+    {
+        if (extension_loaded('intl')) {
+            $transliterator = \Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;');
+            $slug = $transliterator->transliterate($input);
+        } elseif (extension_loaded('iconv')) {
+            $slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $input);
+        } else {
+            $slug = $input;
+        }
+        $slug = mb_strtolower($slug, 'UTF-8');
+        $slug = preg_replace('/[^a-z0-9-]+/u', '_', $slug);
+        $slug = preg_replace('/-{2,}/', '_', $slug);
+        $slug = preg_replace('/-*$/', '', $slug);
+        return $slug;
     }
 }

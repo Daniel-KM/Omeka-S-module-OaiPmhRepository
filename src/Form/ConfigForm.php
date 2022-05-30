@@ -98,6 +98,7 @@ class ConfigForm extends Form
                         'none' => 'Without oai sets', // @translate
                         'item_set' => 'With item sets as oai sets', // @translate
                         'list_item_sets' => 'With the list of item sets below', // @translate
+                        'queries' => 'With dynamic sets defined by queries below', // @translate
                         'site_pool' => 'With sites as oai sets', // @translate
                     ],
                 ],
@@ -120,6 +121,22 @@ class ConfigForm extends Form
                     'data-placeholder' => 'Select item sets…', // @translate
                 ],
             ])
+            ->add([
+                'name' => 'oaipmhrepository_sets_queries',
+                    'type' => OmekaElement\ArrayTextarea::class,
+                    'options' => [
+                        'label' => 'Dynamic sets based on advanced search queries', // @translate
+                        'as_key_value' => true,
+                    ],
+                    'attributes' => [
+                        'id' => 'oaipmhrepository_sets_queries',
+                        'required' => false,
+                        'placeholder' => 'Articles = resource_template_id[]=2
+Books = resource_template_id[]=3
+',
+                        'rows' => 5,
+                    ],
+                ])
             ->add([
                 'name' => 'oaipmhrepository_by_site_repository',
                 'type' => Element\Radio::class,

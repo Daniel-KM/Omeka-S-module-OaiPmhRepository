@@ -107,3 +107,11 @@ if (version_compare($oldVersion, '3.3.5.2', '<')) {
     );
     $settings->set('oaipmhrepository_map_properties', $defaultSettings['oaipmhrepository_map_properties']);
 }
+
+if (version_compare($oldVersion, '3.3.5.6', '<')) {
+    $messenger = new Messenger();
+    $message = new Message(
+        'It is now possible to define oai sets with a specific list of item sets or with a list of search queries.' // @translate
+    );
+    $messenger->addWarning($message);
+}

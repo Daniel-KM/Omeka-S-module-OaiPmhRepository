@@ -50,33 +50,33 @@ interface OaiSetInterface
     public function listSetSpecs(ItemRepresentation $item);
 
     /**
-     * Get the oai set spec of the specified resource (item set or site).
+     * Get the oai set spec of the specified resource (item set, site or array).
      *
-     * @param AbstractEntityRepresentation $representation
+     * @param AbstractEntityRepresentation|array $set Item set, site, or query.
      * @return string
      */
-    public function getSetSpec(AbstractEntityRepresentation $set);
+    public function getSetSpec($set);
 
     /**
-     * Get the oai set name of the specified resource (item set or site).
+     * Get the oai set name of the specified resource (item set, site or array).
      *
-     * @param AbstractEntityRepresentation $representation
+     * @param AbstractEntityRepresentation|array $set Item set, site, or query.
      * @return string
      */
-    public function getSetName(AbstractEntityRepresentation $set);
+    public function getSetName($set);
 
     /**
-     * Get the oai set description of the specified resource (item set or site).
+     * Get the oai set description of the resource (item set, siten or array).
      *
-     * @param AbstractEntityRepresentation $representation
+     * @param AbstractEntityRepresentation|array $set Item set, site, or query.
      * @return string
      */
-    public function getSetDescription(AbstractEntityRepresentation $set);
+    public function getSetDescription($set);
 
     /**
-     * Get the Omeka item set or site according to the oai set spec.
+     * Get the Omeka item set, site or array according to the oai set spec.
      *
-     * @return AbstractEntityRepresentation
+     * @return AbstractEntityRepresentation|string
      */
     public function findResource($setSpec);
 }

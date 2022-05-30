@@ -195,11 +195,12 @@ class ResponseGenerator extends AbstractXmlGenerator
             }
         } else {
             $this->setSpecType = $settings->get('oaipmhrepository_global_repository', 'none');
-            if (!in_array($this->setSpecType, ['item_set', 'list_item_sets', 'site_pool', 'none'])) {
+            if (!in_array($this->setSpecType, ['item_set', 'list_item_sets', 'queries', 'site_pool', 'none'])) {
                 $this->setSpecType = 'none';
-            }
-            if ($this->setSpecType === 'list_item_sets') {
+            } elseif ($this->setSpecType === 'list_item_sets') {
                 $listItemSets = array_filter(array_map('intval', $settings->get('oaipmhrepository_list_item_sets', []))) ?: [];
+            } elseif ($this->setSpecType === 'queries') {
+                $listQueries = array_filter($settings->get('oaipmhrepository_sets_queries', [])) ?: [];
             }
         }
 
@@ -210,6 +211,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->oaiSet->setOptions([
             'hide_empty_sets' => $settings->get('oaipmhrepository_hide_empty_sets', true),
             'list_item_sets' => $listItemSets,
+            'queries' => $listQueries,
         ]);
 
         //formatOutput makes DOM output "pretty" XML.  Good for debugging, but
@@ -642,10 +644,6 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         // Public/private is automatically managed for anonymous requests.
 
-        if ($this->site) {
-            $query['site_id'] = $this->site->id();
-        }
-
         if ($set) {
             $resourceSet = $this->oaiSet->findResource($set);
             if (empty($resourceSet)) {
@@ -661,6 +659,9 @@ class ResponseGenerator extends AbstractXmlGenerator
                 case 'list_item_sets':
                     $query['item_set_id'] = $resourceSet->id();
                     break;
+                case 'queries':
+                    $query = new ArrayObject($resourceSet['aQuery']);
+                    break;
                 case 'none':
                 default:
                     $this->throwError(self::OAI_ERR_NO_SET_HIERARCHY);
@@ -668,6 +669,11 @@ class ResponseGenerator extends AbstractXmlGenerator
             }
         }
 
+        if ($this->site) {
+            $query['site_id'] = $this->site->id();
+        }
+
+        /** @var \OaiPmhRepository\OaiPmh\Metadata\MetadataInterface $metadataFormat */
         $metadataFormatManager = $this->serviceLocator->get(\OaiPmhRepository\OaiPmh\MetadataFormatManager::class);
         $metadataFormat = $metadataFormatManager->get($metadataPrefix);
         $metadataFormat->setOaiSet($this->oaiSet);
