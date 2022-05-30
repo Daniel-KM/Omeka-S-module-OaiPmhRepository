@@ -77,7 +77,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         $this->options = $options;
     }
 
-    public function listSets()
+    public function listSets(): array
     {
         $oaiSets = [];
         if ($this->site) {
@@ -180,7 +180,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         return $oaiSets;
     }
 
-    public function listSetSpecs(ItemRepresentation $item)
+    public function listSetSpecs(ItemRepresentation $item): array
     {
         $setSpecs = [];
         switch ($this->setSpecType) {
@@ -257,7 +257,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         return $setSpecs;
     }
 
-    public function getSetSpec($set)
+    public function getSetSpec($set): ?string
     {
         if (is_array($set)) {
             return $set['spec'];
@@ -270,17 +270,17 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         }
     }
 
-    protected function getSetSpecItemSet(ItemSetRepresentation $itemSet)
+    protected function getSetSpecItemSet(ItemSetRepresentation $itemSet): ?string
     {
         return (string) $itemSet->id();
     }
 
-    protected function getSetSpecSite(SiteRepresentation $site)
+    protected function getSetSpecSite(SiteRepresentation $site): ?string
     {
         return $site->slug();
     }
 
-    public function getSetName($set)
+    public function getSetName($set): ?string
     {
         if (is_array($set)) {
             return $set['name'];
@@ -293,17 +293,17 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         }
     }
 
-    protected function getSetNameItemSet(ItemSetRepresentation $itemSet)
+    protected function getSetNameItemSet(ItemSetRepresentation $itemSet): ?string
     {
         return $itemSet->displayTitle();
     }
 
-    protected function getSetNameSite(SiteRepresentation $site)
+    protected function getSetNameSite(SiteRepresentation $site): ?string
     {
         return $site->title();
     }
 
-    public function getSetDescription($set)
+    public function getSetDescription($set): ?string
     {
         if (is_array($set)) {
             return $set['description'];
@@ -316,12 +316,12 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         }
     }
 
-    protected function getSetDescriptionItemSet(ItemSetRepresentation $itemSet)
+    protected function getSetDescriptionItemSet(ItemSetRepresentation $itemSet): ?string
     {
         return $itemSet->displayDescription() ?: null;
     }
 
-    protected function getSetDescriptionSite(SiteRepresentation $site): void
+    protected function getSetDescriptionSite(SiteRepresentation $site): ?string
     {
         return $site->displayDescription() ?: null;
     }
@@ -365,7 +365,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
         return $set;
     }
 
-    protected function getJsonLdType(AbstractEntityRepresentation $representation)
+    protected function getJsonLdType(AbstractEntityRepresentation $representation): ?string
     {
         $jsonLdType = $representation->getJsonLdType();
         return is_array($jsonLdType)
