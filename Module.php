@@ -163,6 +163,8 @@ class Module extends AbstractModule
                 if ($sourceTerm === $destinationTerm
                     || empty($sourceTerm)
                     || empty($destinationTerm)
+                    || is_numeric($sourceTerm)
+                    || is_numeric($destinationTerm)
                     || mb_substr($sourceTerm, 0, 1) === '#'
                     || mb_substr($destinationTerm, 0, 1) === '#'
                     || !strpos($sourceTerm, ':')
