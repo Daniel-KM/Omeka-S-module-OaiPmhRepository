@@ -358,7 +358,12 @@ class ConfigForm extends Form
             ->add([
                 'name' => 'oaipmhrepository_generic_dcterms',
                 'required' => false,
-            ]);
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_list_item_sets',
+                'required' => false,
+            ])
+        ;
     }
 
     public function setMetadataFormats(array $metadataFormats): self
