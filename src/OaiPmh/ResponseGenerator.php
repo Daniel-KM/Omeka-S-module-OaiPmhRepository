@@ -187,6 +187,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->site = $currentSite();
 
         $listItemSets = [];
+        $listQueries = [];
 
         if ($this->site) {
             $this->setSpecType = $settings->get('oaipmhrepository_by_site_repository', 'none');

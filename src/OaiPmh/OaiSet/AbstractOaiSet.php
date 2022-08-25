@@ -323,7 +323,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
 
     protected function getSetDescriptionSite(SiteRepresentation $site): ?string
     {
-        return $site->displayDescription() ?: null;
+        return $site->summary() ?: null;
     }
 
     public function findResource($setSpec)
