@@ -137,6 +137,20 @@ class OaiDcterms extends AbstractMetadata
         if ($appendIdentifier) {
             $this->appendNewElement($oai, 'dcterms:identifier', $appendIdentifier, ['xsi:type' => 'dcterms:URI']);
         }
+        // Append thumbnail for record
+        $thumbnail = $item->thumbnail();
+        $primaryMedia = $item->primaryMedia();
+        $thumbnailURL = '';
+        if (($primaryMedia) && ($primaryMedia->ingester() == 'remoteFile')) {
+            $thumbnailURL = $primaryMedia->mediaData()['thumbnail'];
+        }
+        if (($thumbnailURL == '') && ($primaryMedia) && ($primaryMedia->hasThumbnails())) {
+            $thumbnailURL = $primaryMedia->thumbnailUrl('medium');
+        }
+        $thumbnailURL = $thumbnail ? $thumbnail->assetUrl() : $thumbnailURL;
+        if ($thumbnailURL) {
+            $this->appendNewElement($oai, 'dcterms:identifier', $thumbnailURL, ['xsi:type' => 'dcterms:URI']);
+        }
 
         // Also append an identifier for each file
         if ($this->params['expose_media']) {
