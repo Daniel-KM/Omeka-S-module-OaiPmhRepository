@@ -259,10 +259,20 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
             case 'label_attr_uri':
                 // For compatibility with many harvesters that don't manage
                 // attributes, the uri is kept when no label.
+                //check if uri is valid link, if not, use label as prefix
                 $vUri = (string) $value->uri();
                 $v = (string) $value->value();
-                $v = strlen($v) ? $v : $vUri;
-                $attributes['href'] = $vUri;
+                if (filter_var($vUri, FILTER_VALIDATE_URL)) {
+                  $v = strlen($v) ? $v : $vUri;
+                  $attributes['href'] = $vUri;
+                } else {
+                  if (!$v) {
+                    $v = $vUri;
+                  } else {
+                    $v = $v . ': ' . $vUri;
+                  }
+
+                }
                 break;
             case 'uri_attr_label':
             default:

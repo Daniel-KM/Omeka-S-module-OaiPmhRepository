@@ -129,6 +129,25 @@ class OaiDcterms extends AbstractMetadata
             $termValues = $this->filterValues($item, $term, $termValues);
             foreach ($termValues as $value) {
                 list($text, $attributes) = $this->formatValue($value);
+                //get relator terms
+                if ($value->property()->term() == "dcterms:contributor") {
+                    if ($valueAnnotation = $value->valueAnnotation()) {
+                        foreach ($valueAnnotation->values() as $annotationTerm => $propertyData) {
+                            if ($propertyData['property']->term() == "bf:role") {
+                                $relatorList = [];
+                                $relatorString = '';
+                                foreach ($propertyData['values'] as $annotationValue) {
+                                    array_push($relatorList, $annotationValue);
+                                }
+                                if ($relatorList) {
+                                    $relatorString = ' [' . implode(", ", $relatorList) . ']';
+                                    $text = $text . $relatorString;
+                                }
+                            }
+                        }
+                    }
+                }
+                //append
                 $this->appendNewElement($oai, $term, $text, $attributes);
             }
         }
