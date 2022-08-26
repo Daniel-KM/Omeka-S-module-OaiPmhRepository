@@ -155,7 +155,7 @@ class OaiDcterms extends AbstractMetadata
 
         $appendIdentifier = $this->singleIdentifier($item);
         if ($appendIdentifier) {
-            $this->appendNewElement($oai, 'dc:identifier', $appendIdentifier, ['xsi:type' => 'dcterms:URI']);
+            $this->appendNewElement($oai, 'dc:identifier', $appendIdentifier);
         }
         // Append thumbnail for record
         $thumbnail = $item->thumbnail();
@@ -169,13 +169,13 @@ class OaiDcterms extends AbstractMetadata
         }
         $thumbnailURL = $thumbnail ? $thumbnail->assetUrl() : $thumbnailURL;
         if ($thumbnailURL) {
-            $this->appendNewElement($oai, 'dc:identifier', $thumbnailURL, ['xsi:type' => 'dcterms:URI']);
+            $this->appendNewElement($oai, 'dc:identifier', $thumbnailURL);
         }
 
         // Also append an identifier for each file
         if ($this->params['expose_media']) {
             foreach ($item->media() as $media) {
-                $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl(), ['xsi:type' => 'dcterms:URI']);
+                $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl());
             }
         }
     }
