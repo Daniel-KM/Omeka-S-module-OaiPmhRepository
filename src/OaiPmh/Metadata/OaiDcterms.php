@@ -35,6 +35,7 @@ class OaiDcterms extends AbstractMetadata
     const METADATA_SCHEMA = 'http://www.openarchives.org/OAI/2.0/oai_dcterms.xsd';
 
     /** XML namespace for Dublin Core */
+    const DC_NAMESPACE_URI = 'http://purl.org/dc/elements/1.1/';
     const DCTERMS_NAMESPACE_URI = 'http://purl.org/dc/terms/';
 
     /**
@@ -52,79 +53,79 @@ class OaiDcterms extends AbstractMetadata
         /* Must manually specify XML schema uri per spec, but DOM won't include
          * a redundant xmlns:xsi attribute, so we just set the attribute
          */
+        $oai->setAttribute('xmlns:dc', self::DC_NAMESPACE_URI);
         $oai->setAttribute('xmlns:dcterms', self::DCTERMS_NAMESPACE_URI);
         $oai->setAttribute('xmlns:xsi', parent::XML_SCHEMA_NAMESPACE_URI);
         $oai->setAttribute('xsi:schemaLocation', self::METADATA_NAMESPACE . ' ' .
             self::METADATA_SCHEMA);
 
         // Each of the 55 Dublin Core terms, in the Omeka order.
-        $localNames = [
-            // Dublin Core Elements.
-            'title',
-            'creator',
-            'subject',
-            'description',
-            'publisher',
-            'contributor',
-            'date',
-            'type',
-            'format',
-            'identifier',
-            'source',
-            'language',
-            'relation',
-            'coverage',
-            'rights',
-            // Dublin Core terms.
-            'audience',
-            'alternative',
-            'tableOfContents',
-            'abstract',
-            'created',
-            'valid',
-            'available',
-            'issued',
-            'modified',
-            'extent',
-            'medium',
-            'isVersionOf',
-            'hasVersion',
-            'isReplacedBy',
-            'replaces',
-            'isRequiredBy',
-            'requires',
-            'isPartOf',
-            'hasPart',
-            'isReferencedBy',
-            'references',
-            'isFormatOf',
-            'hasFormat',
-            'conformsTo',
-            'spatial',
-            'temporal',
-            'mediator',
-            'dateAccepted',
-            'dateCopyrighted',
-            'dateSubmitted',
-            'educationLevel',
-            'accessRights',
-            'bibliographicCitation',
-            'license',
-            'rightsHolder',
-            'provenance',
-            'instructionalMethod',
-            'accrualMethod',
-            'accrualPeriodicity',
-            'accrualPolicy',
+        $oaiDCterms = [
+          'dc:title',
+          'dc:creator',
+          'dc:subject',
+          'dc:description',
+          'dc:publisher',
+          'dc:contributor',
+          'dc:date',
+          'dc:type',
+          'dc:format',
+          'dc:identifier',
+          'dc:source',
+          'dc:language',
+          'dc:relation',
+          'dc:coverage',
+          'dc:rights',
+          'dcterms:abstract',
+          'dcterms:accessRights',
+          'dcterms:accrualMethod',
+          'dcterms:accrualPeriodicity',
+          'dcterms:accrualPolicy',
+          'dcterms:alternative',
+          'dcterms:audience',
+          'dcterms:available',
+          'dcterms:bibliographicCitation',
+          'dcterms:conformsTo',
+          'dcterms:created',
+          'dcterms:dateAccepted',
+          'dcterms:dateCopyrighted',
+          'dcterms:dateSubmitted',
+          'dcterms:educationLevel',
+          'dcterms:extent',
+          'dcterms:hasFormat',
+          'dcterms:hasPart',
+          'dcterms:hasVersion',
+          'dcterms:instructionalMethod',
+          'dcterms:isFormatOf',
+          'dcterms:isPartOf',
+          'dcterms:isReferencedBy',
+          'dcterms:isReplacedBy',
+          'dcterms:isRequiredBy',
+          'dcterms:issued',
+          'dcterms:isVersionOf',
+          'dcterms:license',
+          'dcterms:mediator',
+          'dcterms:medium',
+          'dcterms:modified',
+          'dcterms:provenance',
+          'dcterms:references',
+          'dcterms:replaces',
+          'dcterms:requires',
+          'dcterms:rightsHolder',
+          'dcterms:spatial',
+          'dcterms:tableOfContents',
+          'dcterms:temporal',
+          'dcterms:valid'
         ];
+
 
         /* Must create elements using createElement to make DOM allow a
          * top-level xmlns declaration instead of wasteful and non-
          * compliant per-node declarations.
          */
         $values = $this->filterValuesPre($item);
-        foreach ($localNames as $localName) {
-            $term = 'dcterms:' . $localName;
+        foreach ($oaiDCterms as $oaiDCterm) {
+            $term = str_replace('dc:', 'dcterms:', $oaiDCterm);
             $termValues = $values[$term]['values'] ?? [];
             $termValues = $this->filterValues($item, $term, $termValues);
             foreach ($termValues as $value) {
@@ -148,13 +149,13 @@ class OaiDcterms extends AbstractMetadata
                     }
                 }
                 //append
-                $this->appendNewElement($oai, $term, $text, $attributes);
+                $this->appendNewElement($oai, $oaiDCterm, $text, $attributes);
             }
         }
 
         $appendIdentifier = $this->singleIdentifier($item);
         if ($appendIdentifier) {
-            $this->appendNewElement($oai, 'dcterms:identifier', $appendIdentifier, ['xsi:type' => 'dcterms:URI']);
+            $this->appendNewElement($oai, 'dc:identifier', $appendIdentifier, ['xsi:type' => 'dcterms:URI']);
         }
         // Append thumbnail for record
         $thumbnail = $item->thumbnail();
@@ -168,13 +169,13 @@ class OaiDcterms extends AbstractMetadata
         }
         $thumbnailURL = $thumbnail ? $thumbnail->assetUrl() : $thumbnailURL;
         if ($thumbnailURL) {
-            $this->appendNewElement($oai, 'dcterms:identifier', $thumbnailURL, ['xsi:type' => 'dcterms:URI']);
+            $this->appendNewElement($oai, 'dc:identifier', $thumbnailURL, ['xsi:type' => 'dcterms:URI']);
         }
 
         // Also append an identifier for each file
         if ($this->params['expose_media']) {
             foreach ($item->media() as $media) {
-                $this->appendNewElement($oai, 'dcterms:identifier', $media->originalUrl(), ['xsi:type' => 'dcterms:URI']);
+                $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl(), ['xsi:type' => 'dcterms:URI']);
             }
         }
     }
