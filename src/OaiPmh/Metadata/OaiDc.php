@@ -121,7 +121,7 @@ class OaiDc extends AbstractMetadata
         }
         $thumbnailURL = $thumbnail ? $thumbnail->assetUrl() : $thumbnailURL;
         if ($thumbnailURL) {
-            $this->appendNewElement($oai, 'dcterms:identifier', $thumbnailURL, ['xsi:type' => 'dcterms:URI']);
+            $this->appendNewElement($oai, 'dc:identifier', $thumbnailURL, ['xsi:type' => 'dcterms:URI']);
         }
 
         // Also append an identifier for each file
