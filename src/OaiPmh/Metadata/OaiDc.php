@@ -79,22 +79,12 @@ class OaiDc extends AbstractMetadata
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
             $termValues = $this->filterValues($item, $term, $termValues);
-            if ($term == "dcterms:type") {
-              $thesis = false;
-              foreach ($termValues as $value) {
-                  list($text, $attributes) = $this->formatValue($value);
-                  if ($text == "Thesis") {
-                    $thesis = true;
-                    $this->appendNewElement($oai, 'dc:type', $text, $attributes);
-                  }
-              }
-              if (!$thesis) {
-                  if ($item->displayResourceClassLabel()) {
-                    $this->appendNewElement($oai, $oaiDCterm, $item->displayResourceClassLabel());
-                  } elseif ($termValues) {
-                    list($text, $attributes) = $this->formatValue($termValues[0]);
-                    $this->appendNewElement($oai, 'dc:type' . $localName, $text, $attributes);
-                  }
+            if ($term == "dcterms:format") {
+              if ($item->displayResourceClassLabel()) {
+                $this->appendNewElement($oai, 'dc:format', $item->displayResourceClassLabel());
+              } elseif ($termValues) {
+                list($text, $attributes) = $this->formatValue($termValues[0]);
+                $this->appendNewElement($oai, 'dc:format', $text, $attributes);
               }
             } else {
               foreach ($termValues as $value) {
