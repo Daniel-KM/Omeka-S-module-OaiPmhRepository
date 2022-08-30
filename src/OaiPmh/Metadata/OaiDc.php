@@ -79,37 +79,28 @@ class OaiDc extends AbstractMetadata
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
             $termValues = $this->filterValues($item, $term, $termValues);
-            if ($term == "dcterms:format") {
-              if ($item->displayResourceClassLabel()) {
-                $this->appendNewElement($oai, 'dc:format', $item->displayResourceClassLabel());
-              } elseif ($termValues) {
-                list($text, $attributes) = $this->formatValue($termValues[0]);
-                $this->appendNewElement($oai, 'dc:format', $text, $attributes);
-              }
-            } else {
-              foreach ($termValues as $value) {
-                  list($text, $attributes) = $this->formatValue($value);
-                  //get relator terms
-                  if ($value->property()->term() == "dcterms:contributor") {
-                      if ($valueAnnotation = $value->valueAnnotation()) {
-                          foreach ($valueAnnotation->values() as $annotationTerm => $propertyData) {
-                              if ($propertyData['property']->term() == "bf:role") {
-                                  $relatorList = [];
-                                  $relatorString = '';
-                                  foreach ($propertyData['values'] as $annotationValue) {
-                                      array_push($relatorList, $annotationValue);
-                                  }
-                                  if ($relatorList) {
-                                      $relatorString = ' [' . implode(", ", $relatorList) . ']';
-                                      $text = $text . $relatorString;
-                                  }
-                              }
-                          }
-                      }
-                  }
-                  //append
-                  $this->appendNewElement($oai, 'dc:' . $localName, $text, $attributes);
-              }
+            foreach ($termValues as $value) {
+                list($text, $attributes) = $this->formatValue($value);
+                //get relator terms
+                if ($value->property()->term() == "dcterms:contributor") {
+                    if ($valueAnnotation = $value->valueAnnotation()) {
+                        foreach ($valueAnnotation->values() as $annotationTerm => $propertyData) {
+                            if ($propertyData['property']->term() == "bf:role") {
+                                $relatorList = [];
+                                $relatorString = '';
+                                foreach ($propertyData['values'] as $annotationValue) {
+                                    array_push($relatorList, $annotationValue);
+                                }
+                                if ($relatorList) {
+                                    $relatorString = ' [' . implode(", ", $relatorList) . ']';
+                                    $text = $text . $relatorString;
+                                }
+                            }
+                        }
+                    }
+                }
+                //append
+                $this->appendNewElement($oai, 'dc:' . $localName, $text, $attributes);
             }
         }
 
