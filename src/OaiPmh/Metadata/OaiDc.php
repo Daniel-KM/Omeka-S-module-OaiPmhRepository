@@ -100,7 +100,11 @@ class OaiDc extends AbstractMetadata
                     }
                 }
                 //append
-                $this->appendNewElement($oai, 'dc:' . $localName, $text, $attributes);
+                if (($localName == 'description') && (str_contains($text, "Fashion Institute of Technology, State University of New York")) && ((str_contains($text, "M.A.")) || (str_contains($text, "MA")) || (str_contains($text, "M.F.A.")) || (str_contains($text, "MFA")) || (str_contains($text, "M.P.S.")) || (str_contains($text, "MPS")) || (str_contains($text, "M.S.")) || (str_contains($text, "MS")) || (str_contains($text, "M.B.A.")) || (str_contains($text, "MBA")))) {
+                    $this->appendNewElement($oai, 'dc:description.thesis', $text, $attributes);
+                } else {
+                  $this->appendNewElement($oai, 'dc:' . $localName, $text, $attributes);
+                }
             }
         }
 
