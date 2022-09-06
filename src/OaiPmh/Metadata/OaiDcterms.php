@@ -196,7 +196,7 @@ class OaiDcterms extends AbstractMetadata
         }
         $thumbnailURL = $thumbnail ? $thumbnail->assetUrl() : $thumbnailURL;
         if ($thumbnailURL) {
-            $this->appendNewElement($oai, 'dc:identifier', $thumbnailURL);
+            $this->appendNewElement($oai, 'dc:identifier', str_replace("amazon","Amazon",$thumbnailURL));
         }
 
         // Also append an identifier for each file
