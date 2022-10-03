@@ -117,7 +117,7 @@ return [
             'oaipmhrepository_list_item_sets' => [],
             'oaipmhrepository_sets_queries' => [],
             'oaipmhrepository_by_site_repository' => 'disabled',
-            'oaipmhrepository_append_identifier_global' => 'api_url',
+            'oaipmhrepository_append_identifier_global' => 'absolute_site_url',
             'oaipmhrepository_append_identifier_site' => 'absolute_site_url',
             'oaipmhrepository_oai_set_format' => 'basic',
             'oaipmhrepository_generic_dcterms' => [
