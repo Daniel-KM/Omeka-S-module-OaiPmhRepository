@@ -5,15 +5,9 @@ namespace OaiPmhRepository\OaiPmh\Metadata;
 use DOMElement;
 use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use Omeka\Api\Representation\ItemRepresentation;
-use Omeka\Settings\SettingsInterface;
 
 interface MetadataInterface
 {
-    /**
-     * @param SettingsInterface $settings
-     */
-    public function setSettings(SettingsInterface $settings);
-
     /**
      * @param OaiSetInterface $oaiSet
      */

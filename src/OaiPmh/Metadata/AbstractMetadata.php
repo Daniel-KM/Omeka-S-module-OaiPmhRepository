@@ -12,13 +12,13 @@ use ArrayObject;
 use DOMElement;
 use Laminas\EventManager\EventManagerAwareInterface;
 use Laminas\EventManager\EventManagerAwareTrait;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use OaiPmhRepository\OaiPmh\AbstractXmlGenerator;
 use OaiPmhRepository\OaiPmh\OaiSet\OaiSetInterface;
 use OaiPmhRepository\OaiPmh\Plugin\OaiIdentifier;
 use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\ItemRepresentation;
 use Omeka\Api\Representation\ValueRepresentation;
-use Omeka\Settings\SettingsInterface;
 
 /**
  * Abstract class on which all other metadata format handlers are based.
@@ -53,9 +53,9 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     const METADATA_SCHEMA = null;
 
     /**
-     * @var SettingsInterface
+     * @var ServiceLocatorInterface
      */
-    protected $settings;
+    protected $services;
 
     /**
      * The class used to create the set data (spec, name and description).
@@ -74,9 +74,10 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     protected $params = [];
 
-    public function setSettings(SettingsInterface $settings): void
+    public function setServices(ServiceLocatorInterface $services)
     {
-        $this->settings = $settings;
+        $this->services = $services;
+        return $this;
     }
 
     public function setOaiSet(OaiSetInterface $oaiSet): void
