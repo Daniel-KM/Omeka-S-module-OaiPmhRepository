@@ -190,6 +190,8 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 $vvr = $value->valueResource();
                 if ($vvr) {
                     return $this->formatValueResource($vvr);
+                } elseif ($value->uri()) {
+                    return $this->formatValueUri($value);
                 }
                 $v = (string) $value->value();
                 break;
