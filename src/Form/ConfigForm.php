@@ -294,7 +294,7 @@ Books = resource_template_id[]=3
 
             ->add([
                 'name' => 'oaipmhrepository_mets_data_item',
-                'type' => Element\Select::class,
+                'type' => Element\Radio::class,
                 'options' => [
                     'label' => 'Mets: data format for item', // @translate
                     'info' => 'The format of the metadata of item.', // @translate
@@ -307,11 +307,12 @@ Books = resource_template_id[]=3
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_mets_data_item',
+                    'value' => 'dcterms',
                 ],
             ])
             ->add([
                 'name' => 'oaipmhrepository_mets_data_media',
-                'type' => Element\Select::class,
+                'type' => Element\Radio::class,
                 'options' => [
                     'label' => 'Mets: data format for media', // @translate
                     'info' => 'The format of the metadata of media.', // @translate
@@ -324,8 +325,10 @@ Books = resource_template_id[]=3
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_mets_data_media',
+                    'value' => 'dcterms',
                 ],
             ])
+
             ->add([
                 'name' => 'oaipmhrepository_human_interface',
                 'type' => Element\Checkbox::class,

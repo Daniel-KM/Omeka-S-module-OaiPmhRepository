@@ -60,15 +60,14 @@ class Mets extends AbstractMetadata
 
         $itemDataFormat = $this->params['mets_data_item'];
         switch ($itemDataFormat) {
-            case 'dc':
             default:
-                $this->mdtypeDc($dataWrap, $item);
-                break;
             case 'dcterms':
                 $this->mdtypeDcterms($dataWrap, $item);
                 break;
+            case 'dc':
+                $this->mdtypeDc($dataWrap, $item);
+                break;
             // case 'mods':
-            //    break;
         }
 
         $fileIds = [];
@@ -106,15 +105,14 @@ class Mets extends AbstractMetadata
 
                     $fileDataWrap = $this->appendNewElement($fileContentMetadata, 'mdWrap');
                     switch ($mediaDataFormat) {
-                        case 'dc':
                         default:
-                            $this->mdtypeDc($fileDataWrap, $media);
-                            break;
                         case 'dcterms':
                             $this->mdtypeDcterms($fileDataWrap, $media);
                             break;
-                            // case 'mods':
-                            //    break;
+                        case 'dc':
+                            $this->mdtypeDc($fileDataWrap, $media);
+                            break;
+                        // case 'mods':
                     }
                 }
             }

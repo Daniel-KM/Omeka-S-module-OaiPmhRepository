@@ -41,8 +41,8 @@ class MetadataFormatFactory implements FactoryInterface
         switch ($prefix) {
             case 'mets':
                 $params['mets'] = [
-                    'data_item' => $settings->get('oaipmhrepository_mets_data_item', 'dc'),
-                    'data_media' => $settings->get('oaipmhrepository_mets_data_media', 'dc'),
+                    'data_item' => $settings->get('oaipmhrepository_mets_data_item', 'dcterms'),
+                    'data_media' => $settings->get('oaipmhrepository_mets_data_media', 'dcterms'),
                 ];
                 break;
             default:
