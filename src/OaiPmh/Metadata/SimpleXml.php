@@ -6,6 +6,7 @@
 namespace OaiPmhRepository\OaiPmh\Metadata;
 
 use DOMElement;
+use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 use Omeka\Api\Representation\ItemRepresentation;
 
 /**
@@ -33,15 +34,20 @@ class SimpleXml extends AbstractMetadata
         $values = $this->filterValuesPre($item);
 
         // Append all schemas used by current resource, not all vocabularies.
+        // Prepend omeka namespace to append resource metadata.
         // Include dcterms in all cases to manage single identifier, media urls…
+        // Include dctype to manage resource classes.
+        // TODO Include namespaces of the modules when used and needed (mapping…).
         $usedVocabularies = [
+            'o' => null,
             'dcterms' => null,
+            'dctype' => null,
         ];
         foreach (array_keys($values) as $term) {
             $usedVocabularies[strtok($term, ':')] = null;
         }
 
-        // Keep dcterms first and order alphabetically.
+        // Keep omeka, dcterms and dctype first and order alphabetically.
         $usedVocabularies = array_intersect_key($this->params['simple_xml']['vocabularies'], $usedVocabularies);
 
         // Create the main node.
@@ -78,5 +84,33 @@ class SimpleXml extends AbstractMetadata
         if ($appendIdentifier) {
             $this->appendNewElement($oai, 'dcterms:identifier', $appendIdentifier, ['xsi:type' => 'dcterms:URI']);
         }
+    }
+
+    /**
+     * Get common resource metadata.
+     */
+    protected function mainResourceMetadata(AbstractResourceEntityRepresentation $resource): array
+    {
+        $result = [];
+
+        $class = $resource->resourceClass();
+        $result['o:resource_class'] = $class ? $class->term() : null;
+
+        $template = $resource->resourceTemplate();
+        $result['o:resource_template'] = $template ? $template->label() : null;
+
+        $thumbnail = $resource->thumbnailDisplayUrl('medium');
+        $result['o:thumbnail'] = $thumbnail ?: null;
+
+        $created = $resource->created();
+        $result['o:created'] = $created->format('c');
+
+        $modified = $resource->modified();
+        $result['o:modified'] = $modified ? $modified->format('c') : null;
+
+        $title = $resource->displayTitle();
+        $result['o:title'] = $title;
+
+        return $result;
     }
 }

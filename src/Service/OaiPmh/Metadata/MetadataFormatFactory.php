@@ -60,9 +60,12 @@ class MetadataFormatFactory implements FactoryInterface
                 $api = $services->get('Omeka\ApiManager');
                 $vocabulariesPrefixes = $api->search('vocabularies', ['sort_by' => 'prefix', 'sort_order' => 'asc'], ['returnScalar' => 'prefix'])->getContent();
                 $vocabulariesNamespaceUri = $api->search('vocabularies', ['sort_by' => 'prefix', 'sort_order' => 'asc'], ['returnScalar' => 'namespaceUri'])->getContent();
-                // Keep dcterms first.
+                // Prepend omeka namespace to append resource metadata.
+                // Keep dcterms first and include dctype for resource classes.
                 $vocabularies = [
+                    'o' => 'http://omeka.org/s/vocabs/o#',
                     'dcterms' => 'http://purl.org/dc/terms/',
+                    'dctype' => 'http://purl.org/dc/dcmitype/',
                 ] + array_combine($vocabulariesPrefixes, $vocabulariesNamespaceUri);
                 $params['simple_xml'] = [
                     'vocabularies' => $vocabularies,
