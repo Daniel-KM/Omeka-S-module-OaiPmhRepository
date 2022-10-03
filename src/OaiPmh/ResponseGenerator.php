@@ -211,7 +211,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->oaiSet->setOptions([
             'hide_empty_sets' => $settings->get('oaipmhrepository_hide_empty_sets', true),
             'list_item_sets' => $listItemSets,
-            'queries' => $listQueries,
+            'queries' => $listQueries ?? [],
         ]);
 
         //formatOutput makes DOM output "pretty" XML.  Good for debugging, but
