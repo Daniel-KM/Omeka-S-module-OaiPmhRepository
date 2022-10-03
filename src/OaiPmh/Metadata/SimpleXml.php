@@ -84,12 +84,7 @@ class SimpleXml extends AbstractMetadata
             self::METADATA_NAMESPACE . ' ' . self::METADATA_SCHEMA);
         */
 
-        foreach ($values as $term => $propertyData) {
-            foreach ($propertyData['values'] as $value) {
-                list($text, $attributes) = $this->formatValue($value);
-                $this->appendNewElement($oai, $term, $text, $attributes);
-            }
-        }
+        $this->appendValues($oai, $values);
 
         $appendIdentifier = $this->singleIdentifier($item);
         if ($appendIdentifier) {
@@ -116,12 +111,7 @@ class SimpleXml extends AbstractMetadata
                 $meta = array_filter($meta);
                 $mediaNode = $this->appendNewElement($oai, 'o:media', null, $meta);
                 $values = $this->filterValuesPre($media);
-                foreach ($values as $term => $propertyData) {
-                    foreach ($propertyData['values'] as $value) {
-                        list($text, $attributes) = $this->formatValue($value);
-                        $this->appendNewElement($mediaNode, $term, $text, $attributes);
-                    }
-                }
+                $this->appendValues($mediaNode, $values);
                 $data = $media->mediaData();
                 if ($data) {
                     $this->appendNewElement($mediaNode, 'o:data', json_encode($data, 320), ['status' => 'experimental']);
@@ -156,5 +146,21 @@ class SimpleXml extends AbstractMetadata
         $result['o:title'] = $title;
 
         return $result;
+    }
+
+    protected function appendValues($xmlNode, array $values)
+    {
+        foreach ($values as $term => $propertyData) {
+            /** @var \Omeka\Api\Representation\ValueRepresentation $value */
+            foreach ($propertyData['values'] as $value) {
+                list($text, $attributes) = $this->formatValue($value);
+                $dataType = $value->type();
+                if ($dataType !== 'literal') {
+                    $attributes['o:type'] = $dataType;
+                }
+                $this->appendNewElement($xmlNode, $term, $text, $attributes);
+            }
+        }
+        return $this;
     }
 }
