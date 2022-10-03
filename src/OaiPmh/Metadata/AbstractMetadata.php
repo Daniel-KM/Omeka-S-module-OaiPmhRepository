@@ -179,7 +179,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $type = $value->type();
         switch ($type) {
             case 'resource':
-            case substr($type, 0, 9) === 'resource:':
+            case substr($type, 0, 8) === 'resource':
                 return $this->formatValueResource($value->valueResource());
             case 'uri':
             case substr($type, 0, 13) === 'valuesuggest:':
