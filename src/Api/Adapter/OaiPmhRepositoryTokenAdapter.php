@@ -3,7 +3,7 @@
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
  * @author Daniel Berthereau <daniel.github@berthereau.net>
- * @copyright Daniel Berthereau, 2014-2018
+ * @copyright Daniel Berthereau, 2014-2022
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\Api\Adapter;
@@ -21,6 +21,24 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
 {
     protected $sortFields = [
         'id' => 'id',
+        'verb' => 'verb',
+        'metadata_prefix' => 'metadataPrefix',
+        'cursor' => 'cursor',
+        'from' => 'from',
+        'until' => 'until',
+        'set' => 'set',
+        'expiration' => 'expiration',
+    ];
+
+    protected $scalarFields = [
+        'id' => 'id',
+        'verb' => 'verb',
+        'metadata_prefix' => 'metadataPrefix',
+        'cursor' => 'cursor',
+        'from' => 'from',
+        'until' => 'until',
+        'set' => 'set',
+        'expiration' => 'expiration',
     ];
 
     public function getResourceName()
