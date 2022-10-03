@@ -287,7 +287,7 @@ return [
                         'title' => 'Omeka S OAI-PMH Repository Module',
                         'author' => [
                             'name' => 'John Flatness; Julian Maurice; Daniel Berthereau; and other contributors',
-                            'email' => 'john@zerocrates.org; julian.maurice@biblibre.com; daniel.github@berthereau.net',
+                            'email' => 'john@zerocrates.org; julian.maurice@biblibre.com; daniel.git@berthereau.net',
                             'institution' => 'RRCHNM; BibLibre;',
                         ],
                         'version' => null,

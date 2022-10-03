@@ -10,6 +10,15 @@ Initiative Protocol for Metadata Harvesting ([OAI-PMH]) repository for Omeka S,
 allowing Omeka S items, item sets, and media to be harvested by OAI-PMH
 harvesters. The module implements version 2.0 of the protocol.
 
+It provides a way to map non-Dublin Core properties to Dublin Core properties in
+order to expose all values of all items, in particular records for author
+managed with foaf. Of course, the mapping is far from perfect, because it is not
+simple to map two ontologies that don't describe the same content.
+
+Anyway, there is a specific format, `simple_xml`, similar to the default `oai_dc`,
+that returns resource as a flat xml, included all values of all vocabularies
+that are used.
+
 
 Installation
 ------------
@@ -47,7 +56,7 @@ Default: If it can, the module will try to automatically detect the domain of
 the server hosting the site, and use that as the default namespace identifier.
 If a name can’t be detected (for example, if the site is accessed through the
 `localhost` domain), the default will be `default.must.change` (as you might
-think, this value is intended to be changed, not used as-is).  The module will
+think, this value is intended to be changed, not used as-is). The module will
 function with this, or any other string, as the namespace identifier, but this
 breaks the assumption that each identifier is globally unique. Best practice is
 to set this value to the domain name the Omeka server is published at, possibly
@@ -103,9 +112,10 @@ be updated.
 
 ### Map properties
 
-This option allows to expose any metadata as another one. The default mapping
-maps Bibliographic Ontology into Dublin Core. It can be improved or adapter if
-needed.
+This option allows to expose any metadata as another one. The [default mapping]
+maps Bibliographic Ontology (bibo) and Friend of a Friend (foaf) into Dublin Core.
+Of course is not perfect, but you can adapt it to your real data. See the default
+For foaf, a [spreadsheet] can help to improve the mapping.
 
 ### Metadata for mets (item and media)
 
@@ -187,7 +197,7 @@ allows the repository to expose metadata from different standards all in the
 same output.
 
 **NOTE**: The rdf output is currently not implemented, but it is available
-through the  standard api of Omeka S as json.
+through the standard api of Omeka S as json.
 
 ### [Omeka XML] (prefix `omeka-xml`)
 
@@ -197,7 +207,13 @@ by harvesters or other tools and because the RRCHNM itself removed the [schema]
 from the last site.
 
 **NOTE**: Because of its limited support by harvesters, the format is not
-implemented in Omeka S.
+implemented in Omeka S. Nevertheless, you can use the format "simple xml" that
+provides all metadata too.
+
+### Simple flat xml (prefix `simple_xml`)
+
+This format exposes metadata as a simple flat XML. Unlike most of the other
+standard formats, this format expose all metadata from different vocabularies.
 
 ### Other formats
 
@@ -217,7 +233,17 @@ resource, so it is possible to remove, to update or to append some values, or to
 convert some properties from other vocabularies into the standard formats.
 
 The old event `oaipmhrepository.values` called for each value is deprecated
-since version 3.3.5.2 and will be removed in a future version.
+since version 3.3.5.2 and was removed in version 3.3.6.
+
+
+TODO
+----
+
+- [ ] Normalize simple_xml (or omeka xml v5/v6?).
+- [ ] Improve data output for media html in simple xml, in particular for html.
+- [ ] Include namespace and metadata of modules when needed for simple_xml (module Mapping, etc.)
+- [ ] Native rdf output (from json serialization? From easyrdf?).
+- [ ] Improve performance for big bases and items with many medias. With a cache? In a table? As a xml file?
 
 
 Warning
@@ -238,7 +264,9 @@ See online issues on the [module issues] page on GitLab.
 License
 -------
 
-This plugin is published under [GNU/GPL].
+### Module
+
+This module is published under [GNU/GPL].
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -254,10 +282,10 @@ You should have received a copy of the GNU General Public License along with
 this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-**Human interface** (xslt stylesheet)
+### Human interface (xslt stylesheet)
 
 The human interface is published under the [CeCILL-B] BSD-like licence. See its
-header for other licenses notes.
+header for other licenses notes. It is based on [Bootstrap].
 
 
 Copyright
@@ -268,7 +296,7 @@ See commits for full list of contributors.
 * Copyright Yu-Hsun Lin, 2009
 * Copyright John Flatness, 2009-2016
 * Copyright Julian Maurice for BibLibre, 2016-2017
-* Copyright Daniel Berthereau, 2014-2021 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2014-2022 (see [Daniel-KM])
 
 This [Omeka S] module is based on the rewrite of the [OAI-PMH Repository plugin]
 for [Omeka] by [BibLibre] and provide the same features as the original plugin
@@ -283,6 +311,8 @@ and many more.
 [BibLibre]: https://github.com/biblibre
 [Installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
 [Bootstrap]: https://getbootstrap.com
+[default mapping]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130
+[spreadsheet]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/foaf_to_dcterms.ods
 [`oai-pmh-repository.xsl`]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/blob/master/asset/xsl/oai-pmh-repository.xsl
 [Dublin Core]: http://dublincore.org
 [Dublin Core Terms]: http://www.dublincore.org/documents/dcmi-terms/
