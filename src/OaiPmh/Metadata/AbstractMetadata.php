@@ -301,7 +301,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 $attributes['xsi:type'] = 'dcterms:URI';
                 $w = (string) $value->value();
                 if (strlen($w)) {
-                    $attributes['title'] = $w;
+                    $attributes[$this->params['attribute_title'] ?? 'title'] = $w;
                 }
                 break;
         }
@@ -356,7 +356,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 $attributes['xsi:type'] = 'dcterms:URI';
                 $vTitle = $resource->displayTitle('');
                 if (strlen($vTitle)) {
-                    $attributes['title'] = $vTitle;
+                    $attributes[$this->params['attribute_title'] ?? 'title'] = $vTitle;
                 }
                 break;
         }

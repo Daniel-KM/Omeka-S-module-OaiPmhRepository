@@ -70,6 +70,7 @@ class MetadataFormatFactory implements FactoryInterface
                 $params['simple_xml'] = [
                     'vocabularies' => $vocabularies,
                 ];
+                $params['attribute_title'] = 'o:title';
                 break;
             default:
                 // nothing.
