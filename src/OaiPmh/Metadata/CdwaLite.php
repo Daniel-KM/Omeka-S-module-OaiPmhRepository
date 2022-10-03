@@ -3,7 +3,7 @@
  * @author John Flatness
  * @copyright Copyright 2009 John Flatness
  * @copyright BibLibre, 2016
- * @copyright Daniel Berthereau, 2014-2018
+ * @copyright Daniel Berthereau, 2014-2022
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\Metadata;
@@ -63,7 +63,6 @@ class CdwaLite extends AbstractMetadata
          * Required.  Fill with 'Unknown' if omitted.
          */
         $types = $values['dcterms:type']['values'] ?? [];
-        $types = $this->filterValues($item, 'dcterms:type', $types);
         $objectWorkTypeWrap = $this->appendNewElement($descriptive, 'cdwalite:objectWorkTypeWrap');
         if (empty($types)) {
             $types[] = 'Unknown';
@@ -77,7 +76,6 @@ class CdwaLite extends AbstractMetadata
          * Required.  Fill with 'Unknown' if omitted.
          */
         $titles = $values['dcterms:title']['values'] ?? [];
-        $titles = $this->filterValues($item, 'dcterms:title', $titles);
         $titleWrap = $this->appendNewElement($descriptive, 'cdwalite:titleWrap');
 
         foreach ($titles as $title) {
@@ -90,7 +88,6 @@ class CdwaLite extends AbstractMetadata
          * Non-repeatable, implode for inclusion of many creators.
          */
         $creators = $values['dcterms:creator']['values'] ?? [];
-        $creators = $this->filterValues($item, 'dcterms:creator', $creators);
 
         $creatorTexts = [];
         foreach ($creators as $creator) {
@@ -128,7 +125,7 @@ class CdwaLite extends AbstractMetadata
          */
         $dates = $values['dcterms:date']['values'] ?? [];
         $date = count($dates) ? reset($dates) : null;
-        $dateText = (string) $this->filterValues($item, 'dcterms:date', $date) ?: 'Unknown'; // @translate
+        $dateText = (string) $date ?: 'Unknown'; // @translate
         $this->appendNewElement($descriptive, 'cdwalite:displayCreationDate', $dateText);
 
         /* Date => indexingDatesWrap->indexingDatesSet
@@ -137,7 +134,6 @@ class CdwaLite extends AbstractMetadata
          */
         $indexingDatesWrap = $this->appendNewElement($descriptive, 'cdwalite:indexingDatesWrap');
         $dates = $values['dcterms:date']['values'] ?? [];
-        $dates = $this->filterValues($item, 'dcterms:date', $dates);
         foreach ($dates as $date) {
             $indexingDatesSet = $this->appendNewElement($indexingDatesWrap, 'cdwalite:indexingDatesSet');
             $this->appendNewElement($indexingDatesSet, 'cdwalite:earliestDate', (string) $date);
@@ -155,7 +151,6 @@ class CdwaLite extends AbstractMetadata
          * Not required.
          */
         $subjects = $values['dcterms:subject']['values'] ?? [];
-        $subjects = $this->filterValues($item, 'dcterms:subject', $subjects);
         $classWrap = $this->appendNewElement($descriptive, 'cdwalite:classWrap');
         foreach ($subjects as $subject) {
             $this->appendNewElement($classWrap, 'cdwalite:classification', (string) $subject);
@@ -165,7 +160,6 @@ class CdwaLite extends AbstractMetadata
          * Not required.
          */
         $descriptions = $values['dcterms:description']['values'] ?? [];
-        $descriptions = $this->filterValues($item, 'dcterms:description', $descriptions);
         if (!empty($descriptions)) {
             $descriptiveNoteWrap = $this->appendNewElement($descriptive, 'cdwalite:descriptiveNoteWrap');
             foreach ($descriptions as $description) {
@@ -185,7 +179,6 @@ class CdwaLite extends AbstractMetadata
          * Not required.
          */
         $rights = $values['dcterms:rights']['values'] ?? [];
-        $rights = $this->filterValues($item, 'dcterms:rights', $rights);
         foreach ($rights as $right) {
             $this->appendNewElement($administrative, 'cdwalite:rightsWork', (string) $right);
         }

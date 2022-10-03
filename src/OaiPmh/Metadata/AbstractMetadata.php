@@ -3,7 +3,7 @@
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
  * @copyright BibLibre, 2016
- * @copyright Daniel Berthereau, 2014-2018
+ * @copyright Daniel Berthereau, 2014-2022
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\Metadata;
@@ -387,33 +387,6 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $eventManager = $this->getEventManager();
         $args = $eventManager->prepareArgs($args);
         $eventManager->trigger('oaipmhrepository.values.pre', $this, $args);
-        return $args['values'];
-    }
-
-    /**
-     * Filter values (remove, update or append) of a resource via an event.
-     *
-     * @deprecated Since 3.3.5.2 Use filterValuesPre() instead, that filters them globally. Will be removed in a future version.
-     * @param AbstractResourceEntityRepresentation $resource
-     * @param string $term
-     * @param ValueRepresentation|ValueRepresentation[]|null $values
-     * @return ValueRepresentation|ValueRepresentation[]|null
-     */
-    protected function filterValues(
-        AbstractResourceEntityRepresentation $resource,
-        $term,
-        $values
-    ) {
-        $args = [];
-        $args['prefix'] = $this->getMetadataPrefix();
-        $args['term'] = $term;
-        $args['resource'] = $resource;
-        $args['values'] = $values;
-
-        /** @var \ArrayObject $args */
-        $eventManager = $this->getEventManager();
-        $args = $eventManager->prepareArgs($args);
-        $eventManager->trigger('oaipmhrepository.values', $this, $args);
         return $args['values'];
     }
 

@@ -3,7 +3,7 @@
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
  * @copyright BibLibre, 2016
- * @copyright Daniel Berthereau, 2014-2018
+ * @copyright Daniel Berthereau, 2014-2022
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\Metadata;
@@ -127,7 +127,6 @@ class OaiDcterms extends AbstractMetadata
         foreach ($localNames as $localName) {
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
-            $termValues = $this->filterValues($item, $term, $termValues);
             foreach ($termValues as $value) {
                 list($text, $attributes) = $this->formatValue($value);
                 $this->appendNewElement($oai, $term, $text, $attributes);

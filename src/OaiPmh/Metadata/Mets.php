@@ -3,7 +3,7 @@
  * @author John Flatness
  * @copyright Copyright 2012 John Flatness
  * @copyright BibLibre, 2016
- * @copyright Daniel Berthereau, 2014-2018
+ * @copyright Daniel Berthereau, 2014-2022
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\Metadata;
@@ -155,7 +155,6 @@ class Mets extends AbstractMetadata
         foreach ($localNames as $localName) {
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
-            $termValues = $this->filterValues($resource, $term, $termValues);
             foreach ($termValues as $value) {
                 list($text, $attributes) = $this->formatValue($value);
                 $this->appendNewElement($dataXml, 'dc:' . $localName, $text, $attributes);
@@ -235,7 +234,6 @@ class Mets extends AbstractMetadata
         foreach ($localNames as $localName) {
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
-            $termValues = $this->filterValues($resource, $term, $termValues);
             foreach ($termValues as $value) {
                 list($text, $attributes) = $this->formatValue($value);
                 $this->appendNewElement($dataXml, $term, $text, $attributes);
