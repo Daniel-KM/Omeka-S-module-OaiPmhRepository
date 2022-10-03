@@ -47,6 +47,17 @@ class SimpleXml extends AbstractMetadata
             $usedVocabularies[strtok($term, ':')] = null;
         }
 
+        // When media are exposed, include their vocabularies.
+        if ($this->params['expose_media']) {
+            $medias = $item->media();
+            foreach ($medias as $media) {
+                $mediaValues = $this->filterValuesPre($media);
+                foreach (array_keys($mediaValues) as $term) {
+                    $usedVocabularies[strtok($term, ':')] = null;
+                }
+            }
+        }
+
         // Keep omeka, dcterms and dctype first and order alphabetically.
         $usedVocabularies = array_intersect_key($this->params['simple_xml']['vocabularies'], $usedVocabularies);
 
@@ -83,6 +94,39 @@ class SimpleXml extends AbstractMetadata
         $appendIdentifier = $this->singleIdentifier($item);
         if ($appendIdentifier) {
             $this->appendNewElement($oai, 'dcterms:identifier', $appendIdentifier, ['xsi:type' => 'dcterms:URI']);
+        }
+
+        // Append medias if needed.
+        if ($this->params['expose_media']) {
+            foreach ($medias as $media) {
+                $meta = $this->mainResourceMetadata($media);
+                $meta['o:ingester'] = $media->ingester();
+                $meta['o:renderer'] = $media->renderer();
+                $meta['o:source'] = $media->source();
+                $meta['o:media_type'] = $media->mediaType();
+                $meta['o:sha256'] = $media->sha256();
+                $meta['o:size'] = $media->size();
+                $meta['o:filename'] = $media->filename();
+                $meta['o:lang'] = $media->lang();
+                $meta['o:alt_text'] = $media->altText();
+                $meta['o:original_url'] = $media->originalUrl();
+                if ($meta['o:title'] === $meta['o:source']) {
+                    unset($meta['o:title']);
+                }
+                $meta = array_filter($meta);
+                $mediaNode = $this->appendNewElement($oai, 'o:media', null, $meta);
+                $values = $this->filterValuesPre($media);
+                foreach ($values as $term => $propertyData) {
+                    foreach ($propertyData['values'] as $value) {
+                        list($text, $attributes) = $this->formatValue($value);
+                        $this->appendNewElement($mediaNode, $term, $text, $attributes);
+                    }
+                }
+                $data = $media->mediaData();
+                if ($data) {
+                    $this->appendNewElement($mediaNode, 'o:data', json_encode($data, 320), ['status' => 'experimental']);
+                }
+            }
         }
     }
 
