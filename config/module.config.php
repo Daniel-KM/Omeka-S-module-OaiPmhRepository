@@ -128,7 +128,7 @@ return [
                 'mods',
             ],
             'oaipmhrepository_map_properties' => [
-                '# Quick mapping between Bibliographic Ontology and Dublin Core terms',
+                '# Quick mapping between Bibliographic Ontology (bibo) and Dublin Core terms. See https://www.bibliontology.com/',
                 'bibo:abstract' => 'dcterms:abstract',
                 'bibo:affirmedBy' => 'dcterms:relation',
                 'bibo:annotates' => 'dcterms:description',
@@ -196,6 +196,71 @@ return [
                 'bibo:upc' => 'dcterms:identifier',
                 'bibo:uri' => 'dcterms:identifier',
                 'bibo:volume' => 'dcterms:format',
+
+                // Alert: Warning, the version on http://xmlns.com/foaf/0.1/ is outdated (2004)! Use the 2014 one on archive.org.
+                '# Quick mapping between Friend of a Friend (foaf) and Dublin Core terms. See https://web.archive.org/web/20220620163542/http://xmlns.com/foaf/spec/20140114.html',
+                'foaf:account' => 'dcterms:identifier', // Online Accounts / IM // Social Web
+                'foaf:accountName' => 'dcterms:identifier', // Online Accounts / IM // Social Web
+                'foaf:accountServiceHomepage' => 'dcterms:references', // Online Accounts / IM // Social Web
+                'foaf:age' => 'dcterms:extent', // Personal Info // Core / Agent
+                'foaf:aimChatID' => 'dcterms:identifier', // Online Accounts / IM
+                'foaf:based_near' => 'dcterms:spatial', // Personal Info // Core / Agent
+                'foaf:birthday' => 'dcterms:issued', // Personal Info
+                'foaf:currentProject' => 'dcterms:requires', // Personal Info // Social Web
+                'foaf:depiction' => 'dcterms:description', // Basics // Core / Agent
+                'foaf:depicts' => 'dcterms:description', // Basics // Core / Agent
+                'foaf:dnaChecksum' => 'dcterms:identifier', // Personal Info // archaic
+                'foaf:family_name' => 'dcterms:title', // Basics // archaic
+                'foaf:familyName' => 'dcterms:title', // Basics // Core / Agent
+                'foaf:firstName' => 'dcterms:title', // Basics
+                'foaf:focus' => 'dcterms:subject', // Personal Info // Linked Data utiliies
+                'foaf:fundedBy' => 'dcterms:isReferencedBy', // Projects and Groups // archaic
+                'foaf:geekcode' => 'dcterms:abstract', // Personal Info // archaic
+                'foaf:gender' => 'dcterms:format', // Personal Info
+                'foaf:givenName' => 'dcterms:title', // Basics // Core / Agent
+                'foaf:givenname' => 'dcterms:title', // Basics // archaic
+                'foaf:holdsAccount' => 'dcterms:identifier', // Online Accounts / IM // archaic
+                'foaf:homepage' => 'dcterms:references', // Basics // Social Web
+                'foaf:icqChatID' => 'dcterms:identifier', // Online Accounts / IM
+                'foaf:img' => 'dcterms:hasFormat', // Basics // Core / Agent
+                'foaf:interest' => 'dcterms:subject', // Personal Info // Social Web
+                'foaf:isPrimaryTopicOf' => 'dcterms:isReferencedBy', // Documents and Images // Core / Agent
+                'foaf:jabberID' => 'dcterms:identifier', // Online Accounts / IM // Social Web
+                'foaf:knows' => 'dcterms:relation', // Personal Info // Core / Agent
+                'foaf:lastName' => 'dcterms:title', // Basics
+                'foaf:logo' => 'dcterms:hasFormat', // Documents and Images // Social Web
+                'foaf:made' => 'dcterms:isReferencedBy', // Documents and Images // Core / Agent
+                'foaf:maker' => 'dcterms:creator', // Documents and Images // Core / Agent
+                'foaf:mbox' => 'dcterms:identifier', // Basics // Social Web
+                'foaf:mbox_sha1sum' => 'dcterms:identifier', // Basics // Social Web
+                'foaf:member' => 'dcterms:isPartOf', // Projects and Groups // Core / Project
+                'foaf:membershipClass' => 'dcterms:isPartOf', // Projects and Groups
+                'foaf:msnChatID' => 'dcterms:identifier', // Online Accounts / IM
+                'foaf:myersBriggs' => 'dcterms:abstract', // Personal Info
+                'foaf:name' => 'dcterms:title', // Basics // Core / Agent
+                'foaf:nick' => 'dcterms:alternative', // Basics // Social Web
+                'foaf:openid' => 'dcterms:identifier', // Online Accounts / IM // Social Web
+                'foaf:page' => 'dcterms:references', // Documents and Images // Social Web
+                'foaf:pastProject' => 'dcterms:requires', // Personal Info // Social Web
+                'foaf:phone' => 'dcterms:identifier', // Basics
+                'foaf:plan' => 'dcterms:abstract', // Personal Info
+                'foaf:primaryTopic' => 'dcterms:subject', // Documents and Images // Core / Agent
+                'foaf:publications' => 'dcterms:references', // Personal Info // Social Web
+                'foaf:schoolHomepage' => 'dcterms:references', // Personal Info // Social Web
+                'foaf:sha1' => 'dcterms:identifier', // Documents and Images // Social Web
+                'foaf:skypeID' => 'dcterms:identifier', // Online Accounts / IM
+                'foaf:status' => 'dcterms:medium', // Personal Info
+                'foaf:surname' => 'dcterms:alternative', // Basics // archaic
+                'foaf:theme' => 'dcterms:subject', // Projects and Groups // archaic
+                'foaf:thumbnail' => 'dcterms:hasFormat', // Documents and Images // Social Web
+                'foaf:tipjar' => 'dcterms:identifier', // Documents and Images // Social Web
+                'foaf:title' => 'dcterms:title', // Basics // Core / Agent
+                'foaf:topic' => 'dcterms:subject', // Documents and Images // Social Web
+                'foaf:topic_interest' => 'dcterms:subject', // Personal Info // Social Web
+                'foaf:weblog' => 'dcterms:references', // Personal Info // Social Web
+                'foaf:workInfoHomepage' => 'dcterms:references', // Personal Info // Social Web
+                'foaf:workplaceHomepage' => 'dcterms:references', // Personal Info // Social Web
+                'foaf:yahooChatID' => 'dcterms:identifier', // Online Accounts / IM
             ],
             'oaipmhrepository_format_resource' => 'url_attr_title',
             'oaipmhrepository_format_resource_property' => 'dcterms:identifier',
