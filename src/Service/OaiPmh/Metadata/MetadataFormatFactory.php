@@ -56,6 +56,18 @@ class MetadataFormatFactory implements FactoryInterface
                     'data_media' => $settings->get('oaipmhrepository_mets_data_media', 'dcterms'),
                 ];
                 break;
+            case 'simple_xml':
+                $api = $services->get('Omeka\ApiManager');
+                $vocabulariesPrefixes = $api->search('vocabularies', ['sort_by' => 'prefix', 'sort_order' => 'asc'], ['returnScalar' => 'prefix'])->getContent();
+                $vocabulariesNamespaceUri = $api->search('vocabularies', ['sort_by' => 'prefix', 'sort_order' => 'asc'], ['returnScalar' => 'namespaceUri'])->getContent();
+                // Keep dcterms first.
+                $vocabularies = [
+                    'dcterms' => 'http://purl.org/dc/terms/',
+                ] + array_combine($vocabulariesPrefixes, $vocabulariesNamespaceUri);
+                $params['simple_xml'] = [
+                    'vocabularies' => $vocabularies,
+                ];
+                break;
             default:
                 // nothing.
         }

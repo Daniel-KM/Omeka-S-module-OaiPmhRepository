@@ -87,6 +87,7 @@ return [
                 OaiPmh\Metadata\Mods::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
                 OaiPmh\Metadata\OaiDc::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
                 OaiPmh\Metadata\OaiDcterms::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
+                OaiPmh\Metadata\SimpleXml::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
             ],
             'aliases' => [
                 'cdwalite' => OaiPmh\Metadata\CdwaLite::class,
@@ -94,6 +95,7 @@ return [
                 'mods' => OaiPmh\Metadata\Mods::class,
                 'oai_dc' => OaiPmh\Metadata\OaiDc::class,
                 'oai_dcterms' => OaiPmh\Metadata\OaiDcterms::class,
+                'simple_xml' => OaiPmh\Metadata\SimpleXml::class,
             ],
         ],
         'oai_set_formats' => [
@@ -110,6 +112,7 @@ return [
                 'mets',
                 'mods',
                 'oai_dcterms',
+                'simple_xml',
             ],
             'oaipmhrepository_expose_media' => true,
             'oaipmhrepository_hide_empty_sets' => true,
@@ -126,6 +129,7 @@ return [
                 'mets',
                 'cdwalite',
                 'mods',
+                'simple_xml',
             ],
             'oaipmhrepository_map_properties' => [
                 '# Quick mapping between Bibliographic Ontology (bibo) and Dublin Core terms. See https://www.bibliontology.com/',
