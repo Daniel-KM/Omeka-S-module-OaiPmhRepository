@@ -18,6 +18,7 @@ class MetadataFormatFactory implements FactoryInterface
         $oaiSetManager = $services->get('OaiPmhRepository\OaiPmh\OaiSetManager');
         $oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'base'));
 
+        /** @var \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata $metadataFormat */
         $metadataFormat = new $requestedName();
         $prefix = $metadataFormat->getMetadataPrefix();
 
@@ -39,6 +40,16 @@ class MetadataFormatFactory implements FactoryInterface
         ];
 
         switch ($prefix) {
+            case 'oai_dc':
+                $params['oai_dc'] = [
+                    'bnf_vignette' => $settings->get('oaipmhrepository_oai_dc_bnf_vignette', 'none') ?: 'none',
+                ];
+                break;
+            case 'oai_dcterms':
+                $params['oai_dcterms'] = [
+                    'bnf_vignette' => $settings->get('oaipmhrepository_oai_dcterms_bnf_vignette', 'none') ?: 'none',
+                ];
+                break;
             case 'mets':
                 $params['mets'] = [
                     'data_item' => $settings->get('oaipmhrepository_mets_data_item', 'dcterms'),

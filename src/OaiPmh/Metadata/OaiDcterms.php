@@ -119,6 +119,8 @@ class OaiDcterms extends AbstractMetadata
             'accrualPolicy',
         ];
 
+        $bnfVignette = $this->params['oai_dcterms']['bnf_vignette'];
+
         /* Must create elements using createElement to make DOM allow a
          * top-level xmlns declaration instead of wasteful and non-
          * compliant per-node declarations.
@@ -130,6 +132,12 @@ class OaiDcterms extends AbstractMetadata
             foreach ($termValues as $value) {
                 list($text, $attributes) = $this->formatValue($value);
                 $this->appendNewElement($oai, $term, $text, $attributes);
+            }
+            if ($bnfVignette !== 'none' && $localName === 'relation') {
+                $thumbnail = $item->thumbnailDisplayUrl($bnfVignette);
+                if ($thumbnail) {
+                    $this->appendNewElement($oai, 'dcterms:relation', 'vignette : ' . $thumbnail, []);
+                }
             }
         }
 

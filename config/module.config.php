@@ -265,6 +265,8 @@ return [
             'oaipmhrepository_format_resource' => 'url_attr_title',
             'oaipmhrepository_format_resource_property' => 'dcterms:identifier',
             'oaipmhrepository_format_uri' => 'uri_attr_label',
+            'oaipmhrepository_oai_dc_bnf_vignette' => 'none',
+            'oaipmhrepository_oai_dcterms_bnf_vignette' => 'none',
             'oaipmhrepository_mets_data_item' => 'dcterms',
             'oaipmhrepository_mets_data_media' => 'dcterms',
             'oaipmhrepository_human_interface' => true,

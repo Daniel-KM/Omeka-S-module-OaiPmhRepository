@@ -293,6 +293,43 @@ Books = resource_template_id[]=3
             ])
 
             ->add([
+                'name' => 'oaipmhrepository_oai_dc_bnf_vignette',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'label' => 'Dublin Core: Append the url of the thumbnail for BnF', // @translate
+                    'info' => 'For compliance with the non-standard recommandations of the Bibliothèque nationale de France, the url of the main thumbnail may be automatically included to records.', // @translate
+                    'documentation' => 'https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf',
+                    'value_options' => [
+                        'none' => 'None', // @translate
+                        'large' => 'Large', // @translate
+                        'medium' => 'Medium', // @translate
+                        'square' => 'Square', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dc_bnf_vignette',
+                    'value' => 'none',
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_oai_dcterms_bnf_vignette',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'label' => 'Dublin Core terms: Append the url of the thumbnail for BnF', // @translate
+                    'value_options' => [
+                        'none' => 'None', // @translate
+                        'large' => 'Large', // @translate
+                        'medium' => 'Medium', // @translate
+                        'square' => 'Square', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dcterms_bnf_vignette',
+                    'value' => 'none',
+                ],
+            ])
+
+            ->add([
                 'name' => 'oaipmhrepository_mets_data_item',
                 'type' => Element\Radio::class,
                 'options' => [

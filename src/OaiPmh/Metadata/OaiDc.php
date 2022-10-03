@@ -70,6 +70,8 @@ class OaiDc extends AbstractMetadata
             'rights',
         ];
 
+        $bnfVignette = $this->params['oai_dc']['bnf_vignette'];
+
         /* Must create elements using createElement to make DOM allow a
          * top-level xmlns declaration instead of wasteful and non-
          * compliant per-node declarations.
@@ -81,6 +83,12 @@ class OaiDc extends AbstractMetadata
             foreach ($termValues as $value) {
                 list($text, $attributes) = $this->formatValue($value);
                 $this->appendNewElement($oai, 'dc:' . $localName, $text, $attributes);
+            }
+            if ($bnfVignette !== 'none' && $localName === 'relation') {
+                $thumbnail = $item->thumbnailDisplayUrl($bnfVignette);
+                if ($thumbnail) {
+                    $this->appendNewElement($oai, 'dc:relation', 'vignette : ' . $thumbnail, []);
+                }
             }
         }
 

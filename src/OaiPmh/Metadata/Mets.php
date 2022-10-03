@@ -58,7 +58,7 @@ class Mets extends AbstractMetadata
         $metadataSection->setAttribute('ID', (string) $itemDmdId);
         $dataWrap = $this->appendNewElement($metadataSection, 'mdWrap');
 
-        $itemDataFormat = $this->params['mets_data_item'];
+        $itemDataFormat = $this->params['mets']['data_item'];
         switch ($itemDataFormat) {
             default:
             case 'dcterms':
@@ -74,7 +74,7 @@ class Mets extends AbstractMetadata
         if ($this->params['expose_media']) {
             $mediaList = $item->media();
             if (count($mediaList)) {
-                $mediaDataFormat = $this->params['mets_data_media'];
+                $mediaDataFormat = $this->params['mets']['data_media'];
 
                 $fileSection = $this->appendNewElement($mets, 'fileSec');
                 $fileGroup = $this->appendNewElement($fileSection, 'fileGrp');
