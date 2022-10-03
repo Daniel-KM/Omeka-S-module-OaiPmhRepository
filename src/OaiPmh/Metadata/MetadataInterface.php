@@ -16,7 +16,7 @@ interface MetadataInterface
     /**
      * @return OaiSetInterface $oaiSet
      */
-    public function getOaiSet();
+    public function getOaiSet(): OaiSetInterface;
 
     /**
      * Returns the OAI-PMH metadata prefix for the output format.

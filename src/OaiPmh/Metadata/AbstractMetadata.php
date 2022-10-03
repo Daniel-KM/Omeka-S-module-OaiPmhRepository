@@ -65,9 +65,11 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     protected $oaiSet;
 
     /**
+     * The repository is global by default.
+     *
      * @var bool
      */
-    protected $isGlobalRepository;
+    protected $isGlobalRepository = true;
 
     /**
      * @var array
@@ -80,19 +82,21 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         return $this;
     }
 
-    public function setOaiSet(OaiSetInterface $oaiSet): void
+    public function setOaiSet(OaiSetInterface $oaiSet)
     {
         $this->oaiSet = $oaiSet;
+        return $this;
     }
 
-    public function getOaiSet()
+    public function getOaiSet(): OaiSetInterface
     {
         return $this->oaiSet;
     }
 
-    public function setIsGlobalRepository($isGlobalRepository): void
+    public function setIsGlobalRepository($isGlobalRepository)
     {
         $this->isGlobalRepository = $isGlobalRepository;
+        return $this;
     }
 
     public function setParams(array $params): MetadataInterface
@@ -101,7 +105,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         return $this;
     }
 
-    public function declareMetadataFormat(DOMElement $parent): void
+    public function declareMetadataFormat(DOMElement $parent)
     {
         $elements = [
             'metadataPrefix' => $this->getMetadataPrefix(),
@@ -109,6 +113,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
             'metadataNamespace' => $this->getMetadataNamespace(),
         ];
         $this->createElementWithChildren($parent, 'metadataFormat', $elements);
+        return $this;
     }
 
     /**
@@ -118,11 +123,12 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      *
      * @param ArrayObject $query
      */
-    public function filterList(ArrayObject $query): void
+    public function filterList(ArrayObject $query)
     {
+        return $this;
     }
 
-    public function appendRecord(DOMElement $parent, ItemRepresentation $item): void
+    public function appendRecord(DOMElement $parent, ItemRepresentation $item)
     {
         $document = $parent->ownerDocument;
         $record = $document->createElement('record');
@@ -132,9 +138,10 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $metadata = $document->createElement('metadata');
         $record->appendChild($metadata);
         $this->appendMetadata($metadata, $item);
+        return $this;
     }
 
-    public function appendHeader(DOMElement $parent, ItemRepresentation $item): void
+    public function appendHeader(DOMElement $parent, ItemRepresentation $item)
     {
         $headerData = [];
         $headerData['identifier'] = OaiIdentifier::itemToOaiId($item->id());
@@ -151,14 +158,15 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         foreach ($setSpecs as $setSpec) {
             $this->appendNewElement($header, 'setSpec', $setSpec);
         }
+        return $this;
     }
 
-    protected function isGlobalRepository()
+    protected function isGlobalRepository(): bool
     {
         return $this->isGlobalRepository;
     }
 
-    protected function singleIdentifier(AbstractResourceEntityRepresentation $resource)
+    protected function singleIdentifier(AbstractResourceEntityRepresentation $resource): ?string
     {
         if ($this->isGlobalRepository()) {
             $append = $this->params['append_identifier_global'];
@@ -168,10 +176,9 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                     return $resource->apiUrl();
                 case 'relative_site_url':
                 case 'absolute_site_url':
-                    if ($this->params['main_site_slug']) {
-                        return $resource->siteUrl($this->params['main_site_slug'], $append === 'absolute_site_url');
-                    }
-                    break;
+                    return $this->params['main_site_slug']
+                        ? $resource->siteUrl($this->params['main_site_slug'], $append === 'absolute_site_url')
+                        : null;
             }
         } else {
             switch ($this->params['append_identifier_site']) {
@@ -370,7 +377,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     protected function filterValuesPre(
         AbstractResourceEntityRepresentation $resource
-    ) {
+    ): array {
         $args = [];
         $args['prefix'] = $this->getMetadataPrefix();
         $args['resource'] = $resource;
