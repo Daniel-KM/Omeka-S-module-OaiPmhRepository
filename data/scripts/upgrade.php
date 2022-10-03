@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace OaiPmhRepository;
 
 use Omeka\Mvc\Controller\Plugin\Messenger;
@@ -21,9 +22,8 @@ $connection = $services->get('Omeka\Connection');
 $entityManager = $services->get('Omeka\EntityManager');
 $plugins = $services->get('ControllerPluginManager');
 $api = $plugins->get('api');
-$space = strtolower(__NAMESPACE__);
 
-$defaultSettings = $config[$space]['config'];
+$defaultSettings = $config['oaipmhrepository']['config'];
 
 if (version_compare($oldVersion, '0.3', '<')) {
     $connection = $serviceLocator->get('Omeka\Connection');
@@ -32,7 +32,7 @@ ALTER TABLE oai_pmh_repository_token CHANGE id id INT AUTO_INCREMENT NOT NULL, C
 DROP INDEX expiration ON oai_pmh_repository_token;
 CREATE INDEX IDX_E9AC4F9524CD504D ON oai_pmh_repository_token (expiration);
 SQL;
-    $connection->exec($sql);
+    $connection->executeStatement($sql);
 
     $settings->set('oaipmhrepository_name', $settings->get('oaipmh_repository_name',
         $settings->get('installation_title')));
@@ -71,7 +71,7 @@ if (version_compare($oldVersion, '3.2.2', '<')) {
     $sql = <<<'SQL'
 ALTER TABLE oai_pmh_repository_token CHANGE `set` `set` VARCHAR(190) DEFAULT NULL;
 SQL;
-    $connection->exec($sql);
+    $connection->executeStatement($sql);
 
     $settings->set('oaipmhrepository_append_identifier_global',
         $defaultSettings['oaipmhrepository_append_identifier_global']);
@@ -114,4 +114,56 @@ if (version_compare($oldVersion, '3.3.5.6', '<')) {
         'It is now possible to define oai sets with a specific list of item sets or with a list of search queries.' // @translate
     );
     $messenger->addWarning($message);
+}
+
+if (version_compare($oldVersion, '3.3.6', '<')) {
+    $messenger = new Messenger();
+    $message = new Message(
+        'A simple mapping of foaf properties to Dublin Core has been added to the default config. It allows to publish, for example, common metadata of people.' // @translate
+    );
+    $messenger->addSuccess($message);
+
+    // Update the mapping if this is the original one.
+    $mapProperties = $settings->get('oaipmhrepository_map_properties');
+    $mapPropertiesOriginal = $defaultSettings['oaipmhrepository_map_properties'];
+    if ($mapProperties
+        && count($mapPropertiesOriginal) === 68
+        && array_slice($mapProperties, 1, 67, true) === array_slice($mapPropertiesOriginal, 1, 67, true)
+    ) {
+        $settings->set('oaipmhrepository_map_properties', $mapPropertiesOriginal);
+    } else {
+        $message = new Message(
+            'You can copy the %1$sdefault mapping foaf to dcterms%2$s in the config of the module if needed.', // @translate
+            '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130" target="_blank">',
+            '</a>'
+        );
+        $message->setEscapeHtml(false);
+        $messenger->addWarning($message);
+    }
+
+    $message = new Message(
+        'An option was added to append a thumbnail url according to the non-standard %1$srecommandation%2$s of the Bibliothèque nationale de France.', // @translate
+        '<a href="https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf" target="_blank">',
+        '</a>'
+    );
+    $message->setEscapeHtml(false);
+    $messenger->addSuccess($message);
+
+    $message = new Message(
+        'The deprecated event "oaipmhrepository.values" was removed. Use "oaipmhrepository.values.pre" instead.' // @translate
+    );
+    $messenger->addWarning($message);
+
+    $metadataFormats = $settings->get('oaipmhrepository_metadata_formats', []);
+    $metadataFormats[] = 'simple_xml';
+    $settings->set('oaipmhrepository_metadata_formats', $metadataFormats);
+
+    $urlHelper = $services->get('ViewHelperManager')->get('url');
+    $message = new Message(
+        'A new output metadata format was added, "simple_xml", that contains all the values in a simple xml, not only the dublin core ones. You can disabled it in the %1$sconfig of the module%2$s.', // @translate
+        '<a href="' . $urlHelper('admin/default', ['controller' => 'module', 'action' => 'configure'], ['query' => ['id' => 'OaiPmhRepository']]) . '">',
+        '</a>'
+    );
+    $message->setEscapeHtml(false);
+    $messenger->addSuccess($message);
 }
