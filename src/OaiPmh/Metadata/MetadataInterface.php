@@ -29,7 +29,7 @@ interface MetadataInterface
      *
      * @return string Metadata prefix
      */
-    public function getMetadataPrefix();
+    public function getMetadataPrefix(): string;
 
     /**
      * Appends a metadataFormat element to the document.

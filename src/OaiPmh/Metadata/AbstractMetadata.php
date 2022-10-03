@@ -32,6 +32,27 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     use EventManagerAwareTrait;
 
     /**
+     * OAI-PMH metadata prefix
+     *
+     * @var string
+     */
+    const METADATA_PREFIX = null;
+
+    /**
+     * XML namespace for output format
+     *
+     * @var string
+     */
+    const METADATA_NAMESPACE = null;
+
+    /**
+     * XML schema for output format
+     *
+     * @var string
+     */
+    const METADATA_SCHEMA = null;
+
+    /**
      * @var SettingsInterface
      */
     protected $settings;
@@ -396,19 +417,33 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     abstract public function appendMetadata(DOMElement $parent, ItemRepresentation $item);
 
-    abstract public function getMetadataPrefix();
+    /**
+     * Returns the metadata prefix for the output format.
+     *
+     * @return string Metadata prefix
+     */
+    public function getMetadataPrefix(): string
+    {
+        return static::METADATA_PREFIX;
+    }
 
     /**
      * Returns the XML schema for the output format.
      *
      * @return string XML schema URI
      */
-    abstract public function getMetadataSchema();
+    public function getMetadataSchema(): string
+    {
+        return static::METADATA_SCHEMA;
+    }
 
     /**
      * Returns the XML namespace for the output format.
      *
      * @return string XML namespace URI
      */
-    abstract public function getMetadataNamespace();
+    public function getMetadataNamespace(): string
+    {
+        return static::METADATA_NAMESPACE;
+    }
 }

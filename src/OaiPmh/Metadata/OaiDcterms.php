@@ -16,6 +16,7 @@ use Omeka\Api\Representation\ItemRepresentation;
  * oai_dcterms is output of the 55 Dublin Core terms.
  *
  * This format is not standardized, but used by some repositories.
+ *
  * Note: the namespace and the schema don’t exist. It is designed as an extended
  * version of oai_dc.
  *
@@ -144,20 +145,5 @@ class OaiDcterms extends AbstractMetadata
                 $this->appendNewElement($oai, 'dcterms:identifier', $media->originalUrl(), ['xsi:type' => 'dcterms:URI']);
             }
         }
-    }
-
-    public function getMetadataPrefix()
-    {
-        return self::METADATA_PREFIX;
-    }
-
-    public function getMetadataSchema()
-    {
-        return self::METADATA_SCHEMA;
-    }
-
-    public function getMetadataNamespace()
-    {
-        return self::METADATA_NAMESPACE;
     }
 }

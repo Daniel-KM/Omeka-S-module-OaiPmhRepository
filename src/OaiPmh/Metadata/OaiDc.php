@@ -97,19 +97,4 @@ class OaiDc extends AbstractMetadata
             }
         }
     }
-
-    public function getMetadataPrefix()
-    {
-        return self::METADATA_PREFIX;
-    }
-
-    public function getMetadataSchema()
-    {
-        return self::METADATA_SCHEMA;
-    }
-
-    public function getMetadataNamespace()
-    {
-        return self::METADATA_NAMESPACE;
-    }
 }

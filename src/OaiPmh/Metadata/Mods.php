@@ -211,19 +211,4 @@ class Mods extends AbstractMetadata
     {
         return strncmp($text, 'http://', 7) || strncmp($text, 'https://', 8);
     }
-
-    public function getMetadataPrefix()
-    {
-        return self::METADATA_PREFIX;
-    }
-
-    public function getMetadataSchema()
-    {
-        return self::METADATA_SCHEMA;
-    }
-
-    public function getMetadataNamespace()
-    {
-        return self::METADATA_NAMESPACE;
-    }
 }
