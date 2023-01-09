@@ -153,7 +153,7 @@ class SimpleXml extends AbstractMetadata
         foreach ($values as $term => $propertyData) {
             /** @var \Omeka\Api\Representation\ValueRepresentation $value */
             foreach ($propertyData['values'] as $value) {
-                list($text, $attributes) = $this->formatValue($value);
+                [$text, $attributes] = $this->formatValue($value);
                 $dataType = $value->type();
                 if ($dataType !== 'literal') {
                     $attributes['o:type'] = $dataType;

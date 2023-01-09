@@ -81,7 +81,7 @@ class OaiDc extends AbstractMetadata
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
             foreach ($termValues as $value) {
-                list($text, $attributes) = $this->formatValue($value);
+                [$text, $attributes] = $this->formatValue($value);
                 $this->appendNewElement($oai, 'dc:' . $localName, $text, $attributes);
             }
             if ($bnfVignette !== 'none' && $localName === 'relation') {

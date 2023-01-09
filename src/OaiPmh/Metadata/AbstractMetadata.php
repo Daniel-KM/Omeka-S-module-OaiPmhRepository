@@ -294,15 +294,14 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 $vUri = (string) $value->uri();
                 $v = (string) $value->value();
                 if (filter_var($vUri, FILTER_VALIDATE_URL)) {
-                  $v = strlen($v) ? $v : $vUri;
-                  $attributes['href'] = $vUri;
+                    $v = strlen($v) ? $v : $vUri;
+                    $attributes['href'] = $vUri;
                 } else {
-                  if (!$v) {
-                    $v = $vUri;
-                  } else {
-                    $v = $v . ': ' . $vUri;
-                  }
-
+                    if (!$v) {
+                        $v = $vUri;
+                    } else {
+                        $v = $v . ': ' . $vUri;
+                    }
                 }
                 break;
             case 'uri_attr_label':

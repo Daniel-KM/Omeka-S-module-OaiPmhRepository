@@ -156,7 +156,7 @@ class Mets extends AbstractMetadata
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
             foreach ($termValues as $value) {
-                list($text, $attributes) = $this->formatValue($value);
+                [$text, $attributes] = $this->formatValue($value);
                 $this->appendNewElement($dataXml, 'dc:' . $localName, $text, $attributes);
             }
         }
@@ -235,7 +235,7 @@ class Mets extends AbstractMetadata
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
             foreach ($termValues as $value) {
-                list($text, $attributes) = $this->formatValue($value);
+                [$text, $attributes] = $this->formatValue($value);
                 $this->appendNewElement($dataXml, $term, $text, $attributes);
             }
         }
