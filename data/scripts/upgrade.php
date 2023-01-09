@@ -2,31 +2,32 @@
 
 namespace OaiPmhRepository;
 
-use Omeka\Mvc\Controller\Plugin\Messenger;
 use Omeka\Stdlib\Message;
 
 /**
  * @var Module $this
- * @var \Laminas\ServiceManager\ServiceLocatorInterface $serviceLocator
+ * @var \Laminas\ServiceManager\ServiceLocatorInterface $services
  * @var string $newVersion
  * @var string $oldVersion
  *
+ * @var \Omeka\Api\Manager $api
+ * @var \Omeka\Settings\Settings $settings
  * @var \Doctrine\DBAL\Connection $connection
  * @var \Doctrine\ORM\EntityManager $entityManager
- * @var \Omeka\Api\Manager $api
+ * @var \Omeka\Mvc\Controller\Plugin\Messenger $messenger
  */
-$services = $serviceLocator;
-$settings = $services->get('Omeka\Settings');
-$config = require dirname(__DIR__, 2) . '/config/module.config.php';
-$connection = $services->get('Omeka\Connection');
-$entityManager = $services->get('Omeka\EntityManager');
 $plugins = $services->get('ControllerPluginManager');
 $api = $plugins->get('api');
+$settings = $services->get('Omeka\Settings');
+$connection = $services->get('Omeka\Connection');
+$messenger = $plugins->get('messenger');
+$entityManager = $services->get('Omeka\EntityManager');
 
-$defaultSettings = $config['oaipmhrepository']['config'];
+$defaultConfig = require dirname(__DIR__, 2) . '/config/module.config.php';
+$defaultSettings = $defaultConfig['oaipmhrepository']['config'];
 
 if (version_compare($oldVersion, '0.3', '<')) {
-    $connection = $serviceLocator->get('Omeka\Connection');
+    $connection = $services->get('Omeka\Connection');
     $sql = <<<'SQL'
 ALTER TABLE oai_pmh_repository_token CHANGE id id INT AUTO_INCREMENT NOT NULL, CHANGE verb verb VARCHAR(190) NOT NULL, CHANGE metadata_prefix metadata_prefix VARCHAR(190) NOT NULL, CHANGE `cursor` `cursor` INT NOT NULL, CHANGE `set` `set` INT DEFAULT NULL;
 DROP INDEX expiration ON oai_pmh_repository_token;
@@ -37,7 +38,7 @@ SQL;
     $settings->set('oaipmhrepository_name', $settings->get('oaipmh_repository_name',
         $settings->get('installation_title')));
     $settings->set('oaipmhrepository_namespace_id', $settings->get('oaipmhrepository_namespace_id',
-        $this->getServerNameWithoutProtocol($serviceLocator)));
+        $this->getServerNameWithoutProtocol($services)));
     $settings->set('oaipmhrepository_expose_media', $settings->get('oaipmh_repository_namespace_expose_files',
         $defaultSettings['oaipmhrepository_expose_media']));
     $settings->set('oaipmhrepository_list_limit',
@@ -67,7 +68,7 @@ if (version_compare($oldVersion, '0.3.1', '<')) {
 }
 
 if (version_compare($oldVersion, '3.2.2', '<')) {
-    $connection = $serviceLocator->get('Omeka\Connection');
+    $connection = $services->get('Omeka\Connection');
     $sql = <<<'SQL'
 ALTER TABLE oai_pmh_repository_token CHANGE `set` `set` VARCHAR(190) DEFAULT NULL;
 SQL;
@@ -91,7 +92,6 @@ if (version_compare($oldVersion, '3.3.0', '<')) {
 }
 
 if (version_compare($oldVersion, '3.3.5.2', '<')) {
-    $messenger = new Messenger();
     $message = new Message(
         'The event "oaipmhrepository.values" that may be used by other modules was deprecated and replaced by event "oaipmhrepository.values.pre".' // @translate
     );
@@ -109,7 +109,6 @@ if (version_compare($oldVersion, '3.3.5.2', '<')) {
 }
 
 if (version_compare($oldVersion, '3.3.5.6', '<')) {
-    $messenger = new Messenger();
     $message = new Message(
         'It is now possible to define oai sets with a specific list of item sets or with a list of search queries.' // @translate
     );
@@ -117,7 +116,6 @@ if (version_compare($oldVersion, '3.3.5.6', '<')) {
 }
 
 if (version_compare($oldVersion, '3.3.6', '<')) {
-    $messenger = new Messenger();
     $message = new Message(
         'A simple mapping of foaf properties to Dublin Core has been added to the default config. It allows to publish, for example, common metadata of people.' // @translate
     );

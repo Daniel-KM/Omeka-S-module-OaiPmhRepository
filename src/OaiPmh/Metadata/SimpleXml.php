@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 /**
- * @copyright Daniel Berthereau, 2014-2022
+ * @copyright Daniel Berthereau, 2014-2023
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\Metadata;

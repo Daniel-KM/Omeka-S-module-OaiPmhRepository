@@ -309,7 +309,7 @@ and many more.
 [OAI-PMH Repository plugin]: https://github.com/omeka/plugin-OaiPmhRepository
 [Omeka]: https://omeka.org/classic
 [BibLibre]: https://github.com/biblibre
-[Installing a module]: http://dev.omeka.org/docs/s/user-manual/modules/#installing-modules
+[Installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
 [Bootstrap]: https://getbootstrap.com
 [default mapping]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130
 [spreadsheet]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/foaf_to_dcterms.ods
