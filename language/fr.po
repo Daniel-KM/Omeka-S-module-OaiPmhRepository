@@ -152,7 +152,7 @@ msgid ""
 "An option was added to append a thumbnail url according to the non-standard "
 "%1$srecommandation%2$s of the Bibliothèque nationale de France."
 msgstr ""
-"Une option a été ajoutée pour inclure une url ves la vignette, conformément "
+"Une option a été ajoutée pour inclure une url vers la vignette, conformément "
 "aux %1$srecommandations%2$s non standard de la Bibliothèque nationale de "
 "France."
 
