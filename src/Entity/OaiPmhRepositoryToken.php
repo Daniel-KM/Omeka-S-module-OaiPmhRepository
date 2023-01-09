@@ -3,7 +3,7 @@
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
  * @author Daniel Berthereau <daniel.github@berthereau.net>
- * @copyright Daniel Berthereau, 2017-2018
+ * @copyright Daniel Berthereau, 2017-2023
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\Entity;

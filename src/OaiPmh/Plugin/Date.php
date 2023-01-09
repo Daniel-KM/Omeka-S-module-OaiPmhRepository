@@ -3,7 +3,7 @@
  * @author John Flatness
  * @copyright Copyright 2012 John Flatness
  * @copyright BibLibre, 2016
- * @copyright Daniel Berthereau, 2014-2018
+ * @copyright Daniel Berthereau, 2014-2023
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\Plugin;
