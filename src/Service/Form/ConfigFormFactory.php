@@ -20,7 +20,7 @@ class ConfigFormFactory implements FactoryInterface
             $formats[] = $format::METADATA_PREFIX;
         }
 
-        $form = new ConfigForm(null, $options);
+        $form = new ConfigForm(null, $options ?? []);
         return $form
             ->setMetadataFormats($formats)
             ->setOaiSetFormats($services->get(OaiSetManager::class)->getRegisteredNames());
