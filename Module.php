@@ -109,6 +109,11 @@ class Module extends AbstractModule
             'oaipmhrepository.values',
             [$this, 'filterOaiPmhRepositoryValues']
         );
+        $sharedEventManager->attach(
+            \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::class,
+            'oaipmhrepository.strings',
+            [$this, 'editOaiPmhRepositoryValues']
+        );
     }
 
     public function handleConfigForm(AbstractController $controller)
@@ -307,6 +312,54 @@ class Module extends AbstractModule
         }
         $event->setParam('values', $values);
     }
+
+	public function editOaiPmhRepositoryValues(Event $event): void{
+		static $value_mapping;
+		
+		    if (is_null($value_mapping)) {
+				$services = $this->getServiceLocator();
+				$settings = $services->get('Omeka\Settings');
+				$value_mapping = $settings->get('oaipmhrepository_map_values', []);
+				$value_splitting = $settings->get('oaipmhrepository_map_values', []);
+				
+				foreach ($value_mapping as $sourceValue => $destinationValue) {
+					if ($sourceValue === $destinationValue
+						|| mb_substr($sourceValue, 0, 1) === '#'
+					) {
+						unset($value_mapping[$sourceValue]);
+						continue;
+					}
+				}
+				foreach ($value_splitting as $sourceTerm => $delimiter) {
+					if (empty($sourceTerm)
+						|| empty($delimiter)
+						|| is_numeric($sourceTerm)
+						|| mb_substr($sourceTerm, 0, 1) === '#'
+						|| mb_substr($delimiter, 0, 1) != '"'
+					) {
+						unset($value_splitting[$sourceTerm]);
+						continue;
+					}
+					$property = $this->getProperty($sourceTerm);
+					if (!$property) {
+						unset($value_splitting[$sourceTerm]);
+						continue;
+					}
+				}
+			}
+        if (!count($value_mapping) && !count($value_splitting)) {
+            return;
+        }
+		
+		$string = $event->getParam('string', '');
+		$property = $event->getParam('property', '');
+
+		if (array_key_exists($string, $value_mapping)) {
+			$string = $value_mapping[$string];
+		}
+		
+		$event->setParam('string', $string);
+	}
 
     protected function getServerNameWithoutProtocol($serviceLocator)
     {

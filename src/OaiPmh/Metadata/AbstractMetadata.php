@@ -266,7 +266,9 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         if ($lang) {
             $attributes['xml:lang'] = $lang;
         }
-
+		
+        $v = $this->editStringValues($v, $value->property());
+		
         return [
             $v,
             $attributes,
@@ -398,6 +400,28 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $eventManager->trigger('oaipmhrepository.values.pre', $this, $args);
         return $args['values'];
     }
+	
+    /**
+     * Filter extracted string values of a resource before processing (remove, update or append).
+     *
+     * @param string $v
+	 * @param string $property
+     * @return string
+     */
+    protected function editStringValues(
+        string $v, $property
+    ): string {
+        $args = [];
+        $args['string'] = $v;
+		$args['property'] = $property;
+		
+        /** @var \ArrayObject $args */
+        $eventManager = $this->getEventManager();
+        $args = $eventManager->prepareArgs($args);
+        $eventManager->trigger('oaipmhrepository.strings', $this, $args);
+        return $args['string'];
+    }
+
 
     /**
      * Appends a metadata element, a child element with the required format, and
