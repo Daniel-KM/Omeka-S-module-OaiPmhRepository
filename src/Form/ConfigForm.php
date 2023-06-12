@@ -250,20 +250,20 @@ Books = resource_template_id[]=3
                     'rows' => 5,
                 ],
             ])
-            // ->add([
-                // 'name' => 'oaipmhrepository_split_properties',
-                // 'type' => OmekaElement\ArrayTextarea::class,
-                // 'options' => [
-                    // 'label' => 'Split these properties using these delimiters', // @translate
-                    // 'info' => 'Split these properties for OAI using a designated delimiter (property = quoted delimiter)', // @translate
-                    // 'as_key_value' => true,
-                // ],
-                // 'attributes' => [
-                    // 'id' => 'oaipmhrepository_split_properties',
-                    // 'placeholder' => 'creator = ", "',
-                    // 'rows' => 5,
-                // ],
-            // ])
+            ->add([
+                'name' => 'oaipmhrepository_split_properties',
+                'type' => OmekaElement\ArrayTextarea::class,
+                'options' => [
+                    'label' => 'Split these properties using these delimiters', // @translate
+                    'info' => 'Split these properties for OAI using a designated delimiter (property = quoted delimiter)', // @translate
+                    'as_key_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_split_properties',
+                    'placeholder' => 'creator = ", "',
+                    'rows' => 5,
+                ],
+            ])
 			
 
             ->add([

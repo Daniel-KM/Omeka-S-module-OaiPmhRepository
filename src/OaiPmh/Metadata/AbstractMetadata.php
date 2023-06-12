@@ -52,6 +52,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     const METADATA_SCHEMA = null;
 
+
     /**
      * @var ServiceLocatorInterface
      */
@@ -75,6 +76,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      * @var array
      */
     protected $params = [];
+
 
     public function setServices(ServiceLocatorInterface $services)
     {
@@ -206,6 +208,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     {
         $attributes = [];
         $type = $value->type();
+
         switch ($type) {
             case 'resource':
             case substr($type, 0, 8) === 'resource':
@@ -266,9 +269,9 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         if ($lang) {
             $attributes['xml:lang'] = $lang;
         }
-		
-        $v = $this->editStringValues($v, $value->property());
-		
+        
+        $v = $this->editStringValues($v, $value->jsonSerialize()['property_id']);
+        
         return [
             $v,
             $attributes,
@@ -298,6 +301,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 if (filter_var($vUri, FILTER_VALIDATE_URL)) {
                     $v = strlen($v) ? $v : $vUri;
                     $attributes['href'] = $vUri;
+					
                 } else {
                     if (!$v) {
                         $v = $vUri;
@@ -309,6 +313,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
             case 'uri_attr_label':
             default:
                 $v = (string) $value->uri();
+	
                 $attributes['xsi:type'] = 'dcterms:URI';
                 $w = (string) $value->value();
                 if (strlen($w)) {
@@ -321,7 +326,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         if ($lang) {
             $attributes['xml:lang'] = $lang;
         }
-
+		
         return [
             $v,
             $attributes,
@@ -401,6 +406,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         return $args['values'];
     }
 	
+
     /**
      * Filter extracted string values of a resource before processing (remove, update or append).
      *
@@ -410,11 +416,11 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     protected function editStringValues(
         string $v, $property
-    ): string {
+    ): string|array {
         $args = [];
         $args['string'] = $v;
-		$args['property'] = $property;
-		
+        $args['property'] = $property;
+        
         /** @var \ArrayObject $args */
         $eventManager = $this->getEventManager();
         $args = $eventManager->prepareArgs($args);
