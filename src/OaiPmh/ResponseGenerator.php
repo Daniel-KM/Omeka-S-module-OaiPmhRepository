@@ -464,14 +464,16 @@ class ResponseGenerator extends AbstractXmlGenerator
         $identifier = $this->_getParam('identifier');
         $metadataPrefix = $this->_getParam('metadataPrefix');
 
-        $itemId = OaiIdentifier::oaiIdToItem($identifier);
+        $oaiLocalId = OaiIdentifier::oaiIdToItem($identifier);
 
-        if (!$itemId) {
+        if (!$oaiLocalId) {
             $this->throwError(self::OAI_ERR_ID_DOES_NOT_EXIST);
             return;
         }
 
         $api = $this->serviceLocator->get('Omeka\ApiManager');
+
+        $itemId = $oaiLocalId;
 
         $data = [];
         $data['id'] = $itemId;
@@ -503,19 +505,15 @@ class ResponseGenerator extends AbstractXmlGenerator
      *
      * Outputs records for all of the items in the database in the specified
      * metadata format.
-     *
-     * @todo extend for additional metadata formats
      */
     private function listMetadataFormats(): void
     {
         $identifier = $this->_getParam('identifier');
-        /* Items are not used for lookup, simply checks for an invalid id */
+        // Items are not used for lookup, simply checks for an invalid id.
         if ($identifier) {
-            $itemId = OaiIdentifier::oaiIdToItem($identifier);
-
-            if (!$itemId) {
+            $oaiLocalId = OaiIdentifier::oaiIdToItem($identifier);
+            if (!$oaiLocalId) {
                 $this->throwError(self::OAI_ERR_ID_DOES_NOT_EXIST);
-
                 return;
             }
         }

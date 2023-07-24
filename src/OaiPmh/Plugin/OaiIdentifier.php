@@ -9,14 +9,15 @@
 namespace OaiPmhRepository\OaiPmh\Plugin;
 
 use DOMElement;
+use Omeka\Api\Representation\AbstractResourceEntityRepresentation;
 
 /**
  * Utility class for dealing with OAI identifiers.
  *
- * OaiIdentifier represents an instance of a unique identifier
- * for the repository conforming to the oai-identifier recommendation.  The class
- * can parse the local ID out of a given identifier string, or create a new
- * identifier by specifing the local ID of the item.
+ * OaiIdentifier represents an instance of a unique identifier for the
+ * repository conforming to the oai-identifier recommendation.
+ * The class can parse the local ID out of a given identifier string, or create
+ * a new identifier by specifing the local ID of the item.
  */
 class OaiIdentifier
 {
@@ -31,34 +32,41 @@ class OaiIdentifier
     }
 
     /**
-     * Converts the given OAI identifier to an Omeka item ID.
+     * Extract the oai local identifier from the given OAI identifier.
+     *
+     * The local identifier is generally the Omeka item ID, but it may be
+     * prefixed by a set identifier or it may be any specific identifier.
      *
      * @param string $oaiId OAI identifier
      *
-     * @return string Omeka item ID
+     * @return string The oai local identifier, generally the Omeka item ID.
      */
-    public static function oaiIdToItem($oaiId)
+    public static function oaiIdToItem($oaiId): ?string
     {
         $scheme = strtok($oaiId, ':');
         $namespaceId = strtok(':');
-        $localId = strtok(':');
-        if ($scheme != 'oai' || $namespaceId != self::$namespaceId || $localId < 0) {
+        // No need of mbstrings: they are forbidden by standard.
+        $localId = mb_substr($oaiId, mb_strlen($scheme . ':' . $namespaceId . ':'));
+        if ($scheme !== 'oai' || $namespaceId !== self::$namespaceId || !strlen($localId)) {
             return null;
         }
-
         return $localId;
     }
 
     /**
-     * Converts the given Omeka item ID to a OAI identifier.
+     * Converts the given Omeka item ID or any oai local id to a OAI identifier.
      *
-     * @param mixed $itemId Omeka item ID
+     * @param mixed $itemOrLocalId Omeka item or oai local identifier
      *
      * @return string OAI identifier
      */
-    public static function itemToOaiId($itemId)
+    public static function itemToOaiId($itemOrLocalId): string
     {
-        return 'oai:' . self::$namespaceId . ':' . $itemId;
+        if (!$itemOrLocalId instanceof AbstractResourceEntityRepresentation) {
+            return 'oai:' . self::$namespaceId . ':' . $itemOrLocalId;
+        }
+        $id = $itemOrLocalId->id();
+        return 'oai:' . self::$namespaceId . ':' . $id;
     }
 
     /**
@@ -73,7 +81,8 @@ class OaiIdentifier
             'scheme' => 'oai',
             'repositoryIdentifier' => self::$namespaceId,
             'delimiter' => ':',
-            'sampleIdentifier' => self::itemtoOaiId(1), ];
+            'sampleIdentifier' => self::itemtoOaiId(1),
+        ];
         $oaiIdentifier = $parentElement->ownerDocument->createElement('oai-identifier');
 
         foreach ($elements as $tag => $value) {
@@ -81,8 +90,8 @@ class OaiIdentifier
         }
         $parentElement->appendChild($oaiIdentifier);
 
-        //must set xmlns attribute manually to avoid DOM extension appending
-        //default: prefix to element name
+        // Must set xmlns attribute manually to avoid DOM extension appending
+        // default: prefix to element name.
         $oaiIdentifier->setAttribute('xmlns', self::OAI_IDENTIFIER_NAMESPACE_URI);
         $oaiIdentifier->setAttribute('xsi:schemaLocation',
             self::OAI_IDENTIFIER_NAMESPACE_URI . ' ' . self::OAI_IDENTIFIER_SCHEMA_URI);

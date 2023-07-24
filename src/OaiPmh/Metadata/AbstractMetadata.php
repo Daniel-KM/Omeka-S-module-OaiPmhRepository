@@ -144,7 +144,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     public function appendHeader(DOMElement $parent, ItemRepresentation $item)
     {
         $headerData = [];
-        $headerData['identifier'] = OaiIdentifier::itemToOaiId($item->id());
+        $headerData['identifier'] = OaiIdentifier::itemToOaiId($item);
 
         $datestamp = $item->modified();
         if (!$datestamp) {

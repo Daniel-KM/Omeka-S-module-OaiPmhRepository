@@ -191,7 +191,7 @@ class CdwaLite extends AbstractMetadata
         $this->appendNewElement($recordWrap, 'cdwalite:recordID', $item->id());
         $this->appendNewElement($recordWrap, 'cdwalite:recordType', 'item');
         $recordInfoWrap = $this->appendNewElement($recordWrap, 'cdwalite:recordInfoWrap');
-        $recordInfoID = $this->appendNewElement($recordInfoWrap, 'cdwalite:recordInfoID', OaiIdentifier::itemToOaiId($item->id()));
+        $recordInfoID = $this->appendNewElement($recordInfoWrap, 'cdwalite:recordInfoID', OaiIdentifier::itemToOaiId($item));
         $recordInfoID->setAttribute('cdwalite:type', 'oai');
 
         /* file link => resourceWrap->resourceSet->linkResource
