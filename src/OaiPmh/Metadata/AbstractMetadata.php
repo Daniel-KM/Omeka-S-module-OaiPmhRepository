@@ -290,6 +290,15 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
             case 'uri_label':
                 $v = trim($value->uri() . ' ' . $value->value());
                 break;
+            case 'label_only':
+                $v = trim((string) $value->value());
+                break;
+            case 'label_else_uri':
+                $v = trim((string) $value->value());
+                if (!strlen($v)) {
+                    $v = (string) $value->uri();
+                }
+                break;
             case 'label_attr_uri':
                 // For compatibility with many harvesters that don't manage
                 // attributes, the uri is kept when no label.

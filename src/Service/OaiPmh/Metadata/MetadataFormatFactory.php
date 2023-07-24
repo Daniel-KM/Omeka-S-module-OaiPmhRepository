@@ -48,7 +48,7 @@ class MetadataFormatFactory implements FactoryInterface
                     $classTypeTable = $viewHelpers->has('table') ? $viewHelpers->get('table')($classTypeTable) : null;
                     $classType = $classTypeTable ? 'table' : 'no';
                 } else {
-                    $classTypeTable =  null;
+                    $classTypeTable = null;
                 }
                 $params['oai_dc'] = [
                     'bnf_vignette' => $settings->get('oaipmhrepository_oai_dc_bnf_vignette', 'none') ?: 'none',
@@ -64,7 +64,7 @@ class MetadataFormatFactory implements FactoryInterface
                     $classTypeTable = $viewHelpers->has('table') ? $viewHelpers->get('table')($classTypeTable) : null;
                     $classType = $classTypeTable ? 'table' : 'no';
                 } else {
-                    $classTypeTable =  null;
+                    $classTypeTable = null;
                 }
                 $params['oai_dcterms'] = [
                     'bnf_vignette' => $settings->get('oaipmhrepository_oai_dcterms_bnf_vignette', 'none') ?: 'none',

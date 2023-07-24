@@ -284,6 +284,8 @@ Books = resource_template_id[]=3
                         'label_attr_uri' => 'Label as text and uri as attribute', // @translate
                         'uri_label' => 'Uri and label separated by a space', // @translate
                         'uri' => 'Uri only', // @translate
+                        'label_only' => 'Label only', // @translate
+                        'label_else_uri' => 'Label if any else uri', // @translate
                         'uri_as_text' => 'Uri only as text (BnF compliance: no attribute for uri)', // @translate
                         'html' => 'Html', // @translate
                     ],
