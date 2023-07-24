@@ -20,6 +20,12 @@ class ConfigForm extends Form
 
     public function init(): void
     {
+        $valueOptionFormats = $this->getMetadataFormats();
+        $valueOptionFormats = array_combine($valueOptionFormats, $valueOptionFormats);
+
+        $valueOptionOaiSets = $this->getOaiSetFormats();
+        $valueOptionOaiSets = array_combine($valueOptionOaiSets, array_map('ucfirst', $valueOptionOaiSets));
+
         $this
             ->add([
                 'name' => 'oaipmhrepository_name',
@@ -44,18 +50,15 @@ class ConfigForm extends Form
                     'id' => 'oaipmhrepository_namespace_id',
                     'required' => true,
                 ],
-            ]);
+            ])
 
-        $valueOptions = $this->getMetadataFormats();
-        $valueOptions = array_combine($valueOptions, $valueOptions);
-        $this
             ->add([
                 'name' => 'oaipmhrepository_metadata_formats',
                 'type' => Element\Select::class,
                 'options' => [
                     'label' => 'Metadata formats', // @translate
                     'info' => 'The format that will be made available. oai_dc is required.', // @translate
-                    'value_options' => $valueOptions,
+                    'value_options' => $valueOptionFormats,
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_metadata_formats',
@@ -186,18 +189,15 @@ Books = resource_template_id[]=3
                 'attributes' => [
                     'id' => 'oaipmhrepository_append_identifier_site',
                 ],
-            ]);
+            ])
 
-        $valueOptions = $this->getOaiSetFormats();
-        $valueOptions = array_combine($valueOptions, array_map('ucfirst', $valueOptions));
-        $this
             ->add([
                 'name' => 'oaipmhrepository_oai_set_format',
                 'type' => Element\Select::class,
                 'options' => [
                     'label' => 'Oai set format', // @translate
                     'info' => 'The format of the oai set identifiers.', // @translate
-                    'value_options' => $valueOptions,
+                    'value_options' => $valueOptionOaiSets,
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_oai_set_format',
@@ -248,7 +248,7 @@ Books = resource_template_id[]=3
                         'url_title' => 'Omeka url and title', // @translate
                         'title' => 'Title', // @translate
                         'url' => 'Omeka url', // @translate
-                        'url_as_text' => 'Omeka url without attribute (BnF compliance)', // @translate
+                        'url_as_text' => 'Omeka url as text', // @translate
                         'identifier' => 'Identifier (property below)', // @translate
                         'id' => 'Id', // @translate
                         'identifier_id' => 'Identifier or id', // @translate
@@ -341,7 +341,7 @@ Books = resource_template_id[]=3
                     'name' => 'oaipmhrepository_oai_table_class_type',
                     'type' => \Table\Form\Element\TablesSelect::class,
                     'options' => [
-                        'label' => 'Dublin Core: Table to use when option above is "main type"', // @translate
+                        'label' => 'Dublin Core: Table to use when option above is "table"', // @translate
                     ],
                     'attributes' => [
                         'id' => 'oaipmhrepository_oai_table_class_type',
