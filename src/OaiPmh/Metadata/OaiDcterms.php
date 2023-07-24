@@ -119,6 +119,8 @@ class OaiDcterms extends AbstractMetadata
             'accrualPolicy',
         ];
 
+        $classType = $this->params['oai_dcterms']['class_type'];
+        $classTypeTable = $this->params['oai_dcterms']['class_type_table'];
         $bnfVignette = $this->params['oai_dcterms']['bnf_vignette'];
         $formatUri = $this->params['format_uri'];
         $formatUriAttributes = in_array($formatUri, ['uri', 'uri_attr_label'])
@@ -131,15 +133,35 @@ class OaiDcterms extends AbstractMetadata
          */
         $values = $this->filterValuesPre($item);
         foreach ($localNames as $localName) {
+            $vals = [];
             $term = 'dcterms:' . $localName;
             $termValues = $values[$term]['values'] ?? [];
             foreach ($termValues as $value) {
                 [$text, $attributes] = $this->formatValue($value);
+                $vals[] = $text;
                 $this->appendNewElement($oai, $term, $text, $attributes);
             }
-            if ($bnfVignette !== 'none' && $localName === 'relation') {
+            // Option class as type.
+            if ($classType !== 'no' && $localName === 'type' && ($class = $item->resourceClass())) {
+                if ($classType === 'term') {
+                    $text = $class->term();
+                } elseif ($classType === 'local') {
+                    $text = $class->localName();
+                } elseif ($classType === 'label') {
+                    $text = $item->displayResourceClassLabel();
+                } elseif ($classType === 'table') {
+                    $text = $classTypeTable->labelFromCode($class->term());
+                } else {
+                    $text = null;
+                }
+                if ($text && !in_array($text, $vals)) {
+                    $this->appendNewElement($oai, 'dcterms:type', $text, []);
+                }
+            }
+            // Option BnF vignette.
+            elseif ($bnfVignette !== 'none' && $localName === 'relation') {
                 $thumbnail = $item->thumbnailDisplayUrl($bnfVignette);
-                if ($thumbnail) {
+                if ($thumbnail && !in_array($thumbnail, $vals)) {
                     $this->appendNewElement($oai, 'dcterms:relation', 'vignette : ' . $thumbnail, []);
                 }
             }

@@ -295,6 +295,60 @@ Books = resource_template_id[]=3
             ])
 
             ->add([
+                'name' => 'oaipmhrepository_oai_dc_class_type',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'label' => 'Dublin Core: Add the class as Dublin Core type', // @translate
+                    'info' => 'For compliance with non-standard requirements of BnF, use a table to map to main types.',
+                    'documentation' => 'https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf',
+                    'value_options' => [
+                        'no' => 'No', // @translate
+                        'term' => 'Term', // @translate
+                        'local' => 'Local name', // @translate
+                        'label' => 'Label', // @translate
+                        'table' => 'Map via module Table (for example map class to "text", "image", "sound", "video")', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dc_class_type',
+                    'value' => 'no',
+                ],
+            ])
+            ->add([
+                'name' => 'oaipmhrepository_oai_dcterms_class_type',
+                'type' => Element\Radio::class,
+                'options' => [
+                    'label' => 'Dublin Core terms: Add the class as Dublin Core type', // @translate
+                    'value_options' => [
+                        'no' => 'No', // @translate
+                        'term' => 'Term', // @translate
+                        'local' => 'Local name', // @translate
+                        'label' => 'Label', // @translate
+                        'table' => 'Map via module Table', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_dcterms_class_type',
+                    'value' => 'no',
+                ],
+            ])
+        ;
+        if (class_exists('Table\Form\Element\TablesSelect')) {
+            $this
+                ->add([
+                    'name' => 'oaipmhrepository_oai_table_class_type',
+                    'type' => \Table\Form\Element\TablesSelect::class,
+                    'options' => [
+                        'label' => 'Dublin Core: Table to use when option above is "main type"', // @translate
+                    ],
+                    'attributes' => [
+                        'id' => 'oaipmhrepository_oai_table_class_type',
+                    ],
+                ]);
+        }
+
+        $this
+            ->add([
                 'name' => 'oaipmhrepository_oai_dc_bnf_vignette',
                 'type' => Element\Radio::class,
                 'options' => [
@@ -317,7 +371,7 @@ Books = resource_template_id[]=3
                 'name' => 'oaipmhrepository_oai_dcterms_bnf_vignette',
                 'type' => Element\Radio::class,
                 'options' => [
-                    'label' => 'Dublin Core terms: Append the url of the thumbnail for BnF', // @translate
+                    'label' => 'Dublin Core terms: Append the url of the thumbnail', // @translate
                     'value_options' => [
                         'none' => 'None', // @translate
                         'large' => 'Large', // @translate

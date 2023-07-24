@@ -41,13 +41,35 @@ class MetadataFormatFactory implements FactoryInterface
 
         switch ($prefix) {
             case 'oai_dc':
+                $classType = $settings->get('oaipmhrepository_oai_dc_class_type', 'no') ?: 'no';
+                if ($classType === 'table') {
+                    $classTypeTable = $settings->get('oaipmhrepository_oai_table_class_type');
+                    $viewHelpers = $services->get('ViewHelperManager');
+                    $classTypeTable = $viewHelpers->has('table') ? $viewHelpers->get('table')($classTypeTable) : null;
+                    $classType = $classTypeTable ? 'table' : 'no';
+                } else {
+                    $classTypeTable =  null;
+                }
                 $params['oai_dc'] = [
                     'bnf_vignette' => $settings->get('oaipmhrepository_oai_dc_bnf_vignette', 'none') ?: 'none',
+                    'class_type' => $classType,
+                    'class_type_table' => $classTypeTable,
                 ];
                 break;
             case 'oai_dcterms':
+                $classType = $settings->get('oaipmhrepository_oai_dcterms_class_type', 'no') ?: 'no';
+                if ($classType === 'table') {
+                    $classTypeTable = $settings->get('oaipmhrepository_oai_table_class_type');
+                    $viewHelpers = $services->get('ViewHelperManager');
+                    $classTypeTable = $viewHelpers->has('table') ? $viewHelpers->get('table')($classTypeTable) : null;
+                    $classType = $classTypeTable ? 'table' : 'no';
+                } else {
+                    $classTypeTable =  null;
+                }
                 $params['oai_dcterms'] = [
                     'bnf_vignette' => $settings->get('oaipmhrepository_oai_dcterms_bnf_vignette', 'none') ?: 'none',
+                    'class_type' => $classType,
+                    'class_type_table' => $classTypeTable,
                 ];
                 break;
             case 'mets':
