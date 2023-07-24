@@ -165,3 +165,19 @@ if (version_compare($oldVersion, '3.3.6', '<')) {
     $message->setEscapeHtml(false);
     $messenger->addSuccess($message);
 }
+
+if (version_compare($oldVersion, '3.4.7', '<')) {
+    $sql = <<<'SQL'
+ALTER TABLE `oai_pmh_repository_token`
+    DROP INDEX IDX_E9AC4F9524CD504D,
+    ADD INDEX IDX_F99CFEE424CD504D (`expiration`),
+    CHANGE `verb` `verb` varchar(15) NOT NULL AFTER `id`,
+    RENAME TO `oaipmhrepository_token`;
+SQL;
+    $connection->executeStatement($sql);
+
+    $message = new Message(
+        'Some new options were added for compliance with non-standard requirements of BnF (Bibliothèque nationale de France): thumbnail, uri without attribute, class as main type.' // @translate
+    );
+    $messenger->addSuccess($message);
+}

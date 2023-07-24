@@ -296,7 +296,7 @@ See commits for full list of contributors.
 * Copyright Yu-Hsun Lin, 2009
 * Copyright John Flatness, 2009-2016
 * Copyright Julian Maurice for BibLibre, 2016-2017
-* Copyright Daniel Berthereau, 2014-2022 (see [Daniel-KM])
+* Copyright Daniel Berthereau, 2014-2023 (see [Daniel-KM])
 
 This [Omeka S] module is based on the rewrite of the [OAI-PMH Repository plugin]
 for [Omeka] by [BibLibre] and provide the same features as the original plugin
