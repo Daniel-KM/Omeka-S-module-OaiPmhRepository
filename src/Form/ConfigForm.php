@@ -444,6 +444,7 @@ Books = resource_template_id[]=3
                 ],
                 'attributes' => [
                     'id' => 'oaipmhrepository_redirect_route',
+                    'placeholder' => '/oai-pmh-repository/request',
                 ],
             ])
             ->add([

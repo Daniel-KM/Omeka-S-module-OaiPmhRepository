@@ -75,7 +75,7 @@ class Module extends AbstractModule
             return;
         }
 
-        $router->addRoute('oai-pmh-repository-request', [
+        $router->addRoute('oai-pmh-redirect', [
             'type' => \Laminas\Router\Http\Literal::class,
             'options' => [
                 'route' => $redirect,
