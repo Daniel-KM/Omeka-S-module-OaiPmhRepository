@@ -71,6 +71,10 @@ class OaiDc extends AbstractMetadata
         ];
 
         $bnfVignette = $this->params['oai_dc']['bnf_vignette'];
+        $formatUri = $this->params['format_uri'];
+        $formatUriAttributes = in_array($formatUri, ['uri', 'uri_attr_label'])
+            ? ['xsi:type' => 'dcterms:URI']
+            : [];
 
         /* Must create elements using createElement to make DOM allow a
          * top-level xmlns declaration instead of wasteful and non-
@@ -94,13 +98,13 @@ class OaiDc extends AbstractMetadata
 
         $appendIdentifier = $this->singleIdentifier($item);
         if ($appendIdentifier) {
-            $this->appendNewElement($oai, 'dc:identifier', $appendIdentifier, ['xsi:type' => 'dcterms:URI']);
+            $this->appendNewElement($oai, 'dc:identifier', $appendIdentifier, $formatUriAttributes);
         }
 
         // Also append an identifier for each file
         if ($this->params['expose_media']) {
             foreach ($item->media() as $media) {
-                $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl(), ['xsi:type' => 'dcterms:URI']);
+                $this->appendNewElement($oai, 'dc:identifier', $media->originalUrl(), $formatUriAttributes);
             }
         }
     }

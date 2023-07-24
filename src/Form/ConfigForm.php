@@ -248,6 +248,7 @@ Books = resource_template_id[]=3
                         'url_title' => 'Omeka url and title', // @translate
                         'title' => 'Title', // @translate
                         'url' => 'Omeka url', // @translate
+                        'url_as_text' => 'Omeka url without attribute (BnF compliance)', // @translate
                         'identifier' => 'Identifier (property below)', // @translate
                         'id' => 'Id', // @translate
                         'identifier_id' => 'Identifier or id', // @translate
@@ -283,6 +284,7 @@ Books = resource_template_id[]=3
                         'label_attr_uri' => 'Label as text and uri as attribute', // @translate
                         'uri_label' => 'Uri and label separated by a space', // @translate
                         'uri' => 'Uri only', // @translate
+                        'uri_as_text' => 'Uri only as text (BnF compliance: no attribute for uri)', // @translate
                         'html' => 'Html', // @translate
                     ],
                 ],

@@ -281,6 +281,9 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 $v = (string) $value->uri();
                 $attributes['xsi:type'] = 'dcterms:URI';
                 break;
+            case 'uri_as_text':
+                $v = (string) $value->uri();
+                break;
             case 'html':
                 $v = $value->asHtml();
                 break;
@@ -345,6 +348,9 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
             case 'url':
                 $v = $this->singleIdentifier($resource);
                 $attributes['xsi:type'] = 'dcterms:URI';
+                break;
+            case 'url_as_text':
+                $v = $this->singleIdentifier($resource);
                 break;
             case 'url_title':
                 $vUrl = $this->singleIdentifier($resource);
