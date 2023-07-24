@@ -15,9 +15,14 @@ use Omeka\Entity\Exception\InvalidArgumentException;
 /**
  * @Entity
  * @Table(
- *      indexes={@Index(columns={
- *          "expiration"
- *      })}
+ *     name="oaipmhrepository_token",
+ *     indexes={
+ *         @Index(
+ *             columns={
+ *                 "expiration"
+ *             }
+ *         )
+ *     }
  * )
  */
 class OaiPmhRepositoryToken extends AbstractEntity
@@ -27,44 +32,89 @@ class OaiPmhRepositoryToken extends AbstractEntity
     const VERB_LIST_SETS = 'ListSets';
 
     /**
+     * @var int
+     *
      * @Id
-     * @Column(type="integer")
+     * @Column(
+     *     type="integer"
+     * )
      * @GeneratedValue
      */
     protected $id;
 
     /**
-     * @Column(type="string", length=190)
+     * @var string
+     *
+     * @Column(
+     *     type="string",
+     *     length=15,
+     *     nullable=false
+     * )
      */
     protected $verb;
 
     /**
-     * @Column(type="string", length=190)
+     * @var string
+     *
+     * @Column(
+     *     type="string",
+     *     length=190,
+     *     nullable=false
+     * )
      */
     protected $metadataPrefix;
 
     /**
-     * @Column(name="`cursor`", type="integer")
+     * @var int
+     *
+     * @Column(
+     *     name="`cursor`",
+     *     type="integer",
+     *     nullable=false
+     * )
      */
     protected $cursor;
 
     /**
-     * @Column(name="`from`", type="datetime", nullable=true)
+     * @var DateTime
+     *
+     * @Column(
+     *     name="`from`",
+     *     type="datetime",
+     *     nullable=true
+     * )
      */
     protected $from;
 
     /**
-     * @Column(type="datetime", nullable=true)
+     * @var \DateTime
+     *
+     * @Column(
+     *     type="datetime",
+     *     nullable=true
+     * )
      */
     protected $until;
 
     /**
-     * @Column(name="`set`", type="string", length=190, nullable=true)
+     * @var string
+     *
+     * @Column(
+     *     name="`set`",
+     *     type="string",
+     *     length=190,
+     *     nullable=true
+     * )
      */
     protected $set;
 
     /**
-     * @Column(type="datetime")
+     * @var \DateTime
+     *
+     * @Column(
+     *     type="datetime",
+     *     nullable=false
+     * )
      */
     protected $expiration;
 
@@ -73,7 +123,7 @@ class OaiPmhRepositoryToken extends AbstractEntity
         return $this->id;
     }
 
-    public function setVerb($verb): void
+    public function setVerb(string $verb): self
     {
         if (!in_array($verb, [
             self::VERB_LIST_IDENTIFIERS,
@@ -83,69 +133,77 @@ class OaiPmhRepositoryToken extends AbstractEntity
             throw new InvalidArgumentException('Invalid OAI-PMH verb.');
         }
         $this->verb = $verb;
+        return $this;
     }
 
-    public function getVerb()
+    public function getVerb(): string
     {
         return $this->verb;
     }
 
-    public function setMetadataPrefix($metadataPrefix): void
+    public function setMetadataPrefix(string $metadataPrefix): self
     {
         $this->metadataPrefix = $metadataPrefix;
+        return $this;
     }
 
-    public function getMetadataPrefix()
+    public function getMetadataPrefix(): string
     {
         return $this->metadataPrefix;
     }
 
-    public function setCursor($cursor): void
+    public function setCursor(int $cursor): self
     {
         $this->cursor = $cursor;
+        return $this;
     }
 
-    public function getCursor()
+    public function getCursor(): int
     {
         return $this->cursor;
     }
 
-    public function setFrom($from): void
+    public function setFrom(?DateTime $from): self
     {
         $this->from = $from;
+        return $this;
     }
 
-    public function getFrom()
+    public function getFrom(): ?DateTime
     {
         return $this->from;
     }
 
-    public function setUntil($until): void
+    public function setUntil(?DateTime $until): self
     {
         $this->until = $until;
+        return $this;
     }
 
-    public function getUntil()
+    public function getUntil(): ?DateTime
     {
         return $this->until;
     }
 
-    public function setSet($set): void
+    public function setSet($set): self
     {
-        $this->set = $set;
+        $set = (string) $set;
+        $this->set = strlen($set) ? $set : null;
+        return $this;
     }
 
-    public function getSet()
+    public function getSet(): ?string
     {
         return $this->set;
     }
 
-    public function setExpiration(DateTime $expiration): void
+    public function setExpiration(DateTime $expiration): self
     {
         $this->expiration = $expiration;
+        return $this;
     }
 
-    public function getExpiration()
+    public function getExpiration(): DateTime
     {
         return $this->expiration;
     }

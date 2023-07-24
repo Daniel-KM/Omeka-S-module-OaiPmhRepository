@@ -2,10 +2,12 @@
 /**
  * @author Julian Maurice <julian.maurice@biblibre.com>
  * @copyright BibLibre, 2016
+ * @copyright Daniel Berthereau, 2014-2023
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\Api\Representation;
 
+use DateTime;
 use Omeka\Api\Representation\AbstractEntityRepresentation;
 
 class OaiPmhRepositoryTokenRepresentation extends AbstractEntityRepresentation
@@ -30,37 +32,37 @@ class OaiPmhRepositoryTokenRepresentation extends AbstractEntityRepresentation
         ];
     }
 
-    public function verb()
+    public function verb(): string
     {
         return $this->resource->getVerb();
     }
 
-    public function metadataPrefix()
+    public function metadataPrefix(): string
     {
         return $this->resource->getMetadataPrefix();
     }
 
-    public function cursor()
+    public function cursor(): int
     {
         return $this->resource->getCursor();
     }
 
-    public function from()
+    public function from(): ?DateTime
     {
         return $this->resource->getFrom();
     }
 
-    public function until()
+    public function until(): ?DateTime
     {
         return $this->resource->getUntil();
     }
 
-    public function set()
+    public function set(): ?string
     {
         return $this->resource->getSet();
     }
 
-    public function expiration()
+    public function expiration(): DateTime
     {
         return $this->resource->getExpiration();
     }
