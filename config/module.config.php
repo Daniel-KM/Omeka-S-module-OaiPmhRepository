@@ -114,7 +114,7 @@ return [
                 'oai_dcterms',
                 'simple_xml',
             ],
-            'oaipmhrepository_expose_media' => true,
+            'oaipmhrepository_expose_media' => false,
             'oaipmhrepository_hide_empty_sets' => true,
             'oaipmhrepository_global_repository' => 'item_set',
             'oaipmhrepository_list_item_sets' => [],
