@@ -102,12 +102,9 @@ class Module extends AbstractModule
         $sharedEventManager->attach(
             \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::class,
             'oaipmhrepository.values.pre',
-            [$this, 'filterOaiPmhRepositoryValuesPre']
-        );
-        $sharedEventManager->attach(
-            \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::class,
-            'oaipmhrepository.values',
-            [$this, 'filterOaiPmhRepositoryValues']
+            [$this, 'filterOaiPmhRepositoryValuesPre'],
+            // Process internal filter first.
+            100
         );
     }
 
@@ -152,6 +149,74 @@ class Module extends AbstractModule
     }
 
     public function filterOaiPmhRepositoryValuesPre(Event $event): void
+    {
+        $this->mapDublinCoreTerms($event);
+        $this->mapOtherProperties($event);
+    }
+
+    protected function mapDublinCoreTerms(Event $event): void
+    {
+        static $genericDcterms;
+        static $map;
+
+        if (is_null($genericDcterms)) {
+            $services = $this->getServiceLocator();
+            $settings = $services->get('Omeka\Settings');
+            $genericDcterms = array_diff(
+                $settings->get('oaipmhrepository_generic_dcterms', ['oai_dc', 'cdwalite', 'mets', 'mods']),
+                ['oai_dcterms', 'simple_xml']
+            );
+            $map = include __DIR__ . '/data/mappings/dc_generic.php';
+        }
+        if (!count($genericDcterms) || !count($map)) {
+            return;
+        }
+
+        $prefix = $event->getParam('prefix');
+        if (!in_array($prefix, $genericDcterms)) {
+            return;
+        }
+
+        $resource = $event->getParam('resource');
+
+        // Check if the filter is enable for the current format.
+        if ($prefix === 'mets') {
+            $services = $this->getServiceLocator();
+            $settings = $services->get('Omeka\Settings');
+            switch (get_class($resource)) {
+                case \Omeka\Api\Representation\MediaRepresentation::class:
+                    $dataFormat = $settings->get('oaipmhrepository_mets_data_media');
+                    break;
+                case \Omeka\Api\Representation\ItemRepresentation::class:
+                default:
+                    $dataFormat = $settings->get('oaipmhrepository_mets_data_item');
+                    break;
+            }
+            if ($dataFormat === 'dcterms') {
+                return;
+            }
+        }
+
+        $values = $event->getParam('values');
+
+        foreach ($map as $destinationTerm => $dcterms) foreach ($dcterms as $sourceTerm) {
+            if (empty($values[$sourceTerm]['values'])) {
+                continue;
+            }
+            if (empty($values[$destinationTerm]['values'])) {
+                $values[$destinationTerm]['values'] = array_values($values[$sourceTerm]['values']);
+            } else {
+                $values[$destinationTerm]['values'] = array_merge(
+                    array_values($values[$destinationTerm]['values']),
+                    array_values($values[$sourceTerm]['values'])
+                );
+            }
+        }
+
+        $event->setParam('values', $values);
+    }
+
+    protected function mapOtherProperties(Event $event): void
     {
         static $mapping;
 
@@ -225,86 +290,16 @@ class Module extends AbstractModule
             if (empty($values[$sourceTerm]['values'])) {
                 continue;
             }
-            $values[$destinationTerm]['values'] = array_merge(
-                array_values($values[$destinationTerm]['values']),
-                array_values($values[$sourceTerm]['values'])
-            );
-        }
-
-        $event->setParam('values', $values);
-    }
-
-    public function filterOaiPmhRepositoryValues(Event $event): void
-    {
-        static $genericDcterms;
-        static $map;
-
-        if (is_null($genericDcterms)) {
-            $services = $this->getServiceLocator();
-            $settings = $services->get('Omeka\Settings');
-            $genericDcterms = array_diff(
-                $settings->get('oaipmhrepository_generic_dcterms', ['oai_dc', 'cdwalite', 'mets', 'mods']),
-                ['oai_dcterms']
-            );
-            $map = include __DIR__ . '/data/mappings/dc_generic.php';
-        }
-        if (!count($genericDcterms) || !count($map)) {
-            return;
-        }
-
-        $prefix = $event->getParam('prefix');
-        if (!in_array($prefix, $genericDcterms)) {
-            return;
-        }
-
-        $resource = $event->getParam('resource');
-
-        // Check if the filter is enable for the current format.
-        if ($prefix === 'mets') {
-            $services = $this->getServiceLocator();
-            $settings = $services->get('Omeka\Settings');
-            switch (get_class($resource)) {
-                case \Omeka\Api\Representation\MediaRepresentation::class:
-                    $dataFormat = $settings->get('oaipmhrepository_mets_data_media');
-                    break;
-                case \Omeka\Api\Representation\ItemRepresentation::class:
-                default:
-                    $dataFormat = $settings->get('oaipmhrepository_mets_data_item');
-                    break;
-            }
-            if ($dataFormat === 'dcterms') {
-                return;
+            if (empty($values[$destinationTerm]['values'])) {
+                $values[$destinationTerm]['values'] = array_values($values[$sourceTerm]['values']);
+            } else {
+                $values[$destinationTerm]['values'] = array_merge(
+                    array_values($values[$destinationTerm]['values']),
+                    array_values($values[$sourceTerm]['values'])
+                );
             }
         }
 
-        $term = $event->getParam('term');
-        if (empty($map[$term])) {
-            return;
-        }
-
-        $values = $event->getParam('values');
-
-        $single = !is_array($values);
-        if ($single) {
-            if ($values) {
-                return;
-            }
-
-            foreach ($map[$term] as $refinedTerm) {
-                $refinedValue = $resource->value($refinedTerm);
-                if ($refinedValue) {
-                    $event->setParam('values', $refinedValue);
-                    return;
-                }
-            }
-
-            return;
-        }
-
-        foreach ($map[$term] as $refinedTerm) {
-            $refinedValues = $resource->value($refinedTerm, ['all' => true]);
-            $values = array_merge($values, $refinedValues);
-        }
         $event->setParam('values', $values);
     }
 

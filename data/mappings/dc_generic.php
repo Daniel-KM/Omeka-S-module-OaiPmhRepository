@@ -74,8 +74,8 @@ return [
     ],
     // Ungenerized terms.
     // 'dcterms:audience',
-        // 'dcterms:mediator',
-        // 'dcterms:educationLevel',
+    // 'dcterms:mediator',
+    // 'dcterms:educationLevel',
     // 'dcterms:rightsHolder',
     // 'dcterms:provenance',
     // 'dcterms:instructionalMethod',

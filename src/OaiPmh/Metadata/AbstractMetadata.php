@@ -146,10 +146,8 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $headerData = [];
         $headerData['identifier'] = OaiIdentifier::itemToOaiId($item);
 
-        $datestamp = $item->modified();
-        if (!$datestamp) {
-            $datestamp = $item->created();
-        }
+        $datestamp = $item->modified() ?: $item->created();
+
         $dateFormat = \OaiPmhRepository\OaiPmh\Plugin\Date::OAI_DATE_FORMAT;
         $headerData['datestamp'] = $datestamp->format($dateFormat);
 
@@ -394,7 +392,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     }
 
     /**
-     * Filter values of a resource before processing (remove, update or append).
+     * Filter values of a resource before processing.
      *
      * @param AbstractResourceEntityRepresentation $resource
      * @return array See \Omeka\Api\Representation\AbstractResourceEntityRepresentation::values()
