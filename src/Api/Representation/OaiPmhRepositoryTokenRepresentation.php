@@ -22,13 +22,13 @@ class OaiPmhRepositoryTokenRepresentation extends AbstractEntityRepresentation
         $entity = $this->resource;
 
         return [
-            'o:verb' => $entity->getVerb(),
-            'o:metadata_prefix' => $entity->getMetadataPrefix(),
-            'o:cursor' => $entity->getCursor(),
-            'o:from' => $this->getDateTime($entity->getFrom()),
-            'o:until' => $this->getDateTime($entity->getUntil()),
-            'o:set' => $entity->getSet(),
-            'o:expiration' => $this->getDateTime($entity->getExpiration()),
+            'o-oai-pmh:verb' => $entity->getVerb(),
+            'o-oai-pmh:metadata_prefix' => $entity->getMetadataPrefix(),
+            'o-oai-pmh:cursor' => $entity->getCursor(),
+            'o-oai-pmh:from' => $this->getDateTime($entity->getFrom()),
+            'o-oai-pmh:until' => $this->getDateTime($entity->getUntil()),
+            'o-oai-pmh:set' => $entity->getSet(),
+            'o-oai-pmh:expiration' => $this->getDateTime($entity->getExpiration()),
         ];
     }
 
