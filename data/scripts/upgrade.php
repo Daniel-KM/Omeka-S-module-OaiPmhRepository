@@ -132,7 +132,7 @@ if (version_compare($oldVersion, '3.3.6', '<')) {
     } else {
         $message = new Message(
             'You can copy the %1$sdefault mapping foaf to dcterms%2$s in the config of the module if needed.', // @translate
-            '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130" target="_blank">',
+            '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130" target="_blank" rel="noopener">',
             '</a>'
         );
         $message->setEscapeHtml(false);
@@ -141,7 +141,7 @@ if (version_compare($oldVersion, '3.3.6', '<')) {
 
     $message = new Message(
         'An option was added to append a thumbnail url according to the non-standard %1$srecommandation%2$s of the Bibliothèque nationale de France.', // @translate
-        '<a href="https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf" target="_blank">',
+        '<a href="https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf" target="_blank" rel="noopener">',
         '</a>'
     );
     $message->setEscapeHtml(false);
