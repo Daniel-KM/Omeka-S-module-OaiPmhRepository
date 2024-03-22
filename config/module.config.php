@@ -266,6 +266,8 @@ return [
                 'foaf:workplaceHomepage' => 'dcterms:references', // Personal Info // Social Web
                 'foaf:yahooChatID' => 'dcterms:identifier', // Online Accounts / IM
             ],
+            'oaipmhrepository_map_values' => '',
+            'oaipmhrepository_split_properties' => '',
             'oaipmhrepository_format_resource' => 'url_attr_title',
             'oaipmhrepository_format_resource_property' => 'dcterms:identifier',
             'oaipmhrepository_format_uri' => 'uri_attr_label',

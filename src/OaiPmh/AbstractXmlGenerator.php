@@ -60,18 +60,43 @@ class AbstractXmlGenerator
      */
     protected function appendNewElement(DOMElement $parent, $name, $text = null, array $attributes = [])
     {
-        $document = $parent->ownerDocument;
-        $newElement = $document->createElement($name);
+		$text = $this->ElementTextPreprocessing($text, $name);
+
         // Use a TextNode, causes escaping of input text
-        if ($text) {
-            $text = $document->createTextNode((string) $text);
-            $newElement->appendChild($text);
-        }
-        foreach ($attributes as $name => $attribute) {
-            $newElement->setAttribute($name, $attribute);
-        }
-        $parent->appendChild($newElement);
+		if (!is_array($text)){
+			$text = array($text);
+		}
+		
+		foreach($text as $t){
+			$document = $parent->ownerDocument;
+			$newElement = $document->createElement($name);
+			if ($t) {
+				$t = $document->createTextNode((string) $t);
+				$newElement->appendChild($t);
+			}
+			foreach ($attributes as $attrName => $attribute) {
+				$newElement->setAttribute($attrName, $attribute);
+			}
+			$parent->appendChild($newElement);
+		}
+
+
 
         return $newElement;
+    }
+	
+	
+	protected function ElementTextPreprocessing(
+        string $text, string $name
+    ): string|array {
+        $args = [];
+        $args['text'] = $text;
+		$args['name'] = $name;
+	
+        /** @var \ArrayObject $args */
+        $eventManager = $this->getEventManager();
+        $args = $eventManager->prepareArgs($args);
+        $eventManager->trigger('oaipmhrepository.appendElement.pre', $this, $args);
+        return $args['text'];
     }
 }

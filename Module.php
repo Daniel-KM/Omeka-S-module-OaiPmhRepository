@@ -106,6 +106,16 @@ class Module extends AbstractModule
             // Process internal filter first.
             100
         );
+        $sharedEventManager->attach(
+            \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::class,
+            'oaipmhrepository.strings',
+            [$this, 'editOaiPmhRepositoryValues']
+        );
+		$sharedEventManager->attach(
+            \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata::class,
+            'oaipmhrepository.appendElement.pre',
+            [$this, 'editOaiPmhRepositoryElementText']
+        );
     }
 
     public function handleConfigForm(AbstractController $controller)
@@ -302,6 +312,86 @@ class Module extends AbstractModule
 
         $event->setParam('values', $values);
     }
+
+	public function editOaiPmhRepositoryValues(Event $event): void{
+		static $value_mapping;
+		
+		    if (is_null($value_mapping)) {
+				$services = $this->getServiceLocator();
+				$settings = $services->get('Omeka\Settings');
+				$value_mapping = $settings->get('oaipmhrepository_map_values', []);		
+				foreach ($value_mapping as $sourceValue => $destinationValue) {
+					if ($sourceValue === $destinationValue
+						|| mb_substr($sourceValue, 0, 1) === '#'
+					) {
+						unset($value_mapping[$sourceValue]);
+						continue;
+					}
+				}
+			}
+        if (!count($value_mapping) && !count($value_splitting)) {
+            return;
+        }
+		
+		$string = $event->getParam('string', '');
+
+		if (array_key_exists($string, $value_mapping)) {
+			$string = $value_mapping[$string];
+		}
+		
+		$event->setParam('string', $string);
+	}
+
+
+    public function editOaiPmhRepositoryElementText(Event $event): void{
+		static $value_splitting;
+	
+		if (is_null($value_splitting)) {
+			$services = $this->getServiceLocator();
+			$settings = $services->get('Omeka\Settings');
+			$value_splitting = $settings->get('oaipmhrepository_split_properties', []);
+			foreach ($value_splitting as $sourceTerm => $delimiter) {
+				if (empty($sourceTerm)
+					|| empty($delimiter)
+					|| is_numeric($sourceTerm)
+					|| mb_substr($sourceTerm, 0, 1) === '#'
+					|| mb_substr($delimiter, 0, 1) != '"'
+				) {
+					unset($value_splitting[$sourceTerm]);
+					continue;
+				}
+				
+				$property = $this->getProperty('dcterms:' . explode(":", $sourceTerm)[1]);
+				
+				if (!$property) {
+					unset($value_splitting[$sourceTerm]);
+					continue;
+				}
+			}
+		}
+	
+        if (!count($value_splitting)) {
+            return;
+        }
+
+		$string = $event->getParam('text', '');
+		$property = $event->getParam('name', '');
+		
+		if (!array_key_exists($property, $value_splitting)) {
+			return;
+		}
+		
+		$delimiter = trim($value_splitting[$property],'"');
+		
+		if (!strpos($string, $delimiter)){
+			return;
+		}
+	
+		$string = explode($delimiter, $string);
+			
+		$event->setParam('text', $string);
+	}
+
 
     protected function getServerNameWithoutProtocol($serviceLocator)
     {
