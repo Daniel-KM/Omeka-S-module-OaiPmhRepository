@@ -2,6 +2,7 @@
 
 namespace OaiPmhRepository;
 
+use Common\Stdlib\PsrMessage;
 use Omeka\Stdlib\Message;
 
 /**
@@ -25,6 +26,14 @@ $entityManager = $services->get('Omeka\EntityManager');
 
 $defaultConfig = require dirname(__DIR__, 2) . '/config/module.config.php';
 $defaultSettings = $defaultConfig['oaipmhrepository']['config'];
+
+if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.55')) {
+    $message = new Message(
+        $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
+        'Common', '3.4.55'
+    );
+    throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
+}
 
 if (version_compare($oldVersion, '0.3', '<')) {
     $connection = $services->get('Omeka\Connection');
@@ -92,11 +101,11 @@ if (version_compare($oldVersion, '3.3.0', '<')) {
 }
 
 if (version_compare($oldVersion, '3.3.5.2', '<')) {
-    $message = new Message(
+    $message = new PsrMessage(
         'The event "oaipmhrepository.values" that may be used by other modules was deprecated and replaced by event "oaipmhrepository.values.pre".' // @translate
     );
     $messenger->addWarning($message);
-    $message = new Message(
+    $message = new PsrMessage(
         'Futhermore, a new option allows to map any term to any other term, so any values can be exposed if needed.' // @translate
     );
     $messenger->addWarning($message);
@@ -109,14 +118,14 @@ if (version_compare($oldVersion, '3.3.5.2', '<')) {
 }
 
 if (version_compare($oldVersion, '3.3.5.6', '<')) {
-    $message = new Message(
+    $message = new PsrMessage(
         'It is now possible to define oai sets with a specific list of item sets or with a list of search queries.' // @translate
     );
     $messenger->addWarning($message);
 }
 
 if (version_compare($oldVersion, '3.3.6', '<')) {
-    $message = new Message(
+    $message = new PsrMessage(
         'A simple mapping of foaf properties to Dublin Core has been added to the default config. It allows to publish, for example, common metadata of people.' // @translate
     );
     $messenger->addSuccess($message);
@@ -130,24 +139,28 @@ if (version_compare($oldVersion, '3.3.6', '<')) {
     ) {
         $settings->set('oaipmhrepository_map_properties', $mapPropertiesOriginal);
     } else {
-        $message = new Message(
-            'You can copy the %1$sdefault mapping foaf to dcterms%2$s in the config of the module if needed.', // @translate
-            '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130" target="_blank" rel="noopener">',
-            '</a>'
+        $message = new PsrMessage(
+            'You can copy the {link}default mapping foaf to dcterms{link_end} in the config of the module if needed.', // @translate
+            [
+                'link' => '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130" target="_blank" rel="noopener">',
+                'link_end' => '</a>',
+            ],
         );
         $message->setEscapeHtml(false);
         $messenger->addWarning($message);
     }
 
-    $message = new Message(
+    $message = new PsrMessage(
         'An option was added to append a thumbnail url according to the non-standard %1$srecommandation%2$s of the Bibliothèque nationale de France.', // @translate
-        '<a href="https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf" target="_blank" rel="noopener">',
-        '</a>'
+        [
+            'link' => '<a href="https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf" target="_blank" rel="noopener">',
+            'link_end' => '</a>',
+        ],
     );
     $message->setEscapeHtml(false);
     $messenger->addSuccess($message);
 
-    $message = new Message(
+    $message = new PsrMessage(
         'The deprecated event "oaipmhrepository.values" was removed. Use "oaipmhrepository.values.pre" instead.' // @translate
     );
     $messenger->addWarning($message);
@@ -157,11 +170,13 @@ if (version_compare($oldVersion, '3.3.6', '<')) {
     $settings->set('oaipmhrepository_metadata_formats', $metadataFormats);
 
     $urlHelper = $services->get('ViewHelperManager')->get('url');
-    $message = new Message(
-        'A new output metadata format was added, "simple_xml", that contains all the values in a simple xml, not only the dublin core ones. You can disabled it in the %1$sconfig of the module%2$s.', // @translate
-        '<a href="' . $urlHelper('admin/default', ['controller' => 'module', 'action' => 'configure'], ['query' => ['id' => 'OaiPmhRepository']]) . '">',
-        '</a>'
-    );
+    $message = new PsrMessage(
+        'A new output metadata format was added, "simple_xml", that contains all the values in a simple xml, not only the dublin core ones. You can disabled it in the {link}config of the module{link_end}.', // @translate
+        [
+            'link' => '<a href="' . $urlHelper('admin/default', ['controller' => 'module', 'action' => 'configure'], ['query' => ['id' => 'OaiPmhRepository']]) . '">',
+            'link_end' => '</a>',
+            ],
+        );
     $message->setEscapeHtml(false);
     $messenger->addSuccess($message);
 }
@@ -188,7 +203,7 @@ SQL;
         // Nothing.
     }
 
-    $message = new Message(
+    $message = new PsrMessage(
         'Some new options were added for compliance with non-standard requirements of BnF (Bibliothèque nationale de France): thumbnail, uri without attribute, class as main type.' // @translate
     );
     $messenger->addSuccess($message);
