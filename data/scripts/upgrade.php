@@ -169,15 +169,58 @@ if (version_compare($oldVersion, '3.3.6', '<')) {
 if (version_compare($oldVersion, '3.4.7', '<')) {
     $sql = <<<'SQL'
 ALTER TABLE `oai_pmh_repository_token`
-    DROP INDEX IDX_E9AC4F9524CD504D,
+    DROP INDEX IDX_E9AC4F9524CD504D;
+SQL;
+    try {
+        $connection->executeStatement($sql);
+    } catch (\Exception $e) {
+        // Nothing.
+    }
+    $sql = <<<'SQL'
+ALTER TABLE `oai_pmh_repository_token`
     ADD INDEX IDX_F99CFEE424CD504D (`expiration`),
     CHANGE `verb` `verb` varchar(15) NOT NULL AFTER `id`,
     RENAME TO `oaipmhrepository_token`;
 SQL;
-    $connection->executeStatement($sql);
+    try {
+        $connection->executeStatement($sql);
+    } catch (\Exception $e) {
+        // Nothing.
+    }
 
     $message = new Message(
         'Some new options were added for compliance with non-standard requirements of BnF (Bibliothèque nationale de France): thumbnail, uri without attribute, class as main type.' // @translate
     );
     $messenger->addSuccess($message);
+}
+
+if (version_compare($oldVersion, '3.4.8', '<')) {
+    // In some cases, the table was not removed or updated in 3.4.7.
+    $sql = <<<'SQL'
+ALTER TABLE `oaipmhrepository_token`
+    DROP INDEX IDX_E9AC4F9524CD504D;
+SQL;
+    try {
+        $connection->executeStatement($sql);
+    } catch (\Exception $e) {
+        // Nothing.
+    }
+    $sql = <<<'SQL'
+ALTER TABLE `oaipmhrepository_token`
+    ADD INDEX IDX_F99CFEE424CD504D (`expiration`),
+    CHANGE `verb` `verb` varchar(15) NOT NULL AFTER `id`;
+SQL;
+    try {
+        $connection->executeStatement($sql);
+    } catch (\Exception $e) {
+        // Nothing.
+    }
+    $sql = <<<'SQL'
+DROP TABLE `oai_pmh_repository_token`;
+SQL;
+    try {
+        $connection->executeStatement($sql);
+    } catch (\Exception $e) {
+        // Nothing.
+    }
 }
