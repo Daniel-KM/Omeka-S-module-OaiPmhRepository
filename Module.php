@@ -7,24 +7,25 @@
  */
 namespace OaiPmhRepository;
 
-if (!class_exists(\Generic\AbstractModule::class)) {
-    require file_exists(dirname(__DIR__) . '/Generic/AbstractModule.php')
-        ? dirname(__DIR__) . '/Generic/AbstractModule.php'
-        : __DIR__ . '/src/Generic/AbstractModule.php';
+if (!class_exists(\Common\TraitModule::class)) {
+    require_once dirname(__DIR__) . '/Common/TraitModule.php';
 }
 
-use Generic\AbstractModule;
+use Common\TraitModule;
 use Laminas\EventManager\Event;
 use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\Mvc\Controller\AbstractController;
 use Laminas\Mvc\MvcEvent;
 use Omeka\Api\Representation\PropertyRepresentation;
+use Omeka\Module\AbstractModule;
 
 /**
  * OaiPmhRepository module class.
  */
 class Module extends AbstractModule
 {
+    use TraitModule;
+
     const NAMESPACE = __NAMESPACE__;
 
     public function onBootstrap(MvcEvent $event): void
@@ -32,6 +33,22 @@ class Module extends AbstractModule
         parent::onBootstrap($event);
         $this->addAclRules();
         $this->addRoutes();
+    }
+
+    protected function preInstall(): void
+    {
+        $services = $this->getServiceLocator();
+        $plugins = $services->get('ControllerPluginManager');
+        $translate = $plugins->get('translate');
+        $translator = $services->get('MvcTranslator');
+
+        if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.55')) {
+            $message = new \Omeka\Stdlib\Message(
+                $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
+                'Common', '3.4.55'
+            );
+            throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
+        }
     }
 
     protected function postInstall(): void
@@ -110,7 +127,7 @@ class Module extends AbstractModule
 
     public function handleConfigForm(AbstractController $controller)
     {
-        $result = parent::handleConfigForm($controller);
+        $result = $this->handleConfigFormAuto($controller);
         if (!$result) {
             return false;
         }
@@ -221,8 +238,15 @@ class Module extends AbstractModule
         static $mapping;
 
         if (is_null($mapping)) {
+            /**
+             * @var \Laminas\ServiceManager\ServiceLocatorInterface $services
+             * @var \Omeka\Api\Manager $api
+             * @var \Omeka\Settings\Settings $settings
+             * @var \Common\Stdlib\EasyMeta $easyMeta
+             */
             $services = $this->getServiceLocator();
             $settings = $services->get('Omeka\Settings');
+            $easyMeta = $services->get('EasyMeta');
             $mapping = $settings->get('oaipmhrepository_map_properties', []);
             foreach ($mapping as $sourceTerm => $destinationTerm) {
                 if ($sourceTerm === $destinationTerm
@@ -238,13 +262,13 @@ class Module extends AbstractModule
                     unset($mapping[$sourceTerm]);
                     continue;
                 }
-                $property = $this->getProperty($sourceTerm);
-                if (!$property) {
+                $propertyId = $easyMeta->propertyId($sourceTerm);
+                if (!$propertyId) {
                     unset($mapping[$sourceTerm]);
                     continue;
                 }
-                $property = $this->getProperty($destinationTerm);
-                if (!$property) {
+                $propertyId = $easyMeta->propertyId($destinationTerm);
+                if (!$propertyId) {
                     unset($mapping[$sourceTerm]);
                     continue;
                 }
@@ -253,6 +277,10 @@ class Module extends AbstractModule
         if (!count($mapping)) {
             return;
         }
+
+        $services = $this->getServiceLocator();
+        $api = $services->get('Omeka\ApiManager');
+        $easyMeta = $services->get('EasyMeta');
 
         /** @var \Omeka\Api\Representation\AbstractResourceEntityRepresentation $resource */
         $resource = $event->getParam('resource');
@@ -266,11 +294,11 @@ class Module extends AbstractModule
             if (isset($values[$destinationTerm]['values'])) {
                 continue;
             }
-            $property = $this->getProperty($destinationTerm);
-            if (!$property) {
+            $propertyId = $easyMeta->propertyId($destinationTerm);
+            if (!$propertyId) {
                 continue;
             }
-            $rtp = $template ? $template->resourceTemplateProperty($property->id()) : null;
+            $rtp = $template ? $template->resourceTemplateProperty($propertyId) : null;
             if ($rtp) {
                 $alternateLabel = $rtp->alternateLabel();
                 $alternateComment = $rtp->alternateComment();
@@ -279,7 +307,8 @@ class Module extends AbstractModule
                 $alternateComment = null;
             }
             $values[$destinationTerm] = [
-                'property' => $property,
+                // The api manages the cache automatically via doctrine.
+                'property' => $api->read('properties', $propertyId)->getContent(),
                 'alternate_label' => $alternateLabel,
                 'alternate_comment' => $alternateComment,
                 'values' => [],
@@ -316,21 +345,5 @@ class Module extends AbstractModule
         }
 
         return $name;
-    }
-
-    protected function getProperty(string $term): ?PropertyRepresentation
-    {
-        static $api;
-        static $properties = [];
-
-        if (!array_key_exists($term, $properties)) {
-            if (is_null($api)) {
-                $api = $this->getServiceLocator()->get('Omeka\ApiManager');
-            }
-            $props = $api->search('properties', ['term' => $term, 'limit' => 1], ['initialize' => false])->getContent();
-            $properties[$term] = count($props) ? reset($props) : null;
-        }
-
-        return $properties[$term];
     }
 }
