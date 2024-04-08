@@ -23,9 +23,19 @@ that are used.
 Installation
 ------------
 
-Uncompress the zip inside the folder `modules` and rename it `OaiPmhRepository`.
-
 See general end user documentation for [installing a module].
+
+This module requires the module [Common], that should be installed first.
+
+* From the zip
+
+Download the last release [OaiPmhRepository.zip] from the list of releases, and
+uncompress it in the `modules` directory.
+
+* From the source and for development:
+
+If the module was installed from the source, rename the name of the folder of
+the module to `OaiPmhRepository`.
 
 
 Config
@@ -310,6 +320,8 @@ and many more.
 [Omeka]: https://omeka.org/classic
 [BibLibre]: https://github.com/biblibre
 [installing a module]: https://omeka.org/s/docs/user-manual/modules/#installing-modules
+[Common]: https://gitlab.com/Daniel-KM/Omeka-S-module-Common
+[OaiPmhRepository.zip]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/releases
 [Bootstrap]: https://getbootstrap.com
 [default mapping]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/config/module.config.php#L130
 [spreadsheet]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/blob/master/foaf_to_dcterms.ods
