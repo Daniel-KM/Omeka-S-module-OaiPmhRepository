@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-02 00:00+0000\n"
+"POT-Creation-Date: 2024-04-19 10:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,42 +17,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Generic/AbstractModule.php:80 src/Generic/AbstractModule.php:88
-#: src/Generic/AbstractModule.php:890
+#: data/scripts/upgrade.php:32 Module.php:47
 #, php-format
-msgid "This module requires the module \"%s\"."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:93
-#, php-format
-msgid "This module requires modules \"%s\"."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:101
-msgid "This module has resources that cannot be installed."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:108
-msgid ""
-"This module cannot install its tables, because they exist already. Try to "
-"remove them first."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:398
-#, php-format
-msgid "The module removed tables \"%s\" from a previous broken install."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:885
-#, php-format
-msgid "This module requires the module \"%1$s\", version %2$s or above."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:982
-#, php-format
-msgid ""
-"The module \"%s\" was automatically deactivated because the dependencies are "
-"unavailable."
+msgid "The module %1$s should be upgraded to version %2$s or later."
 msgstr ""
 
 #: view/common/admin/oai-pmh-repository-dashboard.phtml:13
@@ -99,59 +66,57 @@ msgstr ""
 msgid "No site."
 msgstr ""
 
-#: data/scripts/upgrade.php:96
+#: data/scripts/upgrade.php:105
 msgid ""
 "The event \"oaipmhrepository.values\" that may be used by other modules was "
 "deprecated and replaced by event \"oaipmhrepository.values.pre\"."
 msgstr ""
 
-#: data/scripts/upgrade.php:100
+#: data/scripts/upgrade.php:109
 msgid ""
 "Futhermore, a new option allows to map any term to any other term, so any "
 "values can be exposed if needed."
 msgstr ""
 
-#: data/scripts/upgrade.php:113
+#: data/scripts/upgrade.php:122
 msgid ""
 "It is now possible to define oai sets with a specific list of item sets or "
 "with a list of search queries."
 msgstr ""
 
-#: data/scripts/upgrade.php:120
+#: data/scripts/upgrade.php:129
 msgid ""
 "A simple mapping of foaf properties to Dublin Core has been added to the "
 "default config. It allows to publish, for example, common metadata of people."
 msgstr ""
 
-#: data/scripts/upgrade.php:134
-#, php-format
+#: data/scripts/upgrade.php:143
 msgid ""
-"You can copy the %1$sdefault mapping foaf to dcterms%2$s in the config of "
-"the module if needed."
+"You can copy the {link}default mapping foaf to dcterms{link_end} in the "
+"config of the module if needed."
 msgstr ""
 
-#: data/scripts/upgrade.php:143
+#: data/scripts/upgrade.php:154
 #, php-format
 msgid ""
 "An option was added to append a thumbnail url according to the non-standard "
 "%1$srecommandation%2$s of the Bibliothèque nationale de France."
 msgstr ""
 
-#: data/scripts/upgrade.php:151
+#: data/scripts/upgrade.php:164
 msgid ""
 "The deprecated event \"oaipmhrepository.values\" was removed. Use "
 "\"oaipmhrepository.values.pre\" instead."
 msgstr ""
 
-#: data/scripts/upgrade.php:161
-#, php-format
+#: data/scripts/upgrade.php:174
 msgid ""
 "A new output metadata format was added, \"simple_xml\", that contains all "
 "the values in a simple xml, not only the dublin core ones. You can disabled "
-"it in the %1$sconfig of the module%2$s."
+"it in the {link}config of the module{link_end}."
 msgstr ""
 
-#: data/scripts/upgrade.php:180
+#: data/scripts/upgrade.php:207
 msgid ""
 "Some new options were added for compliance with non-standard requirements of "
 "BnF (Bibliothèque nationale de France): thumbnail, uri without attribute, "
@@ -177,87 +142,77 @@ msgid ""
 "other values will generate invalid identifiers."
 msgstr ""
 
-#: src/Form/ConfigForm.php:58
-msgid "Oai local identifier template"
-msgstr ""
-
 #: src/Form/ConfigForm.php:59
-msgid ""
-"Default is to use the resource id. Use template like \"{{dcterms:"
-"identifier}}\" to use a specific property as oai local id identifier."
-msgstr ""
-
-#: src/Form/ConfigForm.php:70
 msgid "Metadata formats"
 msgstr ""
 
-#: src/Form/ConfigForm.php:71
+#: src/Form/ConfigForm.php:60
 msgid "The format that will be made available. oai_dc is required."
 msgstr ""
 
-#: src/Form/ConfigForm.php:79
+#: src/Form/ConfigForm.php:68
 msgid "Select formats"
 msgstr ""
 
-#: src/Form/ConfigForm.php:86
+#: src/Form/ConfigForm.php:75
 msgid "Expose media"
 msgstr ""
 
-#: src/Form/ConfigForm.php:87
+#: src/Form/ConfigForm.php:76
 msgid ""
 "Whether the plugin should include identifiers for the files associated with "
 "items. This provides harvesters with direct access to files."
 msgstr ""
 
-#: src/Form/ConfigForm.php:97
+#: src/Form/ConfigForm.php:86
 msgid "Hide empty oai sets"
 msgstr ""
 
-#: src/Form/ConfigForm.php:98
+#: src/Form/ConfigForm.php:87
 msgid "Whether the module should hide empty oai sets."
 msgstr ""
 
-#: src/Form/ConfigForm.php:109
+#: src/Form/ConfigForm.php:98
 msgid ""
 "The global repository contains all the resources of Omeka S, in one place. "
 "Note that the oai set identifiers are different (item set id or site id)."
 msgstr ""
 
-#: src/Form/ConfigForm.php:111 src/Form/ConfigForm.php:161
+#: src/Form/ConfigForm.php:100 src/Form/ConfigForm.php:150
 msgid "Disabled"
 msgstr ""
 
-#: src/Form/ConfigForm.php:114
+#: src/Form/ConfigForm.php:103
 msgid "With the list of item sets below"
 msgstr ""
 
-#: src/Form/ConfigForm.php:115
+#: src/Form/ConfigForm.php:104
 msgid "With dynamic sets defined by queries below"
 msgstr ""
 
-#: src/Form/ConfigForm.php:127
+#: src/Form/ConfigForm.php:116
 msgid "List of item sets for the global repository"
 msgstr ""
 
-#: src/Form/ConfigForm.php:135
+#: src/Form/ConfigForm.php:124
 msgid "Select item sets…"
 msgstr ""
 
-#: src/Form/ConfigForm.php:142
+#: src/Form/ConfigForm.php:131
 msgid "Dynamic sets based on advanced search queries"
 msgstr ""
 
-#: src/Form/ConfigForm.php:159
+#: src/Form/ConfigForm.php:148
 msgid ""
 "The site repositories simulate multiple oai servers, with the site pools of "
 "items and the attached item sets as oai sets."
 msgstr ""
 
-#: src/Form/ConfigForm.php:174
+#: src/Form/ConfigForm.php:163
 msgid "Add identifier for global repository"
 msgstr ""
 
-#: src/Form/ConfigForm.php:175 src/Form/ConfigForm.php:192
+#: src/Form/ConfigForm.php:164 src/Form/ConfigForm.php:181
 msgid ""
 "An identifier may be added to simplify harvests, in particular when there is "
 "no unique identifier (ark, noid, call number, etc.). Only one identifier may "
@@ -265,35 +220,35 @@ msgid ""
 "their own identifier and other ones skip this option."
 msgstr ""
 
-#: src/Form/ConfigForm.php:178 src/Form/ConfigForm.php:195
+#: src/Form/ConfigForm.php:167 src/Form/ConfigForm.php:184
 msgid "Api url"
 msgstr ""
 
-#: src/Form/ConfigForm.php:179 src/Form/ConfigForm.php:196
+#: src/Form/ConfigForm.php:168 src/Form/ConfigForm.php:185
 msgid "Relative site url"
 msgstr ""
 
-#: src/Form/ConfigForm.php:180 src/Form/ConfigForm.php:197
+#: src/Form/ConfigForm.php:169 src/Form/ConfigForm.php:186
 msgid "Absolute site url"
 msgstr ""
 
-#: src/Form/ConfigForm.php:191
+#: src/Form/ConfigForm.php:180
 msgid "Add identifier for site repositories"
 msgstr ""
 
-#: src/Form/ConfigForm.php:209
+#: src/Form/ConfigForm.php:198
 msgid "Oai set format"
 msgstr ""
 
-#: src/Form/ConfigForm.php:210
+#: src/Form/ConfigForm.php:199
 msgid "The format of the oai set identifiers."
 msgstr ""
 
-#: src/Form/ConfigForm.php:222
+#: src/Form/ConfigForm.php:211
 msgid "Genericize dcterms for specific formats"
 msgstr ""
 
-#: src/Form/ConfigForm.php:223
+#: src/Form/ConfigForm.php:212
 msgid ""
 "Use refined terms for Dublin Core elements, for example dcterms:abstract "
 "will be merged with dc:description. It allows to expose all metadata in the "
@@ -301,182 +256,188 @@ msgid ""
 "can be used."
 msgstr ""
 
-#: src/Form/ConfigForm.php:240
+#: src/Form/ConfigForm.php:229
 msgid "Map properties"
 msgstr ""
 
-#: src/Form/ConfigForm.php:241
+#: src/Form/ConfigForm.php:230
 msgid ""
 "Map any property to any other property, so they will be available in other "
 "formats, in particular \"oai_dcterms\" and \"oai_dc\"."
 msgstr ""
 
-#: src/Form/ConfigForm.php:255
+#: src/Form/ConfigForm.php:244
 msgid "Format of linked resources"
 msgstr ""
 
-#: src/Form/ConfigForm.php:257
+#: src/Form/ConfigForm.php:246
 msgid "Omeka url as text and title as attribute"
 msgstr ""
 
-#: src/Form/ConfigForm.php:258
+#: src/Form/ConfigForm.php:247
 msgid "Title as text and Omeka url as attribute"
 msgstr ""
 
-#: src/Form/ConfigForm.php:259
+#: src/Form/ConfigForm.php:248
 msgid "Omeka url and title"
 msgstr ""
 
-#: src/Form/ConfigForm.php:261
+#: src/Form/ConfigForm.php:250
 msgid "Omeka url"
 msgstr ""
 
-#: src/Form/ConfigForm.php:262
+#: src/Form/ConfigForm.php:251
 msgid "Omeka url as text"
 msgstr ""
 
-#: src/Form/ConfigForm.php:263
+#: src/Form/ConfigForm.php:252
 msgid "Identifier (property below)"
 msgstr ""
 
-#: src/Form/ConfigForm.php:264
+#: src/Form/ConfigForm.php:253
 msgid "Id"
 msgstr ""
 
-#: src/Form/ConfigForm.php:265
+#: src/Form/ConfigForm.php:254
 msgid "Identifier or id"
 msgstr ""
 
-#: src/Form/ConfigForm.php:277
+#: src/Form/ConfigForm.php:266
 msgid "Property for linked resources"
 msgstr ""
 
-#: src/Form/ConfigForm.php:292
+#: src/Form/ConfigForm.php:281
 msgid "Format of uri"
 msgstr ""
 
-#: src/Form/ConfigForm.php:294
+#: src/Form/ConfigForm.php:283
 msgid "Uri as text and label as attribute"
 msgstr ""
 
-#: src/Form/ConfigForm.php:295
+#: src/Form/ConfigForm.php:284
 msgid "Label as text and uri as attribute"
 msgstr ""
 
-#: src/Form/ConfigForm.php:296
+#: src/Form/ConfigForm.php:285
 msgid "Uri and label separated by a space"
 msgstr ""
 
-#: src/Form/ConfigForm.php:297
+#: src/Form/ConfigForm.php:286
 msgid "Uri only"
 msgstr ""
 
-#: src/Form/ConfigForm.php:298
+#: src/Form/ConfigForm.php:287
 msgid "Label only"
 msgstr ""
 
-#: src/Form/ConfigForm.php:299
+#: src/Form/ConfigForm.php:288
 msgid "Label if any else uri"
 msgstr ""
 
-#: src/Form/ConfigForm.php:300
+#: src/Form/ConfigForm.php:289
 msgid "Uri only as text (BnF compliance: no attribute for uri)"
 msgstr ""
 
-#: src/Form/ConfigForm.php:301
+#: src/Form/ConfigForm.php:290
 msgid "Html"
 msgstr ""
 
-#: src/Form/ConfigForm.php:314
+#: src/Form/ConfigForm.php:303
 msgid "Dublin Core: Add the class as Dublin Core type"
 msgstr ""
 
-#: src/Form/ConfigForm.php:320 src/Form/ConfigForm.php:338
+#: src/Form/ConfigForm.php:304
+msgid ""
+"For compliance with non-standard requirements of BnF, use a table to map to "
+"main types."
+msgstr ""
+
+#: src/Form/ConfigForm.php:309 src/Form/ConfigForm.php:327
 msgid "Local name"
 msgstr ""
 
-#: src/Form/ConfigForm.php:322
+#: src/Form/ConfigForm.php:311
 msgid ""
-"Map via module Table (for example map class to \"text\", \"image\", \"sound"
-"\", \"video\")"
+"Map via module Table (for example map class to \"text\", \"image\", "
+"\"sound\", \"video\")"
 msgstr ""
 
-#: src/Form/ConfigForm.php:334
+#: src/Form/ConfigForm.php:323
 msgid "Dublin Core terms: Add the class as Dublin Core type"
 msgstr ""
 
-#: src/Form/ConfigForm.php:340
+#: src/Form/ConfigForm.php:329
 msgid "Map via module Table"
 msgstr ""
 
-#: src/Form/ConfigForm.php:355
+#: src/Form/ConfigForm.php:344
 msgid "Dublin Core: Table to use when option above is \"table\""
 msgstr ""
 
-#: src/Form/ConfigForm.php:368
+#: src/Form/ConfigForm.php:357
 msgid "Dublin Core: Append the url of the thumbnail for BnF"
 msgstr ""
 
-#: src/Form/ConfigForm.php:369
+#: src/Form/ConfigForm.php:358
 msgid ""
 "For compliance with the non-standard recommandations of the Bibliothèque "
 "nationale de France, the url of the main thumbnail may be automatically "
 "included to records."
 msgstr ""
 
-#: src/Form/ConfigForm.php:373 src/Form/ConfigForm.php:390
+#: src/Form/ConfigForm.php:362 src/Form/ConfigForm.php:379
 msgid "Large"
 msgstr ""
 
-#: src/Form/ConfigForm.php:375 src/Form/ConfigForm.php:392
+#: src/Form/ConfigForm.php:364 src/Form/ConfigForm.php:381
 msgid "Square"
 msgstr ""
 
-#: src/Form/ConfigForm.php:387
+#: src/Form/ConfigForm.php:376
 msgid "Dublin Core terms: Append the url of the thumbnail"
 msgstr ""
 
-#: src/Form/ConfigForm.php:405
+#: src/Form/ConfigForm.php:394
 msgid "Mets: data format for item"
 msgstr ""
 
-#: src/Form/ConfigForm.php:406
+#: src/Form/ConfigForm.php:395
 msgid "The format of the metadata of item."
 msgstr ""
 
-#: src/Form/ConfigForm.php:423
+#: src/Form/ConfigForm.php:412
 msgid "Mets: data format for media"
 msgstr ""
 
-#: src/Form/ConfigForm.php:424
+#: src/Form/ConfigForm.php:413
 msgid "The format of the metadata of media."
 msgstr ""
 
-#: src/Form/ConfigForm.php:442
+#: src/Form/ConfigForm.php:431
 msgid "Human interface"
 msgstr ""
 
-#: src/Form/ConfigForm.php:443
+#: src/Form/ConfigForm.php:432
 msgid ""
 "The OAI-PMH pages can be displayed with a themable responsive human "
 "interface based on Bootstrap (https://getbootstrap.com)."
 msgstr ""
 
-#: src/Form/ConfigForm.php:453
+#: src/Form/ConfigForm.php:442
 msgid "Global repository redirect route"
 msgstr ""
 
-#: src/Form/ConfigForm.php:454
+#: src/Form/ConfigForm.php:443
 msgid ""
 "An alias (redirect 301) for backward compatibility with Omeka Classic, that "
 "used \"/oai-pmh-repository/request\", or any other old OAI-PMH repository."
 msgstr ""
 
-#: src/Form/ConfigForm.php:464
+#: src/Form/ConfigForm.php:454
 msgid "List limit"
 msgstr ""
 
-#: src/Form/ConfigForm.php:465
+#: src/Form/ConfigForm.php:455
 msgid ""
 "Number of individual records that can be returned in a response at once. "
 "Larger values will increase memory usage but reduce the number of database "
@@ -484,11 +445,11 @@ msgid ""
 "increase the number of DB queries and requests."
 msgstr ""
 
-#: src/Form/ConfigForm.php:475
+#: src/Form/ConfigForm.php:465
 msgid "Token expiration time"
 msgstr ""
 
-#: src/Form/ConfigForm.php:476
+#: src/Form/ConfigForm.php:466
 msgid ""
 "In minutes, the length of time a resumption token is valid for. This means "
 "harvesters can re-try old partial list requests for this amount of time. "
@@ -528,12 +489,12 @@ msgstr ""
 msgid "Date/time arguments of differing granularity."
 msgstr ""
 
-#: src/OaiPmh/ResponseGenerator.php:662
+#: src/OaiPmh/ResponseGenerator.php:650
 #, php-format
 msgid "The set \"%s\" doesn’t exist."
 msgstr ""
 
-#: src/OaiPmh/ResponseGenerator.php:737
+#: src/OaiPmh/ResponseGenerator.php:725
 msgid "No records match the given criteria."
 msgstr ""
 

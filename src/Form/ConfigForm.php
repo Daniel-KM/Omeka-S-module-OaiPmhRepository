@@ -301,7 +301,7 @@ Books = resource_template_id[]=3
                 'type' => Element\Radio::class,
                 'options' => [
                     'label' => 'Dublin Core: Add the class as Dublin Core type', // @translate
-                    'info' => 'For compliance with non-standard requirements of BnF, use a table to map to main types.',
+                    'info' => 'For compliance with non-standard requirements of BnF, use a table to map to main types.',//@translate
                     'documentation' => 'https://www.bnf.fr/sites/default/files/2019-02/Guide_oaipmh.pdf',
                     'value_options' => [
                         'no' => 'No', // @translate
