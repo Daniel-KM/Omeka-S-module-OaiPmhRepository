@@ -397,9 +397,7 @@ msgid ""
 "For compliance with non-standard requirements of BnF, use a table to map to "
 "main types."
 msgstr ""
-"Pour être en conformité avec les recommandations non standard de la "
-"Bibliothèque nationale de France, il convient d’utiliser une table pour "
-"aligner les grands types."
+"Pour se conformer aux exigences non standard de la BnF, utiliser un tableau pour établir une correspondance avec les principaux types."
 
 #: src/Form/ConfigForm.php:309 src/Form/ConfigForm.php:327
 msgid "Local name"
