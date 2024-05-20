@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-04-19 10:42+0200\n"
-"PO-Revision-Date: 2024-04-22 00:00+0000\n"
+"POT-Creation-Date: 2024-05-20 00:00+0000\n"
+"PO-Revision-Date: 2024-05-20 00:00+0000\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: data/scripts/upgrade.php:32 Module.php:47
+#: data/scripts/upgrade.php:33 Module.php:47
 #, php-format
 msgid "The module %1$s should be upgraded to version %2$s or later."
 msgstr "Le module %1$s doit être mis à niveau à la version %2$s ou supérieure."
@@ -66,7 +66,7 @@ msgstr "Sans les lots oai."
 msgid "No site."
 msgstr "Aucun site."
 
-#: data/scripts/upgrade.php:105
+#: data/scripts/upgrade.php:106
 msgid ""
 "The event \"oaipmhrepository.values\" that may be used by other modules was "
 "deprecated and replaced by event \"oaipmhrepository.values.pre\"."
@@ -75,7 +75,7 @@ msgstr ""
 "d'autres modules est obsolète et a été remplacé par l’événement "
 "\"oaipmhrepository.values.pre\"."
 
-#: data/scripts/upgrade.php:109
+#: data/scripts/upgrade.php:110
 msgid ""
 "Futhermore, a new option allows to map any term to any other term, so any "
 "values can be exposed if needed."
@@ -83,7 +83,7 @@ msgstr ""
 "De plus, une nouvelle option permet de faire correspondre n'importe quels "
 "termes afin d'exposer toutes les valeurs, si besoin."
 
-#: data/scripts/upgrade.php:122
+#: data/scripts/upgrade.php:123
 msgid ""
 "It is now possible to define oai sets with a specific list of item sets or "
 "with a list of search queries."
@@ -91,7 +91,7 @@ msgstr ""
 "Il est désormais possible de définir des lots oai avec un liste spécifique "
 "de collections ou avec une liste de requêtes de recherche avancée."
 
-#: data/scripts/upgrade.php:129
+#: data/scripts/upgrade.php:130
 msgid ""
 "A simple mapping of foaf properties to Dublin Core has been added to the "
 "default config. It allows to publish, for example, common metadata of people."
@@ -100,7 +100,7 @@ msgstr ""
 "la configuration par défaut. Cela permet de publier, par exemple, les "
 "métadonnées courantes des personnes."
 
-#: data/scripts/upgrade.php:143
+#: data/scripts/upgrade.php:144
 msgid ""
 "You can copy the {link}default mapping foaf to dcterms{link_end} in the "
 "config of the module if needed."
@@ -108,7 +108,7 @@ msgstr ""
 "Vous pouvez copier {link}l’alignement par défaut entre foaf et "
 "dcterms{link_end} dans la configuration du module si besoin."
 
-#: data/scripts/upgrade.php:154
+#: data/scripts/upgrade.php:155
 #, php-format
 msgid ""
 "An option was added to append a thumbnail url according to the non-standard "
@@ -118,7 +118,7 @@ msgstr ""
 "aux %1$srecommandations%2$s non standard de la Bibliothèque nationale de "
 "France."
 
-#: data/scripts/upgrade.php:164
+#: data/scripts/upgrade.php:165
 msgid ""
 "The deprecated event \"oaipmhrepository.values\" was removed. Use "
 "\"oaipmhrepository.values.pre\" instead."
@@ -126,7 +126,7 @@ msgstr ""
 "L’événement obsolète \"oaipmhrepository.values\" a été supprimé. Utiliser "
 "\"oaipmhrepository.values.pre\" à la place."
 
-#: data/scripts/upgrade.php:174
+#: data/scripts/upgrade.php:175
 msgid ""
 "A new output metadata format was added, \"simple_xml\", that contains all "
 "the values in a simple xml, not only the dublin core ones. You can disabled "
@@ -136,7 +136,7 @@ msgstr ""
 "toutes les valeurs et pas seulement celles du Dublin Core. Vous pouvez le "
 "désactiver dans la {link}configuration du module{link_end}."
 
-#: data/scripts/upgrade.php:207
+#: data/scripts/upgrade.php:208
 msgid ""
 "Some new options were added for compliance with non-standard requirements of "
 "BnF (Bibliothèque nationale de France): thumbnail, uri without attribute, "
@@ -145,6 +145,14 @@ msgstr ""
 "De nouvelles options ont été ajoutées en conformité avec les recommandations "
 "non standard de la Bibliothèque nationale de France : vignette, uri sans "
 "attribut, classe en tant que type général."
+
+#: data/scripts/upgrade.php:247
+msgid ""
+"A new option allows to strip xml/html tags of data. It is enable by default "
+"for all formats except simple_xml."
+msgstr ""
+"Une nouvelle option permet de supprimer les balises xml/html. Elle est "
+"activée par défaut pour tous les formats sauf simple_xml."
 
 #: src/Form/ConfigForm.php:34
 msgid "Repository name"
@@ -313,97 +321,103 @@ msgstr ""
 "tous les formats, notamment \"oai_dcterms\" et \"oa_dc\"."
 
 #: src/Form/ConfigForm.php:244
+msgid "Format of literal and other data: strip xml and html tags"
+msgstr ""
+"Format des données texte et spécifiques : supprimer les balises xml/html"
+
+#: src/Form/ConfigForm.php:255
 msgid "Format of linked resources"
 msgstr "Format des ressources liées"
 
-#: src/Form/ConfigForm.php:246
+#: src/Form/ConfigForm.php:257
 msgid "Omeka url as text and title as attribute"
 msgstr "Url Omeka comme texte et titre comme attribut"
 
-#: src/Form/ConfigForm.php:247
+#: src/Form/ConfigForm.php:258
 msgid "Title as text and Omeka url as attribute"
 msgstr "Titre comme texte et url Omeka comme attribut"
 
-#: src/Form/ConfigForm.php:248
+#: src/Form/ConfigForm.php:259
 msgid "Omeka url and title"
 msgstr "Url Omeka et titre"
 
-#: src/Form/ConfigForm.php:250
+#: src/Form/ConfigForm.php:261
 msgid "Omeka url"
 msgstr "Url Omeka"
 
-#: src/Form/ConfigForm.php:251
+#: src/Form/ConfigForm.php:262
 msgid "Omeka url as text"
 msgstr "Url Omeka comme texte"
 
-#: src/Form/ConfigForm.php:252
+#: src/Form/ConfigForm.php:263
 msgid "Identifier (property below)"
 msgstr "Identifiant (propriété ci-dessous)"
 
-#: src/Form/ConfigForm.php:253
+#: src/Form/ConfigForm.php:264
 msgid "Id"
 msgstr "Id"
 
-#: src/Form/ConfigForm.php:254
+#: src/Form/ConfigForm.php:265
 msgid "Identifier or id"
 msgstr "Identifiant ou id"
 
-#: src/Form/ConfigForm.php:266
+#: src/Form/ConfigForm.php:277
 msgid "Property for linked resources"
 msgstr "Propriété pour les ressources liées"
 
-#: src/Form/ConfigForm.php:281
+#: src/Form/ConfigForm.php:292
 msgid "Format of uri"
 msgstr "Format de l’uri"
 
-#: src/Form/ConfigForm.php:283
+#: src/Form/ConfigForm.php:294
 msgid "Uri as text and label as attribute"
 msgstr "Uri comme texte et libellé comme attribut"
 
-#: src/Form/ConfigForm.php:284
+#: src/Form/ConfigForm.php:295
 msgid "Label as text and uri as attribute"
 msgstr "Libellé comme texte et uri comme attribut"
 
-#: src/Form/ConfigForm.php:285
+#: src/Form/ConfigForm.php:296
 msgid "Uri and label separated by a space"
 msgstr "Uri et libellé séparés par une espace"
 
-#: src/Form/ConfigForm.php:286
+#: src/Form/ConfigForm.php:297
 msgid "Uri only"
 msgstr "Uri seulement"
 
-#: src/Form/ConfigForm.php:287
+#: src/Form/ConfigForm.php:298
 msgid "Label only"
 msgstr "Libellé seul"
 
-#: src/Form/ConfigForm.php:288
+#: src/Form/ConfigForm.php:299
 msgid "Label if any else uri"
 msgstr "Libellé sinon uri"
 
-#: src/Form/ConfigForm.php:289
+#: src/Form/ConfigForm.php:300
 msgid "Uri only as text (BnF compliance: no attribute for uri)"
 msgstr "Uri seulement comme texte (conformité BnF : pas d’attribut pour l’uri)"
 
-#: src/Form/ConfigForm.php:290
+#: src/Form/ConfigForm.php:301
 msgid "Html"
 msgstr "Html"
 
-#: src/Form/ConfigForm.php:303
+#: src/Form/ConfigForm.php:314
 msgid "Dublin Core: Add the class as Dublin Core type"
 msgstr "Dublin Core : ajouter la classe en tant que type Dublin Core"
 
-#: src/Form/ConfigForm.php:304
+#: src/Form/ConfigForm.php:315
 msgid ""
 "For compliance with non-standard requirements of BnF, use a table to map to "
 "main types."
 msgstr ""
-"Pour se conformer aux exigences non standard de la BnF, utiliser un tableau pour établir une correspondance avec les principaux types."
+"Pour se conformer aux exigences non standard de la BnF, utiliser un tableau "
+"pour établir une correspondance avec les principaux types."
 
-#: src/Form/ConfigForm.php:309 src/Form/ConfigForm.php:327
+#: src/Form/ConfigForm.php:320 src/Form/ConfigForm.php:338
 msgid "Local name"
 msgstr "Nom local"
 
-#: src/Form/ConfigForm.php:311
+#: src/Form/ConfigForm.php:322
 msgid ""
 "Map via module Table (for example map class to \"text\", \"image\", "
 "\"sound\", \"video\")"
@@ -411,23 +425,23 @@ msgstr ""
 "Aligner via le module Table (par exemple aligner la classe avec « text », "
 "« image », « sound », « video »)"
 
-#: src/Form/ConfigForm.php:323
+#: src/Form/ConfigForm.php:334
 msgid "Dublin Core terms: Add the class as Dublin Core type"
 msgstr "Dublin Core terms : ajouter la classe comme Dublin Core type"
 
-#: src/Form/ConfigForm.php:329
+#: src/Form/ConfigForm.php:340
 msgid "Map via module Table"
 msgstr "Aligner via le module Table"
 
-#: src/Form/ConfigForm.php:344
+#: src/Form/ConfigForm.php:355
 msgid "Dublin Core: Table to use when option above is \"table\""
 msgstr "Dublin Core : Table pour l’option « table » ci-dessus"
 
-#: src/Form/ConfigForm.php:357
+#: src/Form/ConfigForm.php:368
 msgid "Dublin Core: Append the url of the thumbnail for BnF"
 msgstr "Dublin Core : ajouter l’url de la vignette pour la BnF"
 
-#: src/Form/ConfigForm.php:358
+#: src/Form/ConfigForm.php:369
 msgid ""
 "For compliance with the non-standard recommandations of the Bibliothèque "
 "nationale de France, the url of the main thumbnail may be automatically "
@@ -437,39 +451,39 @@ msgstr ""
 "nationale de France, l’url de la vignette principale peut être ajoutée "
 "automatiquement aux notices."
 
-#: src/Form/ConfigForm.php:362 src/Form/ConfigForm.php:379
+#: src/Form/ConfigForm.php:373 src/Form/ConfigForm.php:390
 msgid "Large"
 msgstr "Large"
 
-#: src/Form/ConfigForm.php:364 src/Form/ConfigForm.php:381
+#: src/Form/ConfigForm.php:375 src/Form/ConfigForm.php:392
 msgid "Square"
 msgstr "Carré"
 
-#: src/Form/ConfigForm.php:376
+#: src/Form/ConfigForm.php:387
 msgid "Dublin Core terms: Append the url of the thumbnail"
 msgstr "Dublin Core terms : ajouter l’url de la vignette"
 
-#: src/Form/ConfigForm.php:394
+#: src/Form/ConfigForm.php:405
 msgid "Mets: data format for item"
 msgstr "Mets : format des données des contenus"
 
-#: src/Form/ConfigForm.php:395
+#: src/Form/ConfigForm.php:406
 msgid "The format of the metadata of item."
 msgstr "Le format des métadonnées d’un contenu."
 
-#: src/Form/ConfigForm.php:412
+#: src/Form/ConfigForm.php:423
 msgid "Mets: data format for media"
 msgstr "Mets : format des données des médias"
 
-#: src/Form/ConfigForm.php:413
+#: src/Form/ConfigForm.php:424
 msgid "The format of the metadata of media."
 msgstr "Le format des métadonnées d’un média."
 
-#: src/Form/ConfigForm.php:431
+#: src/Form/ConfigForm.php:442
 msgid "Human interface"
 msgstr "Interface web"
 
-#: src/Form/ConfigForm.php:432
+#: src/Form/ConfigForm.php:443
 msgid ""
 "The OAI-PMH pages can be displayed with a themable responsive human "
 "interface based on Bootstrap (https://getbootstrap.com)."
@@ -477,11 +491,11 @@ msgstr ""
 "Les pages OAI-PMH peuvent être affichées avec un thème adaptatif lisible par "
 "les personnes, basé sur Bootstrap (https://getbootstrap.com)."
 
-#: src/Form/ConfigForm.php:442
+#: src/Form/ConfigForm.php:453
 msgid "Global repository redirect route"
 msgstr "Route spécifique pour l’entrepôt général"
 
-#: src/Form/ConfigForm.php:443
+#: src/Form/ConfigForm.php:454
 msgid ""
 "An alias (redirect 301) for backward compatibility with Omeka Classic, that "
 "used \"/oai-pmh-repository/request\", or any other old OAI-PMH repository."
@@ -490,11 +504,11 @@ msgstr ""
 "qui utilisait \"/oai-pmh-repository/request\", ou tout autre entrepôt OAI-"
 "PMH."
 
-#: src/Form/ConfigForm.php:454
+#: src/Form/ConfigForm.php:465
 msgid "List limit"
 msgstr "Limite de la liste"
 
-#: src/Form/ConfigForm.php:455
+#: src/Form/ConfigForm.php:466
 msgid ""
 "Number of individual records that can be returned in a response at once. "
 "Larger values will increase memory usage but reduce the number of database "
@@ -506,11 +520,11 @@ msgstr ""
 "la mémoire, mais réduit le requêtes http. Une valeur plus petite réduit "
 "l’usage de la mémoire, mais augmente le nombre de requêtes."
 
-#: src/Form/ConfigForm.php:465
+#: src/Form/ConfigForm.php:476
 msgid "Token expiration time"
 msgstr "Durée avant expiration du jeton"
 
-#: src/Form/ConfigForm.php:466
+#: src/Form/ConfigForm.php:477
 msgid ""
 "In minutes, the length of time a resumption token is valid for. This means "
 "harvesters can re-try old partial list requests for this amount of time. "
