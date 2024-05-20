@@ -58,6 +58,11 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     protected $services;
 
     /**
+     * @var \Common\Stdlib\EasyMeta
+     */
+    protected $easyMeta;
+
+    /**
      * The class used to create the set data (spec, name and description).
      *
      * @var OaiSetInterface
@@ -79,6 +84,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     public function setServices(ServiceLocatorInterface $services)
     {
         $this->services = $services;
+        $this->easyMeta = $services->get('EasyMeta');
         return $this;
     }
 
@@ -202,49 +208,24 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
      */
     protected function formatValue(ValueRepresentation $value): array
     {
-        $attributes = [];
-        $type = $value->type();
-        switch ($type) {
+        $dataType = $value->type();
+        $mainType = $this->easyMeta->dataTypeMain($dataType);
+        switch ($mainType) {
             case 'resource':
-            case substr($type, 0, 8) === 'resource':
                 return $this->formatValueResource($value->valueResource());
             case 'uri':
-            case substr($type, 0, 13) === 'valuesuggest:':
-            case substr($type, 0, 16) === 'valuesuggestall:':
                 return $this->formatValueUri($value);
-            // Module Custom vocab.
-            case substr($type, 0, 12) === 'customvocab:':
-                $vvr = $value->valueResource();
-                if ($vvr) {
-                    return $this->formatValueResource($vvr);
-                } elseif ($value->uri()) {
-                    return $this->formatValueUri($value);
-                }
-                $v = (string) $value->value();
-                break;
-            // Module module Numeric data type.
-            case substr($type, 0, 8) === 'numeric:':
-                $v = (string) $value;
-                break;
-            // Module DataTypeRdf.
-            case 'xml':
-            // Module RdfDatatype (deprecated).
-            case 'rdf:XMLLiteral':
-            case 'xsd:date':
-            case 'xsd:dateTime':
-            case 'xsd:decimal':
-            case 'xsd:gDay':
-            case 'xsd:gMonth':
-            case 'xsd:gMonthDay':
-            case 'xsd:gYear':
-            case 'xsd:gYearMonth':
-            case 'xsd:time':
-                $v = (string) $value;
-                break;
-            case 'integer':
-            case 'xsd:integer':
-                $v = (int) $value->value();
-                break;
+            case 'literal':
+            default:
+                return $this->formatValueLiteral($value);
+        }
+    }
+
+    protected function formatValueLiteral(ValueRepresentation $value): array
+    {
+        $attributes = [];
+        $dataType = $value->type();
+        switch ($dataType) {
             case 'boolean':
             case 'xsd:boolean':
                 $v = $value->value() ? 'true' : 'false';
