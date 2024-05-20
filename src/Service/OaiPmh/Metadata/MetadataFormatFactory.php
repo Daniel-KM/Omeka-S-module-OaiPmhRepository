@@ -29,11 +29,21 @@ class MetadataFormatFactory implements FactoryInterface
             $mainSite = $plugins->get('api')->searchOne('sites', ['id' => $mainSite], ['responseContent' => 'resource'])->getContent();
         }
 
+        $formatLiteralStripTags = $settings->get('oaipmhrepository_format_literal_striptags', [
+            'oai_dc',
+            'oai_dcterms',
+            'mets',
+            'cdwalite',
+            'mods',
+            // 'simple_xml',
+        ]);
+
         $params = [
             'main_site_slug' => empty($mainSite) ? null : $mainSite->getSlug(),
             'expose_media' => (bool) $settings->get('oaipmhrepository_expose_media'),
             'append_identifier_global' => $settings->get('oaipmhrepository_append_identifier_global', 'absolute_site_url'),
             'append_identifier_site' => $settings->get('oaipmhrepository_append_identifier_site', 'absolute_site_url'),
+            'format_literal_striptags' => in_array($prefix, $formatLiteralStripTags),
             'format_resource' => $settings->get('oaipmhrepository_format_resource', 'url_attr_title'),
             'format_resource_property' => $settings->get('oaipmhrepository_format_resource_property', 'dcterms:identifier'),
             'format_uri' => $settings->get('oaipmhrepository_format_uri', 'uri_attr_label'),
@@ -96,6 +106,7 @@ class MetadataFormatFactory implements FactoryInterface
                 break;
             default:
                 // nothing.
+                break;
         }
 
         $metadataFormat

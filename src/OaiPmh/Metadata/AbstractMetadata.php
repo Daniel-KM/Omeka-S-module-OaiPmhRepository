@@ -241,6 +241,10 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                 break;
         }
 
+        if ($this->params['format_literal_striptags']) {
+            $v = strip_tags($v);
+        }
+
         $lang = $value->lang();
         if ($lang) {
             $attributes['xml:lang'] = $lang;

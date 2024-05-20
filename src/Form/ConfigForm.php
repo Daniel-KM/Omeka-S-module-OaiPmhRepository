@@ -238,6 +238,17 @@ Books = resource_template_id[]=3
             ])
 
             ->add([
+                'name' => 'oaipmhrepository_format_literal_striptags',
+                'type' => Element\MultiCheckbox::class,
+                'options' => [
+                    'label' => 'Format of literal and other data: strip xml and html tags', // @translate
+                    'value_options' => $valueOptionFormats,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_format_literal_striptags',
+                ],
+            ])
+            ->add([
                 'name' => 'oaipmhrepository_format_resource',
                 'type' => Element\Radio::class,
                 'options' => [
