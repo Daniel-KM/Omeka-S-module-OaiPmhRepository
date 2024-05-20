@@ -272,7 +272,7 @@ return [
                 'mets',
                 'cdwalite',
                 'mods',
-                'simple_xml',
+                // 'simple_xml',
             ],
             'oaipmhrepository_format_resource' => 'url_attr_title',
             'oaipmhrepository_format_resource_property' => 'dcterms:identifier',

@@ -20,6 +20,7 @@ use Omeka\Stdlib\Message;
 $plugins = $services->get('ControllerPluginManager');
 $api = $plugins->get('api');
 $settings = $services->get('Omeka\Settings');
+$translate = $plugins->get('translate');
 $connection = $services->get('Omeka\Connection');
 $messenger = $plugins->get('messenger');
 $entityManager = $services->get('Omeka\EntityManager');
@@ -238,4 +239,12 @@ SQL;
     } catch (\Exception $e) {
         // Nothing.
     }
+}
+
+if (version_compare($oldVersion, '3.4.9', '<')) {
+    $settings->set('oaipmhrepository_format_literal_striptags', $defaultSettings['oaipmhrepository_format_literal_striptags']);
+    $message = new PsrMessage(
+        'A new option allows to strip xml/html tags of data. It is enable by default for all formats except simple_xml.' // @translate
+    );
+    $messenger->addSuccess($message);
 }
