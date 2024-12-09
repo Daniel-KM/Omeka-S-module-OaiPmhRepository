@@ -206,7 +206,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         }
 
         $oaiSetManager = $serviceLocator->get(\OaiPmhRepository\OaiPmh\OaiSetManager::class);
-        $this->oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'base'));
+        $this->oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'basic'));
         $this->oaiSet->setSetSpecType($this->setSpecType);
         $this->oaiSet->setSite($this->site);
         $this->oaiSet->setOptions([

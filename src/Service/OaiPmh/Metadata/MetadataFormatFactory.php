@@ -16,7 +16,7 @@ class MetadataFormatFactory implements FactoryInterface
         $plugins = $services->get('ControllerPluginManager');
         $settings = $services->get('Omeka\Settings');
         $oaiSetManager = $services->get('OaiPmhRepository\OaiPmh\OaiSetManager');
-        $oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'base'));
+        $oaiSet = $oaiSetManager->get($settings->get('oaipmhrepository_oai_set_format', 'basic'));
 
         /** @var \OaiPmhRepository\OaiPmh\Metadata\AbstractMetadata $metadataFormat */
         $metadataFormat = new $requestedName();
