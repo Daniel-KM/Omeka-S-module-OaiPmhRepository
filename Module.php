@@ -3,7 +3,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  * @copyright John Flatness, Center for History and New Media, 2013-2014
  * @copyright BibLibre, 2016
- * @copyright Daniel Berthereau, 2014-2023
+ * @copyright Daniel Berthereau, 2014-2024
  */
 namespace OaiPmhRepository;
 
