@@ -40,12 +40,11 @@ class Module extends AbstractModule
         $services = $this->getServiceLocator();
         $plugins = $services->get('ControllerPluginManager');
         $translate = $plugins->get('translate');
-        $translator = $services->get('MvcTranslator');
 
-        if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.57')) {
+        if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActiveVersion('Common', '3.4.64')) {
             $message = new \Omeka\Stdlib\Message(
                 $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
-                'Common', '3.4.57'
+                'Common', '3.4.64'
             );
             throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
         }
@@ -246,7 +245,7 @@ class Module extends AbstractModule
              */
             $services = $this->getServiceLocator();
             $settings = $services->get('Omeka\Settings');
-            $easyMeta = $services->get('EasyMeta');
+            $easyMeta = $services->get('Common\EasyMeta');
             $mapping = $settings->get('oaipmhrepository_map_properties', []);
             foreach ($mapping as $sourceTerm => $destinationTerm) {
                 if ($sourceTerm === $destinationTerm
@@ -280,7 +279,7 @@ class Module extends AbstractModule
 
         $services = $this->getServiceLocator();
         $api = $services->get('Omeka\ApiManager');
-        $easyMeta = $services->get('EasyMeta');
+        $easyMeta = $services->get('Common\EasyMeta');
 
         /** @var \Omeka\Api\Representation\AbstractResourceEntityRepresentation $resource */
         $resource = $event->getParam('resource');

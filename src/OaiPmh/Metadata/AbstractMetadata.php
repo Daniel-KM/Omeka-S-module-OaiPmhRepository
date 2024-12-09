@@ -84,7 +84,7 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
     public function setServices(ServiceLocatorInterface $services)
     {
         $this->services = $services;
-        $this->easyMeta = $services->get('EasyMeta');
+        $this->easyMeta = $services->get('Common\EasyMeta');
         return $this;
     }
 
