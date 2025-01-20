@@ -170,12 +170,17 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         return $this->isGlobalRepository;
     }
 
+    /**
+     * Get the single identifier of a resource according to option.
+     */
     protected function singleIdentifier(AbstractResourceEntityRepresentation $resource): ?string
     {
         if ($this->isGlobalRepository()) {
             $append = $this->params['append_identifier_global'];
             switch ($append) {
                 default:
+                case 'disabled':
+                    return null;
                 case 'api_url':
                     return $resource->apiUrl();
                 case 'relative_site_url':
@@ -187,6 +192,8 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         } else {
             switch ($this->params['append_identifier_site']) {
                 default:
+                case 'disabled':
+                    return null;
                 case 'api_url':
                     return $resource->apiUrl();
                 case 'relative_site_url':
@@ -195,6 +202,18 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
                     return $resource->siteUrl(null, true);
             }
         }
+    }
+
+    /**
+     * Get the single identifier of a resource according to option or api url.
+     *
+     * A resource requires an identifier in some case, so skip option "disabled"
+     * and use api url by default.
+     */
+    protected function resourceSingleIdentifier(AbstractResourceEntityRepresentation $resource): string
+    {
+        return $this->singleIdentifier($resource)
+            ?? $resource->apiUrl();
     }
 
     /**
@@ -323,43 +342,47 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
 
     protected function formatValueResource(AbstractResourceEntityRepresentation $resource): array
     {
+        // A resource requires an identifier.
+
         $attributes = [];
         switch ($this->params['format_resource']) {
             case 'id':
                 $v = (string) $resource->id();
                 break;
             case 'identifier':
-                $v = (string) $resource->value($this->params['format_resource_property']);
+                $v = (string) $resource->value($this->params['format_resource_property'])
+                    ?: $resource->apiUrl();
                 break;
             case 'identifier_id':
-                $v = (string) $resource->value($this->params['format_resource_property'], ['default' => $resource->id()]);
+                $v = (string) $resource->value($this->params['format_resource_property'], ['default' => $resource->id()])
+                    ?: $resource->apiUrl();
                 break;
             case 'title':
                 $v = $resource->displayTitle('[#' . $resource->id() . ']');
                 break;
             case 'url':
-                $v = $this->singleIdentifier($resource);
+                $v = $this->resourceSingleIdentifier($resource);
                 $attributes['xsi:type'] = 'dcterms:URI';
                 break;
             case 'url_as_text':
-                $v = $this->singleIdentifier($resource);
+                $v = (string) $this->resourceSingleIdentifier($resource);
                 break;
             case 'url_title':
-                $vUrl = $this->singleIdentifier($resource);
+                $vUrl = $this->resourceSingleIdentifier($resource);
                 $vTitle = $resource->displayTitle('');
-                $v = $vUrl . (strlen($vTitle) ? ' ' . $vTitle : '');
+                $v = $vUrl . trim(strlen($vTitle) ? ' ' . $vTitle : '');
                 break;
             case 'title_attr_url':
                 // For compatibility with many harvesters that don't manage
                 // attributes, the uri is kept when no label.
-                $vUrl = $this->singleIdentifier($resource);
+                $vUrl = $this->resourceSingleIdentifier($resource);
                 $v = $resource->displayTitle('');
                 $v = strlen($v) ? $v : $vUrl;
                 $attributes['href'] = $vUrl;
                 break;
             case 'url_attr_title':
             default:
-                $v = $this->singleIdentifier($resource);
+                $v = $this->resourceSingleIdentifier($resource);
                 $attributes['xsi:type'] = 'dcterms:URI';
                 $vTitle = $resource->displayTitle('');
                 if (strlen($vTitle)) {
