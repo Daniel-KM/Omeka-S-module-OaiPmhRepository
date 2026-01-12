@@ -114,13 +114,20 @@ class ResponseGenerator extends AbstractXmlGenerator
     protected $site;
 
     /**
-     * The type of oai sets: "item_set", "site_pool", or "none".
+     * The type of oai sets: "item_set", "list_item_sets", "site_pool", or "none".
      *
      * "site_pool" can be used only for global oai-pmh repository.
      *
      * @var string
      */
     protected $setSpecType;
+
+    /**
+     * List of item set ids to expose for global repository (for list_item_sets).
+     *
+     * @var array
+     */
+    protected $listItemSets = [];
 
     /**
      * The set format.
@@ -189,7 +196,6 @@ class ResponseGenerator extends AbstractXmlGenerator
         $currentSite = $serviceLocator->get('ControllerPluginManager')->get('currentSite');
         $this->site = $currentSite();
 
-        $listItemSets = [];
         $listQueries = [];
 
         if ($this->site) {
@@ -202,7 +208,7 @@ class ResponseGenerator extends AbstractXmlGenerator
             if (!in_array($this->setSpecType, ['item_set', 'list_item_sets', 'queries', 'site_pool', 'none'])) {
                 $this->setSpecType = 'none';
             } elseif ($this->setSpecType === 'list_item_sets') {
-                $listItemSets = array_filter(array_map('intval', $settings->get('oaipmhrepository_list_item_sets', []))) ?: [];
+                $this->listItemSets = array_filter(array_map('intval', $settings->get('oaipmhrepository_list_item_sets', []))) ?: [];
             } elseif ($this->setSpecType === 'queries') {
                 $listQueries = array_filter($settings->get('oaipmhrepository_sets_queries', [])) ?: [];
             }
@@ -214,7 +220,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $this->oaiSet->setSite($this->site);
         $this->oaiSet->setOptions([
             'hide_empty_sets' => $settings->get('oaipmhrepository_hide_empty_sets', true),
-            'list_item_sets' => $listItemSets,
+            'list_item_sets' => $this->listItemSets,
             'queries' => $listQueries ?? [],
         ]);
 
@@ -488,6 +494,16 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         if ($items) {
             $item = reset($items);
+            // Check if item belongs to allowed item sets (#7).
+            if ($this->setSpecType === 'list_item_sets' && !empty($this->listItemSets)) {
+                $itemSetIds = array_map(function ($itemSet) {
+                    return $itemSet->id();
+                }, $item->itemSets());
+                if (empty(array_intersect($itemSetIds, $this->listItemSets))) {
+                    $item = null;
+                    $this->throwError(self::OAI_ERR_ID_DOES_NOT_EXIST);
+                }
+            }
         } else {
             $item = null;
             $this->throwError(self::OAI_ERR_ID_DOES_NOT_EXIST);
@@ -679,6 +695,11 @@ class ResponseGenerator extends AbstractXmlGenerator
                     $this->throwError(self::OAI_ERR_NO_SET_HIERARCHY);
                     return;
             }
+        }
+        // When set type is "list_item_sets", restrict to configured item sets
+        // even when no specific set is requested (fix private data leak #7).
+        elseif ($this->setSpecType === 'list_item_sets' && !empty($this->listItemSets)) {
+            $query['item_set_id'] = $this->listItemSets;
         }
 
         if ($this->site) {
