@@ -83,6 +83,7 @@ return [
         'metadata_formats' => [
             'factories' => [
                 OaiPmh\Metadata\CdwaLite::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
+                OaiPmh\Metadata\Lido::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
                 OaiPmh\Metadata\Mets::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
                 OaiPmh\Metadata\Mods::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
                 OaiPmh\Metadata\OaiDc::class => Service\OaiPmh\Metadata\MetadataFormatFactory::class,
@@ -91,6 +92,8 @@ return [
             ],
             'aliases' => [
                 'cdwalite' => OaiPmh\Metadata\CdwaLite::class,
+                'lido' => OaiPmh\Metadata\Lido::class,
+                'lido_mc' => OaiPmh\Metadata\Lido::class,
                 'mets' => OaiPmh\Metadata\Mets::class,
                 'mods' => OaiPmh\Metadata\Mods::class,
                 'oai_dc' => OaiPmh\Metadata\OaiDc::class,
@@ -110,6 +113,7 @@ return [
             'oaipmhrepository_metadata_formats' => [
                 'oai_dc',
                 'cdwalite',
+                'lido',
                 'mets',
                 'mods',
                 'oai_dcterms',
