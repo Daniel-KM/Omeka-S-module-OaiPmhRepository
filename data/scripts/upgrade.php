@@ -248,3 +248,25 @@ if (version_compare($oldVersion, '3.4.9', '<')) {
     );
     $messenger->addSuccess($message);
 }
+
+if (version_compare($oldVersion, '3.4.12', '<')) {
+    $message = new PsrMessage(
+        'The module now supports the {link}LIDO{link_end} metadata format for OAI-PMH export. This implementation uses the LIDO-MC French application profile.', // @translate
+        [
+            'link' => '<a href="https://lido-schema.org/" target="_blank" rel="noopener">',
+            'link_end' => '</a>',
+        ]
+    );
+    $message->setEscapeHtml(false);
+    $messenger->addSuccess($message);
+
+    $message = new PsrMessage(
+        'A new option allows to use a property value (generally dcterms:identifier) as the local identifier in oai-pmh responses instead of the internal id. This enables compatibility with modules like {link}Clean Url{link_end}.', // @translate
+        [
+            'link' => '<a href="https://gitlab.com/Daniel-KM/Omeka-S-module-CleanUrl" target="_blank" rel="noopener">',
+            'link_end' => '</a>',
+        ]
+    );
+    $message->setEscapeHtml(false);
+    $messenger->addSuccess($message);
+}
