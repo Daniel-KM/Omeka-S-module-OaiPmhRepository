@@ -309,8 +309,8 @@ See commits for full list of contributors.
 * Copyright Daniel Berthereau, 2014-2023 (see [Daniel-KM])
 
 This [Omeka S] module is based on the rewrite of the [OAI-PMH Repository plugin]
-for [Omeka] by [BibLibre] and provide the same features as the original plugin
-and many more.
+for [Omeka] by [BibLibre] and provide the same features as the original plugin,
+written by John Flatness, and many more.
 
 
 [OAI-PMH Repository]: https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository
