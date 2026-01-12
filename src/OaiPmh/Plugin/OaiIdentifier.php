@@ -121,7 +121,7 @@ class OaiIdentifier
             'scheme' => 'oai',
             'repositoryIdentifier' => self::$namespaceId,
             'delimiter' => ':',
-            'sampleIdentifier' => self::itemtoOaiId(1),
+            'sampleIdentifier' => self::itemToOaiId(1),
         ];
         $oaiIdentifier = $parentElement->ownerDocument->createElement('oai-identifier');
 

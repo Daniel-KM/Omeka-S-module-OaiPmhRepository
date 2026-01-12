@@ -21,6 +21,7 @@ use Omeka\Api\Representation\ItemRepresentation;
  * version of oai_dc.
  *
  * @link http://www.bl.uk/schemas/
+ * @link https://dumas.ccsd.cnrs.fr/dumas-05169468v1/dcterms
  * @link http://dublincore.org/documents/dc-xml-guidelines/
  * @link http://dublincore.org/schemas/xmls/qdc/dcterms.xsd
  */

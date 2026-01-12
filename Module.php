@@ -7,7 +7,7 @@
  */
 namespace OaiPmhRepository;
 
-if (!class_exists(\Common\TraitModule::class)) {
+if (!class_exists('Common\TraitModule', false)) {
     require_once dirname(__DIR__) . '/Common/TraitModule.php';
 }
 
@@ -255,8 +255,8 @@ class Module extends AbstractModule
                     || is_numeric($destinationTerm)
                     || mb_substr($sourceTerm, 0, 1) === '#'
                     || mb_substr($destinationTerm, 0, 1) === '#'
-                    || !strpos($sourceTerm, ':')
-                    || !strpos($destinationTerm, ':')
+                    || strpos($sourceTerm, ':') === false
+                    || strpos($destinationTerm, ':') === false
                 ) {
                     unset($mapping[$sourceTerm]);
                     continue;

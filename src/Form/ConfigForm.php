@@ -362,7 +362,7 @@ Books = resource_template_id[]=3
                 ],
             ])
         ;
-        if (class_exists('Table\Form\Element\TablesSelect')) {
+        if (class_exists('Table\Module', false)) {
             $this
                 ->add([
                     'name' => 'oaipmhrepository_oai_table_class_type',

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 /**
  * @author Daniel Berthereau
- * @copyright Daniel Berthereau, 2014-2023
+ * @copyright Daniel Berthereau, 2014-2025
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\OaiSet;
@@ -132,7 +132,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
                     foreach ($oaiSets as $key => $oaiSet) {
                         $itemCount = $this->api
                             // TODO Check if this limit is useful.
-                            ->search('items', ['limit' => 0, 'site_id' => $oaiSet->id()])
+                            ->search('items', ['site_id' => $oaiSet->id(), 'limit' => 0], ['initialize' => false, 'finalize' => false])
                             ->getTotalResults();
                         if (empty($itemCount)) {
                             unset($oaiSets[$key]);
