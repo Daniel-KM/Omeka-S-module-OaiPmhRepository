@@ -3,7 +3,7 @@
  * @author John Flatness, Yu-Hsun Lin
  * @copyright Copyright 2009 John Flatness, Yu-Hsun Lin
  * @copyright BibLibre, 2016
- * @copyright Daniel Berthereau, 2014-2023
+ * @copyright Daniel Berthereau, 2014-2024
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  */
 namespace OaiPmhRepository\OaiPmh\Plugin;
@@ -26,9 +26,21 @@ class OaiIdentifier
 
     private static $namespaceId;
 
-    public static function initializeNamespace($namespaceId): void
+    /**
+     * Property term to use for the OAI identifier instead of internal ID.
+     *
+     * When set (e.g., 'dcterms:identifier'), the first value of this property
+     * will be used as the local identifier in OAI-PMH responses.
+     * This allows compatibility with modules like Clean Url.
+     *
+     * @see https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/issues/3
+     */
+    private static $identifierProperty;
+
+    public static function initializeNamespace($namespaceId, ?string $identifierProperty = null): void
     {
         self::$namespaceId = $namespaceId;
+        self::$identifierProperty = $identifierProperty ?: null;
     }
 
     /**
@@ -56,6 +68,10 @@ class OaiIdentifier
     /**
      * Converts the given Omeka item ID or any oai local id to a OAI identifier.
      *
+     * If an identifier property is configured, the first value of that property
+     * is used instead of the internal id. This allows compatibility with
+     * modules like Clean Url.
+     *
      * @param mixed $itemOrLocalId Omeka item or oai local identifier
      *
      * @return string OAI identifier
@@ -65,8 +81,32 @@ class OaiIdentifier
         if (!$itemOrLocalId instanceof AbstractResourceEntityRepresentation) {
             return 'oai:' . self::$namespaceId . ':' . $itemOrLocalId;
         }
-        $id = $itemOrLocalId->id();
-        return 'oai:' . self::$namespaceId . ':' . $id;
+
+        $localId = null;
+
+        // Use property value if configured.
+        if (self::$identifierProperty) {
+            $values = $itemOrLocalId->value(self::$identifierProperty, ['all' => true]);
+            if ($values) {
+                $firstValue = reset($values);
+                $localId = (string) $firstValue;
+            }
+        }
+
+        // Fall back to internal ID.
+        if (!$localId) {
+            $localId = (string) $itemOrLocalId->id();
+        }
+
+        return 'oai:' . self::$namespaceId . ':' . $localId;
+    }
+
+    /**
+     * Get the identifier property term if configured.
+     */
+    public static function getIdentifierProperty(): ?string
+    {
+        return self::$identifierProperty;
     }
 
     /**

@@ -51,6 +51,22 @@ class ConfigForm extends Form
                     'required' => true,
                 ],
             ])
+            ->add([
+                'name' => 'oaipmhrepository_oai_identifier_property',
+                'type' => OmekaElement\PropertySelect::class,
+                'options' => [
+                    'label' => 'OAI identifier property', // @translate
+                    'info' => 'Use a property value (e.g. dcterms:identifier) instead of the internal id as the local identifier in OAI-PMH responses. This allows compatibility with modules like Clean Url. If empty or no value is found, the internal id is used.', // @translate
+                    'empty_option' => '',
+                    'term_as_value' => true,
+                ],
+                'attributes' => [
+                    'id' => 'oaipmhrepository_oai_identifier_property',
+                    'multiple' => false,
+                    'class' => 'chosen-select',
+                    'data-placeholder' => 'Select property…', // @translate
+                ],
+            ])
 
             ->add([
                 'name' => 'oaipmhrepository_metadata_formats',

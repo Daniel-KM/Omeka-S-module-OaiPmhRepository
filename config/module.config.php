@@ -106,6 +106,7 @@ return [
         'config' => [
             'oaipmhrepository_name' => '',
             'oaipmhrepository_namespace_id' => '',
+            'oaipmhrepository_oai_identifier_property' => '',
             'oaipmhrepository_metadata_formats' => [
                 'oai_dc',
                 'cdwalite',

@@ -181,7 +181,10 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $this->document = new DomDocument('1.0', 'UTF-8');
 
-        OaiIdentifier::initializeNamespace($settings->get('oaipmhrepository_namespace_id'));
+        OaiIdentifier::initializeNamespace(
+            $settings->get('oaipmhrepository_namespace_id'),
+            $settings->get('oaipmhrepository_oai_identifier_property')
+        );
 
         $currentSite = $serviceLocator->get('ControllerPluginManager')->get('currentSite');
         $this->site = $currentSite();
