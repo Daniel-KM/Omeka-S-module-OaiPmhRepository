@@ -634,9 +634,19 @@ class ResponseGenerator extends AbstractXmlGenerator
         $apiAdapterManager = $this->serviceLocator->get('Omeka\ApiAdapterManager');
         $entityManager = $this->serviceLocator->get('Omeka\EntityManager');
 
-        $itemRepository = $entityManager->getRepository(\Omeka\Entity\Item::class);
-        $qb = $itemRepository->createQueryBuilder('omeka_root');
-        $qb->select('omeka_root');
+        /** @var \Omeka\Api\Adapter\ItemAdapter $itemAdapter */
+        $itemAdapter = $apiAdapterManager->get('items');
+        $isOldOmeka = version_compare(\Omeka\Module::VERSION, '4.2.0', '<');
+        if ($isOldOmeka) {
+            $itemRepository = $entityManager->getRepository(\Omeka\Entity\Item::class);
+            $qb = $itemRepository->createQueryBuilder('omeka_root');
+            $qb->select('omeka_root');
+        } else {
+            $qb = $itemAdapter->createQueryBuilder();
+            $qb
+                ->select('omeka_root')
+                ->from(\Omeka\Entity\Item::class, 'omeka_root');
+        }
 
         $query = new ArrayObject;
         $expr = $qb->expr();
@@ -679,8 +689,6 @@ class ResponseGenerator extends AbstractXmlGenerator
 
         $metadataFormat->filterList($query);
 
-        /** @var \Omeka\Api\Adapter\ItemAdapter $itemAdapter */
-        $itemAdapter = $apiAdapterManager->get('items');
         $itemAdapter->buildQuery($qb, $query->getArrayCopy());
 
         if ($from) {
