@@ -231,7 +231,12 @@ abstract class AbstractMetadata extends AbstractXmlGenerator implements Metadata
         $mainType = $this->easyMeta->dataTypeMain($dataType);
         switch ($mainType) {
             case 'resource':
-                return $this->formatValueResource($value->valueResource());
+                $valueResource = $value->valueResource();
+                // Linked resource may be private or deleted (#1).
+                if ($valueResource === null) {
+                    return ['', []];
+                }
+                return $this->formatValueResource($valueResource);
             case 'uri':
                 return $this->formatValueUri($value);
             case 'literal':
