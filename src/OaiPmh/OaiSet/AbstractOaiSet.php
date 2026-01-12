@@ -171,7 +171,7 @@ abstract class AbstractOaiSet extends AbstractXmlGenerator implements OaiSetInte
             $elements['setSpec'] = $this->getSetSpec($oaiSet);
             $elements['setName'] = $this->getSetName($oaiSet);
             $description = $this->getSetDescription($oaiSet);
-            if (!is_null($description)) {
+            if ($description !== null) {
                 $elements['setDescription'] = $description;
             }
             $oaiSets[$key] = $elements;

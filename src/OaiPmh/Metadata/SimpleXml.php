@@ -68,7 +68,7 @@ class SimpleXml extends AbstractMetadata
         // Include resource metadata on the main node.
         $meta = $this->mainResourceMetadata($item);
         foreach ($meta as $name => $value) {
-            if (!is_null($value)) {
+            if ($value !== null) {
                 $oai->setAttribute($name, (string) $value);
             }
         }

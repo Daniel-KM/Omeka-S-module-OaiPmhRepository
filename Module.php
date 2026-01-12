@@ -175,7 +175,7 @@ class Module extends AbstractModule
         static $genericDcterms;
         static $map;
 
-        if (is_null($genericDcterms)) {
+        if ($genericDcterms === null) {
             $services = $this->getServiceLocator();
             $settings = $services->get('Omeka\Settings');
             $genericDcterms = array_diff(
@@ -236,7 +236,7 @@ class Module extends AbstractModule
     {
         static $mapping;
 
-        if (is_null($mapping)) {
+        if ($mapping === null) {
             /**
              * @var \Laminas\ServiceManager\ServiceLocatorInterface $services
              * @var \Omeka\Api\Manager $api
