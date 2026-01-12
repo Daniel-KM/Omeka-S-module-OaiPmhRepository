@@ -588,16 +588,16 @@ class ResponseGenerator extends AbstractXmlGenerator
     private function resumeListResponse($token): void
     {
         $api = $this->serviceLocator->get('ControllerPluginManager')->get('api');
-        $expiredTokens = $api->search('oaipmh_repository_tokens', [
+        $expiredTokens = $api->search('oaipmhrepository_tokens', [
             'expired' => true,
         ])->getContent();
         foreach ($expiredTokens as $expiredToken) {
-            $api->delete('oaipmh_repository_tokens', $expiredToken->id());
+            $api->delete('oaipmhrepository_tokens', $expiredToken->id());
         }
 
         // TODO Purge tokens.
 
-        $tokenObject = $api->searchOne('oaipmh_repository_tokens', ['id' => $token])->getContent();
+        $tokenObject = $api->searchOne('oaipmhrepository_tokens', ['id' => $token])->getContent();
 
         if (!$tokenObject || ($tokenObject->verb() != $this->query['verb'])) {
             $this->throwError(self::OAI_ERR_BAD_RESUMPTION_TOKEN);
@@ -771,7 +771,7 @@ class ResponseGenerator extends AbstractXmlGenerator
         $expiration = new DateTime();
         $expiration->setTimestamp(time() + ($this->_tokenExpirationTime * 60));
 
-        $token = $api->create('oaipmh_repository_tokens', [
+        $token = $api->create('oaipmhrepository_tokens', [
             'o:verb' => $verb,
             'o:metadata_prefix' => $metadataPrefix,
             'o:cursor' => $cursor,

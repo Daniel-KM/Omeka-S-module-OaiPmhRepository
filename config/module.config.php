@@ -5,7 +5,7 @@ namespace OaiPmhRepository;
 return [
     'api_adapters' => [
         'invokables' => [
-            'oaipmh_repository_tokens' => Api\Adapter\OaiPmhRepositoryTokenAdapter::class,
+            'oaipmhrepository_tokens' => Api\Adapter\OaiPmhRepositoryTokenAdapter::class,
         ],
     ],
     'entity_manager' => [

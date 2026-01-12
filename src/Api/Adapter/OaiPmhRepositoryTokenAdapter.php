@@ -42,7 +42,7 @@ class OaiPmhRepositoryTokenAdapter extends AbstractEntityAdapter
 
     public function getResourceName()
     {
-        return 'oaipmh_repository_tokens';
+        return 'oaipmhrepository_tokens';
     }
 
     public function getRepresentationClass()
