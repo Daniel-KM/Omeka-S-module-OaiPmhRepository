@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE phpunit>
-<phpunit bootstrap="./bootstrap.php" colors="true" backupGlobals="false">
+<phpunit bootstrap="./tests/bootstrap.php" colors="true" backupGlobals="false">
     <testsuites>
         <testsuite name="OaiPmhRepository">
-            <directory>./OaiPmhRepositoryTest</directory>
+            <directory suffix="Test.php">./tests/OaiPmhRepositoryTest</directory>
         </testsuite>
     </testsuites>
 </phpunit>

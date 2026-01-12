@@ -2,10 +2,17 @@
 
 namespace OaiPmhRepositoryTest\Controller;
 
-use OmekaTestHelper\Controller\OmekaControllerTestCase;
+use CommonTest\AbstractHttpControllerTestCase;
+use CommonTest\Bootstrap;
+use OaiPmhRepositoryTest\OaiPmhRepositoryTestTrait;
 
-class RequestControllerTest extends OmekaControllerTestCase
+/**
+ * Test OAI-PMH request controller.
+ */
+class RequestControllerTest extends AbstractHttpControllerTestCase
 {
+    use OaiPmhRepositoryTestTrait;
+
     protected $site;
     protected $itemSet;
     protected $item;
@@ -14,7 +21,7 @@ class RequestControllerTest extends OmekaControllerTestCase
     {
         parent::setUp();
 
-        $this->loginAsAdmin();
+        $this->loginAdmin();
 
         $response = $this->api()->create('item_sets', [
             'o:is_public' => true,
@@ -51,16 +58,44 @@ class RequestControllerTest extends OmekaControllerTestCase
         $this->settings()->set('oaipmhrepository_by_site_repository', 'item_set');
         $this->settings()->set('oaipmhrepository_hide_empty_sets', false);
 
-        $this->resetApplication();
+        $this->reset();
 
         $_SERVER['REQUEST_URI'] = '/';
     }
 
     public function tearDown(): void
     {
-        $this->api()->delete('sites', $this->site->id());
-        $this->api()->delete('item_sets', $this->itemSet->id());
-        $this->api()->delete('items', $this->item->id());
+        try {
+            $this->api()->delete('sites', $this->site->id());
+        } catch (\Exception $e) {
+        }
+        try {
+            $this->api()->delete('item_sets', $this->itemSet->id());
+        } catch (\Exception $e) {
+        }
+        try {
+            $this->api()->delete('items', $this->item->id());
+        } catch (\Exception $e) {
+        }
+        $this->cleanupResources();
+    }
+
+    protected function settings()
+    {
+        return $this->getApplicationServiceLocator()->get('Omeka\Settings');
+    }
+
+    protected function getPropertyId($term)
+    {
+        $response = $this->api()->search('properties', [
+            'term' => $term,
+        ]);
+        $property = $response->getContent();
+
+        if (!empty($property)) {
+            return $property[0]->id();
+        }
+        return null;
     }
 
     public function testIndexAction(): void
@@ -84,7 +119,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
 
-        $this->assertObjectHasAttribute('Identify', $xml);
+        $this->assertObjectHasProperty('Identify', $xml);
     }
 
     public function testListMetadataFormatsVerb(): void
@@ -96,16 +131,63 @@ class RequestControllerTest extends OmekaControllerTestCase
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
 
-        $this->assertObjectHasAttribute('ListMetadataFormats', $xml);
+        $this->assertObjectHasProperty('ListMetadataFormats', $xml);
 
         $formats = [];
         foreach ($xml->ListMetadataFormats->metadataFormat as $metadataFormat) {
             $formats[(string) $metadataFormat->metadataPrefix] = true;
         }
         $this->assertArrayHasKey('cdwalite', $formats);
+        $this->assertArrayHasKey('lido', $formats);
         $this->assertArrayHasKey('mets', $formats);
         $this->assertArrayHasKey('mods', $formats);
         $this->assertArrayHasKey('oai_dc', $formats);
+    }
+
+    public function testListIdentifiersVerbLido(): void
+    {
+        $this->dispatch('/s/test/oai?verb=ListIdentifiers&metadataPrefix=lido');
+        $this->assertResponseStatusCode(200);
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+
+        $xml = simplexml_load_string($this->getResponse()->getContent());
+        $this->assertNotFalse($xml);
+
+        $this->assertObjectHasProperty('ListIdentifiers', $xml);
+        $expectedIdentifier = 'oai:test:' . $this->item->id();
+        $this->assertEquals($expectedIdentifier, (string) $xml->ListIdentifiers->header->identifier);
+    }
+
+    public function testGetRecordVerbLido(): void
+    {
+        $itemIdentifier = 'oai:test:' . $this->item->id();
+        $this->dispatch("/s/test/oai?verb=GetRecord&metadataPrefix=lido&identifier=$itemIdentifier");
+        $this->assertResponseStatusCode(200);
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+
+        $xml = simplexml_load_string($this->getResponse()->getContent());
+        $this->assertNotFalse($xml);
+
+        $this->assertObjectHasProperty('GetRecord', $xml);
+        $content = $this->getResponse()->getContent();
+        $this->assertStringContainsString('lido:lido', $content);
+        $this->assertStringContainsString('lido:lidoRecID', $content);
+        $this->assertStringContainsString('lido:descriptiveMetadata', $content);
+        $this->assertStringContainsString('lido:administrativeMetadata', $content);
+    }
+
+    public function testListRecordsVerbLido(): void
+    {
+        $this->dispatch('/s/test/oai?verb=ListRecords&metadataPrefix=lido');
+        $this->assertResponseStatusCode(200);
+        $this->assertResponseHeaderContains('Content-Type', 'text/xml; charset=utf-8');
+
+        $xml = simplexml_load_string($this->getResponse()->getContent());
+        $this->assertNotFalse($xml);
+
+        $this->assertObjectHasProperty('ListRecords', $xml);
+        $content = $this->getResponse()->getContent();
+        $this->assertStringContainsString('lido:lido', $content);
     }
 
     public function testListSetsVerb(): void
@@ -117,8 +199,8 @@ class RequestControllerTest extends OmekaControllerTestCase
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
 
-        $this->assertObjectHasAttribute('ListSets', $xml);
-        $this->assertEquals((string) $xml->ListSets->set->setSpec, $this->itemSet->id());
+        $this->assertObjectHasProperty('ListSets', $xml);
+        $this->assertEquals((string) $this->itemSet->id(), (string) $xml->ListSets->set->setSpec);
     }
 
     public function testListIdentifiersVerbBadArgument(): void
@@ -130,7 +212,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
 
-        $this->assertEquals((string) $xml->error['code'], 'badArgument');
+        $this->assertEquals('badArgument', (string) $xml->error['code']);
     }
 
     public function testListIdentifiersVerbOaiDc(): void
@@ -142,9 +224,9 @@ class RequestControllerTest extends OmekaControllerTestCase
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
 
-        $this->assertObjectHasAttribute('ListIdentifiers', $xml);
+        $this->assertObjectHasProperty('ListIdentifiers', $xml);
         $expectedIdentifier = 'oai:test:' . $this->item->id();
-        $this->assertEquals((string) $xml->ListIdentifiers->header->identifier, $expectedIdentifier);
+        $this->assertEquals($expectedIdentifier, (string) $xml->ListIdentifiers->header->identifier);
     }
 
     public function testGetRecordVerbOaiDc(): void
@@ -157,7 +239,7 @@ class RequestControllerTest extends OmekaControllerTestCase
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
 
-        $this->assertObjectHasAttribute('GetRecord', $xml);
+        $this->assertObjectHasProperty('GetRecord', $xml);
         $metadata = $xml->GetRecord->record->metadata;
         $dc = $metadata->children('oai_dc', true)->dc;
         $title = (string) $dc->children('dc', true)->title;
@@ -174,23 +256,11 @@ class RequestControllerTest extends OmekaControllerTestCase
         $xml = simplexml_load_string($this->getResponse()->getContent());
         $this->assertNotFalse($xml);
 
-        $this->assertObjectHasAttribute('ListRecords', $xml);
+        $this->assertObjectHasProperty('ListRecords', $xml);
         $metadata = $xml->ListRecords->record->metadata;
         $dc = $metadata->children('oai_dc', true)->dc;
         $title = (string) $dc->children('dc', true)->title;
         $expectedTitle = (string) $this->item->value('dcterms:title');
         $this->assertEquals($expectedTitle, $title);
-    }
-
-    protected function getPropertyId($term)
-    {
-        $response = $this->api()->search('properties', [
-            'term' => $term,
-        ]);
-        $property = $response->getContent();
-
-        if (!empty($property)) {
-            return $property[0]->id();
-        }
     }
 }

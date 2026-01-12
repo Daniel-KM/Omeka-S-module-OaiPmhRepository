@@ -47,12 +47,12 @@
     ],
     "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
     "support": {
-        "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository",
+        "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-OaiPmhRepository/-/issues",
         "forum": "https://forum.omeka.org/"
     },
     "keywords": [
         "Omeka S",
-        "Omeka S module",
+        "module",
         "share",
         "open data",
         "library protocol",
@@ -60,19 +60,29 @@
         "Dublin Core",
         "METS",
         "MODS",
-        "CDWA Lite"
+        "CDWA Lite",
+        "LIDO"
     ],
     "autoload": {
         "psr-4": {
             "OaiPmhRepository\\": "src/"
         }
     },
-    "require-dev": {
-        "biblibre/omeka-s-test-helper": "dev-master"
-    },
     "autoload-dev": {
         "psr-4": {
-            "OaiPmhRepositoryTest\\": "test/OaiPmhRepositoryTest/"
+            "OaiPmhRepositoryTest\\": "tests/OaiPmhRepositoryTest/"
         }
+    },
+    "config": {
+        "platform": {
+            "php": "7.4"
+        },
+        "allow-plugins": {
+            "composer/installers": true,
+            "oomphinc/composer-installers-extender": true
+        }
+    },
+    "extra": {
+        "installer-name": "OaiPmhRepository"
     }
 }
